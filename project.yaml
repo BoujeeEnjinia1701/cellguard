@@ -1,0 +1,17 @@
+# Card metadata consumed by https://designmolecule.com
+name: CellGuard
+slug: cellguard
+area: Shared Components
+status: concept          # concept | design | prototype | tested | released
+shortlisted: false
+pitch: >-
+  An open battery management board for small LiFePO4 packs (4 to 16 cells) with cell balancing, protection and a documented state-of-charge estimate, reusable across the lab's vehicles, storage and field kits.
+problem: >-
+  Small builders either buy closed battery management boards with unknown firmware and limits, or skip protection altogether. Both lead to damaged packs and fires, and neither teaches anything.
+budget_usd: 120
+difficulty: 4  # 1 easiest, 5 hardest
+hero_image: media/hero.png
+licenses:
+  hardware: CERN-OHL-S-2.0
+  software: MIT
+tags: [shared-components, open-hardware, cern-ohl-s]
