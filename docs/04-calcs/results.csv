@@ -128,5 +128,6 @@ Mass total with a 3 mm plate,0.581,kg
 BOM lines,17,
 BOM total,134.00,USD
 BOM total without the secondary protector,124.00,USD
-Against budget_usd 120,11.7,% over
-Margin against recommended 140,6.00,USD
+Share of budget_usd 140,95.7,%
+Margin against budget_usd 140,6.00,USD
+Against former budget of 120 (before CGD-DDR-002),11.7,% over

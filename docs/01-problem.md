@@ -3,7 +3,7 @@ doc_id: CGD-PRB-001
 title: CellGuard problem statement
 project: CellGuard
 doc_type: Problem statement
-version: "0.3"
+version: "0.4"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -21,6 +21,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: TRL 3. Chemistry scope and current rating adopted for TRL 3 under Amish's 2026-09-25 instruction, open for his review (CGD-DDR-001); budget note
+- version: "0.4"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Recommendations accepted by Amish (DDR-002)
 ---
 
 # CellGuard problem statement
@@ -63,7 +67,7 @@ Operating context assumed for the concept: LFP prismatic or cylindrical cells in
 
 ## Constraints
 
-- Garage-buildable prototype for about $120 USD in parts (`project.yaml`), excluding cells. CGD-CAL-001 prices the board at $134 with the secondary protector; raising the budget to $140 is proposed, awaiting Amish.
+- Garage-buildable prototype for about $140 USD in parts (`project.yaml`), excluding cells, raised from $120 by Amish on 2026-09-25 (CGD-DDR-002). CGD-CAL-001 prices the board at $134 with the secondary protector.
 - One board design covers 4 to 16 series cells, set by configuration, not by different boards.
 - Parts that a small workshop can solder: no ball grid arrays, no leadless packages finer than 0.5 mm pitch, assembly with a hot plate or hot-air station.
 - Maximum pack voltage below 60 V DC, so the design stays in the extra-low-voltage range.
@@ -72,7 +76,7 @@ Operating context assumed for the concept: LFP prismatic or cylindrical cells in
 
 ## Out of scope
 
-- Firmware for chemistries other than LFP in the first release. The hardware also supports an NMC profile of up to 14 cells, so it could serve as SwapCell's 13S BMS (adopted for TRL 3, open for Amish's review, subject to the SwapCell project).
+- Firmware for chemistries other than LFP in the first release. The hardware also supports an NMC profile of up to 14 cells, so it could serve as SwapCell's 13S BMS (decided by Amish, 2026-09-25, subject to the SwapCell project).
 - Single-cell and 2S to 3S packs, such as FieldNode's single LFP cell, which need a simpler one-cell protector.
 - Packs above 16S or above 60 V, and currents above 40 A continuous.
 - Active (energy-transferring) balancing.
@@ -80,6 +84,6 @@ Operating context assumed for the concept: LFP prismatic or cylindrical cells in
 
 ## Open questions
 
-- NMC profile for SwapCell's 13S pack: adopted for TRL 3 under Amish's 2026-09-25 instruction, open for his review (hardware for both, LFP firmware first). The SwapCell project's agreement is still needed.
-- Current rating: 40 A continuous adopted for TRL 3 under Amish's 2026-09-25 instruction, open for his review; a 100 A variant only if storage users need it.
+- NMC profile for SwapCell's 13S pack: decided by Amish, 2026-09-25: go with recommendation (hardware for both, LFP firmware first). The SwapCell project's agreement is still needed.
+- Current rating: 40 A continuous, decided by Amish, 2026-09-25: go with recommendation; a 100 A variant only if storage users need it.
 - Which partner should supply real packs and use cases for first testing (a solar installer, an e-bike repair shop or a makerspace)? Proposed, awaiting Amish.

@@ -2,7 +2,7 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
 
-**Area:** Shared Components · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** about $120 USD · **Difficulty:** 4 of 5
+**Area:** Shared Components · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** about $140 USD · **Difficulty:** 4 of 5
 
 An open battery management board for small LiFePO4 packs (4 to 16 cells) with cell balancing, protection and a documented state-of-charge estimate, reusable across the lab's vehicles, storage and field kits.
 
@@ -48,7 +48,7 @@ At the same time, more people depend on small lithium packs for basic power: sol
 
 ## What sparked the idea
 
-It came out of a September 2026 review of Design Molecule's applied research areas against the open projects already in the lab. SwapCell, PowerBox, SunSpoke and the smart city nodes all rely on lithium packs whose protection was left unspecified. The review coincided with the US Consumer Product Safety Commission's June 2026 proposed standard for micromobility batteries ([Federal Register](https://www.federalregister.gov/documents/2026/06/24/2026-12749/safety-standard-for-lithium-ion-batteries-used-in-micromobility-products-and-electrical-systems-of)) and London's record year for e-bike fires in 2025, both of which point to the battery management system as the place where safety is won or lost.
+The starting point was the self-balancing scooter, or hoverboard, recall of July 2016. The US Consumer Product Safety Commission and ten firms recalled about 501,000 units because their lithium-ion battery packs could overheat, smoke, catch fire or explode, after at least 99 reported incidents that included burn injuries and property damage ([CPSC recall notice, 6 July 2016](https://www.cpsc.gov/Recalls/2016/Self-Balancing-Scooters-Hoverboards-Recalled-by-10-Firms)). The recall spanned products from ten firms, and nothing published let a buyer or repairer see what limits a pack's protection electronics enforced or how they would fail. CellGuard takes the opposite position for the small LFP packs that builders assemble themselves: publish every threshold, the failure analysis and the state-of-charge method, and back the main protection with an independent second layer, so that the protection can be checked before a pack is trusted rather than after it fails.
 
 ## Problem
 
@@ -60,7 +60,7 @@ Full problem statement: [docs/01-problem.md](docs/01-problem.md)
 
 An open battery management board for small LiFePO4 packs (4 to 16 cells) with cell balancing, protection and a documented state-of-charge estimate, reusable across the lab's vehicles, storage and field kits.
 
-A single cell-monitor and protection chip measures every cell and opens the charge or discharge MOSFETs on its own when a limit is crossed; an independent secondary protector blows a protector fuse if that layer fails. A microcontroller adds a state-of-charge estimate anchored at full and empty, a state-of-health event log and an open CAN and UART interface carrying the SwapCell message set. Calculated at TRL 3 (CGD-CAL-001): 40 A continuous with MOSFET junctions near 54 °C at 40 °C ambient, 4.4 W board loss at 40 A (against a 4 W target), 100 mA passive balancing, about 55 µA sleep current, 220 x 110 x 32 mm and about 0.65 kg. Four requirements are not met on paper: board loss, state of charge on small packs, mass and cost.
+A single cell-monitor and protection chip measures every cell and opens the charge or discharge MOSFETs on its own when a limit is crossed; an independent secondary protector blows a protector fuse if that layer fails. A microcontroller adds a state-of-charge estimate anchored at full and empty, a state-of-health event log and an open CAN and UART interface carrying the SwapCell message set. Calculated at TRL 3 (CGD-CAL-001 v0.2): 40 A continuous with MOSFET junctions near 54 °C at 40 °C ambient, 4.4 W board loss at 40 A (against a 4 W target), 100 mA passive balancing, about 55 µA sleep current, 220 x 110 x 32 mm and about 0.65 kg. Three requirements are not met on paper: board loss, state of charge on small packs and mass; the $134 parts cost meets the $140 budget.
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md) · Requirements: [docs/03-requirements.md](docs/03-requirements.md)
 
@@ -68,14 +68,14 @@ Full design precis: [docs/02-concept.md](docs/02-concept.md) · Requirements: [d
 
 - Cell monitor and protection IC for 3 to 16 cells, with passive balancing (TI BQ76952 class)
 - Independent secondary protector (TI BQ77216 class) with a self-control protector fuse
-- Charge and discharge MOSFET switches: 8 x 100 V, high side, on an aluminium heat spreader
+- Charge and discharge MOSFET switches: 8 x 100 V, high side, top-side cooled, on an aluminium heat spreader
 - 0.25 mΩ current shunt
 - Temperature sensors, 3 points
 - Microcontroller with CAN and UART (STM32G0B1 class)
 - Fuse and precharge circuit
 - Enclosure and harness
 
-The component choices are adopted for TRL 3 under Amish's 2026-09-25 instruction, open for his review ([CGD-DDR-001](docs/decisions/0001-trl2-review-decisions.md)). The priced bill of materials is in [bom/bom.csv](bom/bom.csv): $134 in parts, 11.7 % over the $120 budget; raising the budget to $140 is proposed, awaiting Amish.
+The component choices were decided by Amish on 2026-09-25 ([CGD-DDR-001](docs/decisions/0001-trl2-review-decisions.md), [CGD-DDR-002](docs/decisions/0002-recommendations-accepted.md)). The priced bill of materials is in [bom/bom.csv](bom/bom.csv): $134 in parts, within the $140 budget with a $6 margin.
 
 ## Safety
 
@@ -102,6 +102,6 @@ Controlled documents follow the portfolio [documentation standard](.kit/STANDARD
 ## Licenses
 
 - **Hardware** (CAD, drawings, BOM, electronics): [CERN-OHL-S v2](LICENSE)
-- **Software** (firmware, scripts, notebooks): [MIT](LICENSE-SOFTWARE)
+- **Software** (firmware, scripts, notebooks): [MIT](LICENSE-SOFTWARE). Any code reused from the Apache-2.0 Libre Solar BMS firmware will keep its own license and notices in `firmware/third_party/` and be listed in `LICENSE-SOFTWARE`.
 
 A project of the [Design Molecule](https://designmolecule.com) lab. Shared components set.

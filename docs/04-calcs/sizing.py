@@ -307,8 +307,10 @@ sec = sum(float(r["qty"]) * float(r["unit_cost_usd"]) for r in bom if r["item"].
 out("BOM lines", len(bom), "", "{:.0f}")
 out("BOM total", tot, "USD")
 out("BOM total without the secondary protector", tot - sec, "USD")
-out("Against budget_usd 120", 100 * (tot / 120 - 1), "% over", "{:.1f}")
-out("Margin against recommended 140", 140 - tot, "USD")
+BUDGET = 140.0                                   # budget_usd in project.yaml (CGD-DDR-002; was 120)
+out("Share of budget_usd 140", 100 * tot / BUDGET, "%", "{:.1f}")
+out("Margin against budget_usd 140", BUDGET - tot, "USD")
+out("Against former budget of 120 (before CGD-DDR-002)", 100 * (tot / 120 - 1), "% over", "{:.1f}")
 
 with open(ROOT / "docs/04-calcs/results.csv", "w", newline="") as f:
     w = csv.writer(f)

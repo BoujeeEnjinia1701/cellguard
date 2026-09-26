@@ -1,18 +1,18 @@
 item,qty,spec,supplier,unit_cost_usd,make_buy,notes
 1 Aluminium base plate and heat spreader,1,"6061 aluminium, 220 x 110 x 4 mm, drilled and tapped, with 4 PCB standoffs",Local metal supplier or online cut-to-size service,10.00,make,Indicative price; material and standoffs
 2 Main PCB,1,"4-layer, 2 oz (70 um) copper, 150 x 95 mm, FR-4",PCB fabricator (5-board minimum order),10.00,buy,Indicative price per board
-3 Cell monitor and protection IC,1,"TI BQ76952, 3 to 16 cells, TQFP-48 (0.5 mm pitch), integrated high-side NFET driver, coulomb counter, I2C",Electronics distributor (TI or authorized distributor),6.50,buy,Indicative price; adopted for TRL 3 (CGD-DDR-001)
-4 Charge and discharge MOSFETs,8,"100 V N-channel, 2.5 mOhm or less at 25 C, top-side cooled TOLT or TOLL package",Electronics distributor,2.50,buy,Indicative price; 4 charge and 4 discharge
+3 Cell monitor and protection IC,1,"TI BQ76952, 3 to 16 cells, TQFP-48 (0.5 mm pitch), integrated high-side NFET driver, coulomb counter, I2C",Electronics distributor (TI or authorized distributor),6.50,buy,Indicative price; decided by Amish (CGD-DDR-001, CGD-DDR-002)
+4 Charge and discharge MOSFETs,8,"100 V N-channel, 2.5 mOhm or less at 25 C, top-side cooled TOLT package (CGD-DDR-002)",Electronics distributor,2.50,buy,Indicative price; 4 charge and 4 discharge
 5 Current shunt,1,"0.25 mOhm, 3 W, metal element, 1 % tolerance, 50 ppm/K or better",Electronics distributor,2.50,buy,Indicative price
-6 Microcontroller and CAN transceiver,1,"STM32G0B1 class (LQFP, 0.5 mm pitch) with FDCAN, plus 3.3 V CAN transceiver with low-power standby and bus wake",Electronics distributor,5.00,buy,Indicative price; adopted for TRL 3 (CGD-DDR-001)
-7 Precharge resistor and switch,1,"100 ohm 10 W aluminium-housed resistor and 100 V P-channel MOSFET in DPAK class (35 W pulse for 0.2 s within SOA)",Electronics distributor,3.00,buy,Indicative price
+6 Microcontroller and CAN transceiver,1,"STM32G0B1 class (LQFP, 0.5 mm pitch) with FDCAN, plus 3.3 V CAN transceiver with low-power standby and bus wake",Electronics distributor,5.00,buy,Indicative price; decided by Amish (CGD-DDR-001, CGD-DDR-002)
+7 Precharge resistor and switch,1,"100 ohm 10 W aluminium-housed resistor and 100 V P-channel MOSFET in DPAK class (35 W pulse for 0.2 s within SOA), decided (CGD-DDR-002)",Electronics distributor,3.00,buy,Indicative price
 8 Pack fuse and holder,1,"60 A, DC rated 80 V or more, breaking capacity 10 kA or more, bolted holder",Electrical distributor,12.00,buy,Indicative price
 9 Power terminals,4,"M6 brass studs with nuts, washers and ring lugs (B+, B-, P+, P-)",Hardware supplier,1.50,buy,Indicative price
 10 Balance connector and lead harness,1,"17-way latching connector, 16 sense leads with ring terminals and inline protection",Electronics distributor,8.00,buy,Indicative price
 11 Temperature sensors,1,"Three 10 kOhm NTC thermistors: two ring-lug probes, one SMD on the board",Electronics distributor,4.00,buy,Indicative price for the set
 12 CAN and UART connector,1,"6-way latching connector (CAN-H, CAN-L, TX, RX, enable, ground) with mating plug",Electronics distributor,3.00,buy,Indicative price
 13 Flame-retardant cover,1,"Polycarbonate, UL 94 V-0 grade, 2 mm wall, printed or cut and bent",Self (3D printing filament or sheet stock),5.00,make,Material cost only
-14 Secondary protector and SCP fuse,1,"TI BQ77216 class independent OV, UV, open-wire and temperature protector (TSSOP-24, 0.65 mm pitch), self-control protector fuse rated for 40 A and 60 V DC or more, heater drive MOSFET and passives",Electronics distributor,10.00,buy,Indicative price; added for R4 (CGD-DDR-001); SCP rating at 40 A and 60 V to be confirmed
+14 Secondary protector and SCP fuse,1,"TI BQ77216 class independent OV, UV, open-wire and temperature protector (TSSOP-24, 0.65 mm pitch), self-control protector fuse rated for 40 A and 60 V DC or more, heater drive MOSFET and passives",Electronics distributor,10.00,buy,Indicative price; added for R4, decided by Amish (CGD-DDR-001, CGD-DDR-002); SCP rating at 40 A and 60 V to be confirmed
 15 Supporting electronics,1,"60 V input buck regulator (leaded or SO PowerPAD package), 16 Mbit SPI flash, TVS diode, 16 balance resistors and switches, passives",Electronics distributor,16.00,buy,Indicative price; not shown in the model
 16 Power cables,2,"10 mm2 (8 AWG) silicone cable, 0.5 m, with lugs",Electrical distributor,4.00,buy,Indicative price; not shown in the model
 17 Thermal pad and fixings,1,"0.5 mm electrically insulating thermal pad (3 W/m.K), screws, conformal coating",Hardware supplier,5.00,buy,Indicative price; not shown in the model

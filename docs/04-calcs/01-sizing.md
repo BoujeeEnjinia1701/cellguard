@@ -3,7 +3,7 @@ doc_id: CGD-CAL-001
 title: CellGuard sizing calculations
 project: CellGuard
 doc_type: Calculation note
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -13,11 +13,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: First TRL 3 sizing note (voltage range, power path loss and thermal, protection thresholds, short circuit, single-fault analysis, balancing, current and state of charge, quiescent current, CAN and log, precharge, size and mass, cost)
+- version: "0.2"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Recommendations accepted by Amish (DDR-002)
 ---
 
 # CellGuard sizing calculations
 
-On paper, CellGuard meets 9 of its 16 requirements. **Four are not met:** the board loses about 4.4 W at 40 A against 4 W (R6), mainly because the added self-control protector fuse costs about 0.6 W; the state-of-charge error on a 20 Ah pack reaches about 10.1 points after 7 days without a full charge, against 10 (R8); the board weighs about 0.65 kg against 0.6 kg (R14); and the parts cost $134 against the $120 in `project.yaml` (R16), which would be met against the recommended $140. Three are **at risk**: cell voltage accuracy at 25 °C (R2), single-fault safety until a suitable protector fuse is confirmed (R4) and the balance resistor hotspot (R7). Two TRL 2 figures were optimistic and are corrected here: sleep current is about 55 µA, not 100 µA, and the prospective short-circuit current is about 0.7 to 4.7 kA, not 1 to 8 kA, once cables and the board are counted.
+On paper, CellGuard meets 10 of its 16 requirements. **Three are not met:** the board loses about 4.4 W at 40 A against 4 W (R6), mainly because the added self-control protector fuse costs about 0.6 W; the state-of-charge error on a 20 Ah pack reaches about 10.1 points after 7 days without a full charge, against 10 (R8); and the board weighs about 0.65 kg against 0.6 kg (R14). The parts cost of $134 now meets R16 against the $140 budget that Amish set on 2026-09-25 (CGD-DDR-002); it was $14 over the former $120. Three are **at risk**: cell voltage accuracy at 25 °C (R2), single-fault safety until a suitable protector fuse is confirmed (R4) and the balance resistor hotspot (R7). Two TRL 2 figures were optimistic and are corrected here: sleep current is about 55 µA, not 100 µA, and the prospective short-circuit current is about 0.7 to 4.7 kA, not 1 to 8 kA, once cables and the board are counted.
 
 Every number in this note is printed by `docs/04-calcs/sizing.py` (run from the repo root: `python docs/04-calcs/sizing.py`), which also writes `docs/04-calcs/results.csv`. The script reads part volumes and the envelope from `cad/src/model.py` and costs from `bom/bom.csv`. All values are first-principles estimates; nothing is measured.
 
@@ -52,13 +56,13 @@ A 4S to 16S LFP pack spans 12.8 to 51.2 V nominal and reaches 58.4 V at full cha
 
 **Loss (R6).** The MOSFETs lose 2.00 W at 40 A with cold junctions and 2.38 W at the converged junction temperature. The shunt adds 0.40 W, the PCB copper and stud joints (0.569 mΩ at 20 °C, 0.635 mΩ at 50 °C) 1.02 W, and the SCP fuse 0.64 W. The board loss is **4.44 W, and R6 is not met**. Without the SCP fuse it would be 3.80 W. The external main fuse adds 1.60 W, so the whole power path loses 6.04 W, 99.71 % efficient for a 16S pack at 40 A. The TRL 2 figure of about 3.2 W left out the secondary protector and the temperature rise of the MOSFETs.
 
-**Thermal (R5).** The base plate (0.0484 m² over both faces) rises 12.9 K at 40 A. The hottest MOSFET dissipates 0.361 W, so its junction reaches **53.7 °C** at 40 °C ambient with a top-cooled TOLT package and 61.4 °C with a TOLL package cooled through its mold. The plate holds 234 J/K and has a time constant of 10.1 min, so a 10 s peak at 80 A adds only 0.87 K to it. The hottest MOSFET then dissipates 1.64 W; bounding its junction by the steady-state value gives 58.1 °C (TOLT) or 97.7 °C (TOLL). Both are under the 110 °C limit, so **R5 is met**. The TOLL margin is thin, so the BOM now calls for a top-side cooled package where available.
+**Thermal (R5).** The base plate (0.0484 m² over both faces) rises 12.9 K at 40 A. The hottest MOSFET dissipates 0.361 W, so its junction reaches **53.7 °C** at 40 °C ambient with a top-cooled TOLT package and 61.4 °C with a TOLL package cooled through its mold. The plate holds 234 J/K and has a time constant of 10.1 min, so a 10 s peak at 80 A adds only 0.87 K to it. The hottest MOSFET then dissipates 1.64 W; bounding its junction by the steady-state value gives 58.1 °C (TOLT) or 97.7 °C (TOLL). Both are under the 110 °C limit, so **R5 is met**. The TOLL margin is thin, so the BOM specifies a top-side cooled TOLT package (decided, CGD-DDR-002).
 
 ## 4. Protection thresholds, short circuit and single faults (R3, R4)
 
 **Thresholds (R3).** On the 0.25 mΩ shunt the front end's steps give the settings in Table 2, all inside its ranges. The 40 A continuous and 80 A for 10 s envelope is longer than the front end's longest hardware delay (425 ms), so the microcontroller enforces it with a current and time limit; the hardware trips in Table 2 back it up without the microcontroller.
 
-*Table 2. Proposed protection settings (engineering proposal, awaiting Amish).*
+*Table 2. Protection settings (decided by Amish, 2026-09-25: go with recommendation; CGD-DDR-002).*
 
 | Protection | Setting | Current | Delay |
 | --- | --- | --- | --- |
@@ -94,7 +98,7 @@ The 33 Ω bleed resistors draw 103 mA at 3.40 V and dissipate 0.350 W each; eigh
 
 ## 6. Current measurement and state of charge (R8, R9)
 
-**Current (R9).** One coulomb counter step is 7.60 µV, 30.4 mA on the shunt; the typical calibrated offset of 1 µV is 4.0 mA. The front end's gain spread is ±0.57 %, which with the 1 % shunt gives 1.57 % uncalibrated, outside R9. A one-point gain calibration at build leaves about 0.5 %, so the error at 80 A is 0.404 A against a 0.850 A limit. **R9 is met on paper with calibration**, which is proposed as a build step.
+**Current (R9).** One coulomb counter step is 7.60 µV, 30.4 mA on the shunt; the typical calibrated offset of 1 µV is 4.0 mA. The front end's gain spread is ±0.57 %, which with the 1 % shunt gives 1.57 % uncalibrated, outside R9. A one-point gain calibration at build leaves about 0.5 %, so the error at 80 A is 0.404 A against a 0.850 A limit. **R9 is met on paper with calibration**, which is now a decided build step (CGD-DDR-002); the build itself is TRL 4 work, on hold.
 
 **State of charge (R8).** After a full charge the error is 5.0 points (2 for anchor detection, 2 for the learned capacity, 1 for gain over one cycle), which just meets the ±5 point target. After 7 days of partial cycling the error on the 20 Ah reference pack grows to **10.1 points with a calibrated offset and 32.3 points without**, so **R8 is not met on small packs**. It is met on 100 Ah (7.4 points) and 280 Ah (7.0 points) packs. Meeting 10 points on 20 Ah needs a total offset of 3.9 mA or less, about 1 µV across the shunt. A 0.5 mΩ shunt would halve the offset in amperes but add 0.4 W to R6.
 
@@ -116,7 +120,7 @@ The model envelope is 220 x 110 x 32 mm, inside 230 x 120 x 40 mm. The mass, fro
 
 ## 11. Cost (R16)
 
-The BOM has 17 lines, all priced, and totals **$134.00**: $124.00 as at TRL 2 plus $10.00 for the secondary protector. That is 11.7 % over the $120 in `project.yaml`, so **R16 is not met**. Against the recommended budget of $140 (awaiting Amish) the margin is $6.00.
+The BOM has 17 lines, all priced, and totals **$134.00**: $124.00 as at TRL 2 plus $10.00 for the secondary protector. Against `budget_usd: 140` in `project.yaml`, set by Amish on 2026-09-25 (CGD-DDR-002), that is 95.7 % of the budget with a margin of $6.00, so **R16 is met**. Against the former $120 it was 11.7 % over.
 
 ## 12. Results
 
@@ -127,10 +131,10 @@ The BOM has 17 lines, all priced, and totals **$134.00**: $124.00 as at TRL 2 pl
 | R6 | 4.44 W board loss at 40 A (3.80 W without the SCP fuse) | 4 W or less | **Not met** |
 | R8 | 5.0 points after a full charge; 10.1 points after 7 days on 20 Ah (32.3 uncalibrated); 7.4 on 100 Ah | ±5 and ±10 points | **Not met** (20 Ah); met on 100 Ah and larger |
 | R14 | 220 x 110 x 32 mm; 0.646 kg | 230 x 120 x 40 mm; 0.6 kg | **Not met** (mass) |
-| R16 | $134.00 | $120 (recommended $140, awaiting Amish) | **Not met** against $120; met against $140 |
 | R2 | ±15 mV from −40 to 85 °C; under 10 mV typical at 25 °C | ±10 mV at 25 °C, ±15 mV from −20 to 60 °C | At risk (no guaranteed 25 °C figure) |
 | R4 | All single faults in Table 3 end safe with the BQ77216 and SCP fuse | No single fault allows overcharge or over-discharge | At risk (SCP fuse rating unconfirmed) |
 | R7 | 103 mA; 9.7 h for 1 % on 100 Ah; PCB 56.4 °C, resistor hotspot 73.9 °C | 100 mA; 24 h; 70 °C | At risk (hotspot) |
+| R16 | $134.00; 95.7 % of budget | $140 (raised from $120, CGD-DDR-002) | Met ($6.00 margin) |
 | R1 | 12.8 to 58.4 V; 1.71 times MOSFET margin | 4 to 16 LFP cells, under 60 V | Met |
 | R3 | Table 2 settings inside front-end ranges; SCD trip within 25 µs | Trip within 500 µs; all thresholds configurable | Met on paper |
 | R5 | Junction 53.7 °C (TOLT) or 61.4 °C (TOLL) at 40 A; 97.7 °C bound at 80 A for 10 s (TOLL) | 110 °C or less | Met on paper |
@@ -141,7 +145,7 @@ The BOM has 17 lines, all priced, and totals **$134.00**: $124.00 as at TRL 2 pl
 | R13 | 0.46 s to 90 %; 3.38 J | 1 s for 2 mF | Met |
 | R15 | TQFP-48 at 0.5 mm, TSSOP-24 at 0.65 mm, leaded MOSFET and regulator packages | No BGA; nothing finer than 0.5 mm | Met by design review |
 
-**Options for the items not met** (for Amish; no choice made): R6, choose 1.5 mΩ-class MOSFETs (saves about 0.95 W, bringing the board to about 3.5 W) or mount the SCP fuse beside the main fuse and count it with the external fuse; R8, restate the target for packs of 50 Ah and larger, add a periodic full-charge prompt, or fit a 0.5 mΩ shunt; R14, a 3 mm plate (0.581 kg) or relax the target to 0.65 kg; R16, the recommended $140 budget.
+**Options for the items not met** (no option was recommended, so these stay proposed, awaiting Amish): R6, choose 1.5 mΩ-class MOSFETs (saves about 0.95 W, bringing the board to about 3.5 W) or mount the SCP fuse beside the main fuse and count it with the external fuse; R8, restate the target for packs of 50 Ah and larger, add a periodic full-charge prompt, or fit a 0.5 mΩ shunt; R14, a 3 mm plate (0.581 kg) or relax the target to 0.65 kg. R16 was closed by the $140 budget (CGD-DDR-002).
 
 ## 13. Limits of this note
 

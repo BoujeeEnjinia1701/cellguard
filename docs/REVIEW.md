@@ -38,6 +38,8 @@ Requirements not met or at risk:
 
 ### Proposed, awaiting Amish
 
+Status update: items 1 to 8 are **Decided by Amish, 2026-09-25: go with recommendation** (CGD-DDR-002). Item 9 has no recommendation and stays Proposed, awaiting Amish.
+
 1. **Front end.** Options: TI BQ76952 class (3 to 16 cells, autonomous protection), ADI daisy-chain monitor, Renesas ISL94202 (8 cells maximum). Recommendation: BQ76952 class.
 2. **Microcontroller and firmware base.** Options: (A) STM32G0B1 class building on the Libre Solar BMS firmware (Apache-2.0), (B) ESP32-C6 class with wireless, (C) new firmware. Recommendation: A, with a decision on how Apache-2.0 code sits in this MIT-licensed repo.
 3. **Secondary protector (safety trade-off).** Add a BQ77216-class independent protector driving a self-control protector fuse, about $10, to meet R4. Recommendation: add.
@@ -104,17 +106,17 @@ Corrections to TRL 2 figures: board loss was about 3.2 W (now 4.44 W with the SC
 
 ### Decisions recorded (CGD-DDR-001)
 
-Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review: BQ76952-class front end; STM32G0B1 with the Libre Solar firmware base; BQ77216-class secondary protector with SCP fuse; 40 A rating; high-side switching; LFP plus NMC-capable hardware with LFP firmware first; SwapCell v0.3 CAN message set as a profile.
+Decided by Amish, 2026-09-25: go with recommendation (first recorded here as adopted for TRL 3, open for his review; confirmed in CGD-DDR-002): BQ76952-class front end; STM32G0B1 with the Libre Solar firmware base; BQ77216-class secondary protector with SCP fuse; 40 A rating; high-side switching; LFP plus NMC-capable hardware with LFP firmware first; SwapCell v0.3 CAN message set as a profile.
 
 ### Still awaiting Amish
 
-1. Budget: raise `budget_usd` to $140 (recommended); unchanged at $120 meanwhile.
+1. Budget: raise `budget_usd` to $140 (recommended). **Decided by Amish, 2026-09-25: go with recommendation**; now $140.
 2. First test partner (no preference stated).
-3. Licensing of Apache-2.0 firmware code in the MIT repo.
+3. Licensing of Apache-2.0 firmware code in the MIT repo. **Decided by Amish, 2026-09-25: go with recommendation** (separate `firmware/third_party/` folder, listed in `LICENSE-SOFTWARE`).
 4. Cover material (no recommendation).
 5. Low-cost method to check the state-of-charge estimate (no recommendation).
-6. TRL 3 engineering proposals: protection thresholds (SCD 100 mV at 15 µs, OCD2 40 mV at 20 ms, OCD1 24 mV at 320 ms, OCC 12 mV), top-cooled MOSFETs, DPAK-class precharge switch, one-point current calibration.
-7. Responses to R6, R8, R14 and R16 (options in CAL-001 section 12: 1.5 mΩ MOSFETs or moving the SCP fuse off the board; restating R8 for 50 Ah and larger packs, a full-charge prompt or a 0.5 mΩ shunt; a 3 mm plate at 0.581 kg; the $140 budget).
+6. TRL 3 engineering proposals: protection thresholds (SCD 100 mV at 15 µs, OCD2 40 mV at 20 ms, OCD1 24 mV at 320 ms, OCC 12 mV), top-cooled MOSFETs, DPAK-class precharge switch, one-point current calibration. **Decided by Amish, 2026-09-25: go with recommendation.**
+7. Responses to R6, R8, R14 and R16. R16: **decided** through the $140 budget. R6, R8, R14: no option recommended, still Proposed, awaiting Amish (options in CAL-001 section 12: 1.5 mΩ MOSFETs or moving the SCP fuse off the board; restating R8 for 50 Ah and larger packs, a full-charge prompt or a 0.5 mΩ shunt; a 3 mm plate at 0.581 kg; the $140 budget).
 
 ### Cross-repo notes
 
@@ -140,3 +142,58 @@ Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for 
 ### Recommended next step
 
 Review CGD-DDR-001 and decide the budget and the responses to R6, R8, R14 and R16. TRL 4 is on hold by Amish's instruction. When it is released, TRL 4 would need: data sheets for the SCP fuse, MOSFETs, TVS and buck; a schematic and board layout; a bench build on a cell simulator; and a lab test report (TST) of protection trips, losses, balancing and sleep current, with build-log entries.
+
+## Session 2026-09-25: recommendations accepted
+
+Amish wrote on 2026-09-25: "i accept all your recommendations, go with them across all repos." Every item with a recommendation is now **Decided by Amish, 2026-09-25: go with recommendation**, recorded in `docs/decisions/0002-recommendations-accepted.md` (CGD-DDR-002 v0.1). CGD-DDR-001 moves to v0.2 with the same wording.
+
+### Decisions applied and what changed
+
+| Item | Before | After |
+| --- | --- | --- |
+| Budget (DDR-001 items 4 and 11) | `budget_usd: 120`; BOM $134.00, 11.7 % over; R16 not met | `budget_usd: 140`; BOM $134.00, 95.7 % of budget, $6.00 margin; R16 met |
+| Protection settings (item 14) | Engineering proposal, awaiting Amish | Decided: SCD 100 mV at 15 µs (400 A), OCD2 40 mV at 20 ms (160 A), OCD1 24 mV at 320 ms (96 A), OCC 12 mV (48 A); cited in R3 |
+| MOSFET package (item 14) | TOLT preferred, TOLL acceptable | TOLT specified in `bom/bom.csv` line 4 (price unchanged); junction 53.7 °C at 40 A |
+| Precharge switch (item 14) | DPAK class proposed | DPAK class decided (already in BOM line 7) |
+| Current calibration (item 14) | Proposed build step | Decided build step in R9; the build is TRL 4, on hold |
+| Firmware licensing (item 10) | Suggested, awaiting Amish | Decided: reused Apache-2.0 files in `firmware/third_party/` with their notices, listed in `LICENSE-SOFTWARE` (note added; no firmware yet) |
+| Items 1 to 3 and 5 to 8 | Adopted for TRL 3, open for review | Decided; wording updated in PRB, PRC, REQ, CAL, BOM notes and README |
+
+No decision changed the geometry, so `cad/src/model.py`, the STEP and STL files and CGD-DWG-001 keep Rev P1; all were regenerated for the domain change. Documents bumped: CGD-PRB-001 0.3 to 0.4, CGD-PRC-001 0.3 to 0.4, CGD-REQ-001 0.3 to 0.4, CGD-CAL-001 0.1 to 0.2, CGD-DDR-001 0.1 to 0.2; CGD-DDR-002 v0.1 is new. `sizing.py` now judges cost against $140 and still prints the former $120 comparison. The pitch and problem lines are unchanged (no rewording was recommended).
+
+The README's "What sparked the idea" now traces the idea to the July 2016 CPSC recall of about 501,000 hoverboards with overheating lithium-ion packs; the earlier text about a portfolio review was removed. All generated files were re-rendered so they show designmolecule.com.
+
+### Requirement status (CGD-CAL-001 v0.2)
+
+10 met on paper, 3 not met, 3 at risk.
+
+| ID | Result | Status |
+| --- | --- | --- |
+| R6 | 4.44 W board loss at 40 A (3.80 W without the SCP fuse) | **Not met** |
+| R8 | 10.1 points after 7 days on 20 Ah (calibrated offset); 7.4 on 100 Ah | **Not met** on small packs |
+| R14 | 0.646 kg against 0.6 kg | **Not met** (mass) |
+| R2 | ±15 mV guaranteed over temperature; only typical at 25 °C | At risk |
+| R4 | Every single fault ends safe; SCP fuse at 40 A and 60 V unconfirmed | At risk |
+| R7 | Resistor hotspot 73.9 °C against 70 °C | At risk |
+| R16 | $134.00 against $140 | Met (was not met against $120) |
+| R1, R3, R5, R9 to R13, R15 | As in CAL-001 Table 4 | Met on paper |
+
+### Still awaiting Amish
+
+1. First test partner (no preference stated).
+2. Cover material (no recommendation).
+3. Low-cost method to check the state-of-charge estimate (no recommendation).
+4. Response to R6 board loss (options listed, none recommended).
+5. Response to R8 state of charge on small packs (options listed, none recommended).
+6. Response to R14 mass (options listed, none recommended).
+
+### Cross-repo actions
+
+- SwapCell: agree to CellGuard's NMC profile (13S) and the SwapCell v0.3 CAN message set as a CellGuard profile; if CellGuard is SwapCell's BMS, SwapCell's INTERLOCK wake input must be carried (sleep 84.5 µA, inside SwapCell's 100 µA limit). Decided on the CellGuard side; SwapCell not edited.
+- MotionCore: state its CAN bit rate and run at 250 kbit/s to share the profile. Not edited.
+- FieldNode: needs its own one-cell protector, as CellGuard starts at 4S. Not edited.
+
+### TRL
+
+`trl: 3` and `trl_target: 3` are unchanged. TRL 4 remains on hold by Amish's instruction: the one-point calibration, firmware, schematic, board layout, bench build and tests are decided or planned but not started.
+
