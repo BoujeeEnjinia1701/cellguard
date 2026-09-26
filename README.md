@@ -104,4 +104,4 @@ Controlled documents follow the portfolio [documentation standard](.kit/STANDARD
 - **Hardware** (CAD, drawings, BOM, electronics): [CERN-OHL-S v2](LICENSE)
 - **Software** (firmware, scripts, notebooks): [MIT](LICENSE-SOFTWARE). Any code reused from the Apache-2.0 Libre Solar BMS firmware will keep its own license and notices in `firmware/third_party/` and be listed in `LICENSE-SOFTWARE`.
 
-A project of the [Design Molecule](https://designmolecule.com) lab. Shared components set.
+A project of the [Design Molecule](https://designmolecule.com) lab.
