@@ -1,18 +1,18 @@
 # CellGuard
 
-![TRL 2](https://img.shields.io/badge/TRL-2%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
+![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
 
-**Area:** Shared Components · **TRL:** 2 of 9 (concept formulated) · **Prototype budget:** about $120 USD · **Difficulty:** 4 of 5
+**Area:** Shared Components · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** about $120 USD · **Difficulty:** 4 of 5
 
 An open battery management board for small LiFePO4 packs (4 to 16 cells) with cell balancing, protection and a documented state-of-charge estimate, reusable across the lab's vehicles, storage and field kits.
 
 ![CellGuard concept](media/hero.png)
 
-[Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [Review note](docs/REVIEW.md)
+[Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement CGD-DWG-001 (PDF)](cad/drawings/CGD-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
-A single, openly documented BMS removes the riskiest unknown from every battery project in the lab and gives SwapCell, PowerBox, SunSpoke and MotionCore a common safety layer. The concept puts protection in one proven cell-monitor chip that trips the pack's switches on its own, and keeps the microcontroller for the parts that users need to read and check: the state-of-charge estimate, the event log and the CAN interface. Switches, sensing, precharge and the pack fuse sit on one aluminium plate, so the whole protection path can be built and tested as one part.
+A single, openly documented BMS removes the riskiest unknown from every battery project in the lab and gives SwapCell, PowerBox, SunSpoke and MotionCore a common safety layer. The concept puts protection in one proven cell-monitor chip that trips the pack's switches on its own, backs it with an independent secondary protector, and keeps the microcontroller for the parts that users need to read and check: the state-of-charge estimate, the event log and the CAN interface. Switches, sensing, precharge and the pack fuse sit on one aluminium plate, so the whole protection path can be built and tested as one part.
 
 It is open and garage-buildable because the value of a BMS lies in knowing exactly what it does. Every threshold sits in a plain configuration file, the firmware and state-of-charge method are published, and the parts can be soldered with a hot plate or hot-air station. A repairer can read a fault log instead of scrapping a pack, and a builder can test the board on a bench before trusting it with cells.
 
@@ -60,25 +60,26 @@ Full problem statement: [docs/01-problem.md](docs/01-problem.md)
 
 An open battery management board for small LiFePO4 packs (4 to 16 cells) with cell balancing, protection and a documented state-of-charge estimate, reusable across the lab's vehicles, storage and field kits.
 
-A single cell-monitor and protection chip measures every cell and opens the charge or discharge MOSFETs on its own when a limit is crossed. A microcontroller adds a state-of-charge estimate anchored at full and empty, a state-of-health event log and an open CAN and UART interface. Estimates at TRL 2: 40 A continuous, about 3.2 W power path loss at 40 A, 100 mA passive balancing, about 100 µA sleep current, about 220 x 110 x 32 mm and 0.5 kg.
+A single cell-monitor and protection chip measures every cell and opens the charge or discharge MOSFETs on its own when a limit is crossed; an independent secondary protector blows a protector fuse if that layer fails. A microcontroller adds a state-of-charge estimate anchored at full and empty, a state-of-health event log and an open CAN and UART interface carrying the SwapCell message set. Calculated at TRL 3 (CGD-CAL-001): 40 A continuous with MOSFET junctions near 54 °C at 40 °C ambient, 4.4 W board loss at 40 A (against a 4 W target), 100 mA passive balancing, about 55 µA sleep current, 220 x 110 x 32 mm and about 0.65 kg. Four requirements are not met on paper: board loss, state of charge on small packs, mass and cost.
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md) · Requirements: [docs/03-requirements.md](docs/03-requirements.md)
 
 ## Key components
 
-- Cell monitor and protection IC for 3 to 16 cells, with passive balancing (TI BQ76952 class, proposed)
+- Cell monitor and protection IC for 3 to 16 cells, with passive balancing (TI BQ76952 class)
+- Independent secondary protector (TI BQ77216 class) with a self-control protector fuse
 - Charge and discharge MOSFET switches: 8 x 100 V, high side, on an aluminium heat spreader
 - 0.25 mΩ current shunt
 - Temperature sensors, 3 points
-- Microcontroller with CAN and UART (STM32G0B1 class, proposed)
+- Microcontroller with CAN and UART (STM32G0B1 class)
 - Fuse and precharge circuit
 - Enclosure and harness
 
-The working bill of materials is in [bom/bom.csv](bom/bom.csv): about $124 in parts, about 3 % over the $120 budget (a budget change is proposed, awaiting Amish).
+The component choices are adopted for TRL 3 under Amish's 2026-09-25 instruction, open for his review ([CGD-DDR-001](docs/decisions/0001-trl2-review-decisions.md)). The priced bill of materials is in [bom/bom.csv](bom/bom.csv): $134 in parts, 11.7 % over the $120 budget; raising the budget to $140 is proposed, awaiting Amish.
 
 ## Safety
 
-> Lithium cells can overheat, vent and burn, and a large pack can deliver thousands of amperes into a short circuit. Use LFP cells, fit a DC-rated pack fuse sized for the pack, charge only within the cell maker's limits and never leave a first build charging unattended. Test every new board and every threshold change on a cell simulator or current-limited bench supply before connecting cells. CellGuard is a research and prototype design; it is not certified.
+> Lithium cells can overheat, vent and burn, and a large pack can deliver thousands of amperes into a short circuit. Use LFP cells, fit a DC-rated pack fuse sized for the pack, charge only within the cell maker's limits and never leave a first build charging unattended. A 16S pack of large cells can drive about 4.7 kA into a short (CGD-CAL-001), so the pack fuse needs a 10 kA DC breaking capacity. Test every new board and every threshold change on a cell simulator or current-limited bench supply before connecting cells. CellGuard is a research and prototype design; it is not certified.
 
 ## Repository layout
 

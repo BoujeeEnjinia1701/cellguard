@@ -1,0 +1,132 @@
+quantity,value,unit
+"LFP pack voltage, 4S nominal",12.80,V
+"LFP pack voltage, 16S nominal",51.20,V
+"LFP pack voltage, 16S maximum",58.40,V
+MOSFET voltage margin at 16S maximum,1.71,x
+NMC maximum series count under 60 V,14,cells
+NMC 13S maximum (SwapCell),54.60,V
+PCB copper and stud joints at 20 degC,0.569,mOhm
+PCB copper and stud joints at 50 degC,0.635,mOhm
+"MOSFET loss at 40 A, 25 degC junction",2.00,W
+"MOSFET loss at 40 A, converged junction (TOLT)",2.38,W
+Shunt loss at 40 A,0.40,W
+PCB copper and stud loss at 40 A,1.02,W
+SCP fuse loss at 40 A (assumed 0.40 mOhm),0.64,W
+Board loss at 40 A with SCP (R6),4.44,W
+Board loss at 40 A without SCP,3.80,W
+"Board loss at 40 A, 25 degC FETs, with SCP",4.06,W
+"Fuse, holder and links loss at 40 A (external)",1.60,W
+Total power path loss at 40 A,6.04,W
+"Power path efficiency, 16S at 40 A",99.71,%
+"Plate area, both faces",0.0484,m2
+Plate temperature rise at 40 A,12.9,K
+Hottest FET loss at 40 A,0.361,W
+Saving with 1.5 mOhm MOSFETs at 40 A,0.95,W
+"FET junction at 40 A, 40 degC, top-cooled TOLT",53.7,degC
+"FET junction at 40 A, 40 degC, TOLL through the mold",61.4,degC
+Plate heat capacity,234,J/K
+Plate time constant,10.1,min
+"Extra plate rise, 80 A for 10 s",0.87,K
+Hottest FET loss at 80 A,1.64,W
+"FET junction after 80 A for 10 s, TOLT (steady bound)",58.1,degC
+"FET junction after 80 A for 10 s, TOLL (steady bound)",97.7,degC
+SCD threshold (100 mV),400,A
+SCD delay set (15 to 450 us available),15,us
+"OCD1 threshold (24 mV), 320 ms",96,A
+"OCD2 threshold (40 mV), 20 ms",160,A
+OCC threshold (12 mV),48,A
+Smallest SCD step (10 mV),40,A
+SCD trip complete (delay plus turn-off),25,us
+Board and fuse resistance in the short-circuit loop,3.47,mOhm
+"Power cable resistance, 2 x 0.5 m of 10 mm2",1.72,mOhm
+"16S 20 Ah: current at FET turn-off, SCD delay 15 us",676,A
+"16S 20 Ah: inductive energy at turn-off, delay 15 us",0.23,J
+"16S 20 Ah: current per discharge MOSFET at turn-off, 15 us",169,A
+"16S 20 Ah: current at FET turn-off, SCD delay 60 us",868,A
+"16S 20 Ah: inductive energy at turn-off, delay 60 us",0.38,J
+16S 20 Ah: prospective short-circuit current,883,A
+"16S 280 Ah: current at FET turn-off, SCD delay 15 us",1122,A
+"16S 280 Ah: inductive energy at turn-off, delay 15 us",0.63,J
+"16S 280 Ah: current per discharge MOSFET at turn-off, 15 us",280,A
+"16S 280 Ah: current at FET turn-off, SCD delay 60 us",2516,A
+"16S 280 Ah: inductive energy at turn-off, delay 60 us",3.16,J
+16S 280 Ah: prospective short-circuit current,4746,A
+"4S 280 Ah: current at FET turn-off, SCD delay 15 us",295,A
+"4S 280 Ah: inductive energy at turn-off, delay 15 us",0.04,J
+"4S 280 Ah: current per discharge MOSFET at turn-off, 15 us",74,A
+"4S 280 Ah: current at FET turn-off, SCD delay 60 us",718,A
+"4S 280 Ah: inductive energy at turn-off, delay 60 us",0.26,J
+4S 280 Ah: prospective short-circuit current,1943,A
+"4S 20 Ah: current at FET turn-off, SCD delay 15 us",257,A
+"4S 20 Ah: inductive energy at turn-off, delay 15 us",0.03,J
+"4S 20 Ah: current per discharge MOSFET at turn-off, 15 us",64,A
+"4S 20 Ah: current at FET turn-off, SCD delay 60 us",504,A
+"4S 20 Ah: inductive energy at turn-off, delay 60 us",0.13,J
+4S 20 Ah: prospective short-circuit current,696,A
+Balance current per cell,103,mA
+Balance power per channel,0.350,W
+"Balance power, 8 channels at once",2.80,W
+Time to correct 1 % on 20 Ah,1.9,h
+Time to correct 1 % on 100 Ah,9.7,h
+Time to correct 1 % on 280 Ah,27.2,h
+PCB bulk rise while balancing (no plate conduction),16.4,K
+PCB bulk temperature at 40 degC ambient,56.4,degC
+Balance resistor hotspot at 40 degC ambient,73.9,degC
+Coulomb counter 1 LSB referred to the shunt,7.60,uV
+"Offset current, uncalibrated (1 LSB)",30.4,mA
+"Offset current, calibrated (1 uV)",4.0,mA
+Front-end gain spread (half range),0.57,%
+Gain error uncalibrated (shunt 1 % + front end),1.57,%
+Gain error after one-point calibration,0.50,%
+Current error at 80 A after calibration,0.404,A
+R9 limit at 80 A,0.850,A
+SoC error after a full charge (anchor + capacity + 1 cycle gain),5.0,points
+"SoC error after 7 days, 20 Ah, calibrated offset",10.1,points
+"SoC error after 7 days, 20 Ah, uncalibrated offset",32.3,points
+"SoC error after 7 days, 100 Ah, calibrated offset",7.4,points
+"SoC error after 7 days, 100 Ah, uncalibrated offset",11.9,points
+"SoC error after 7 days, 280 Ah, calibrated offset",7.0,points
+"SoC error after 7 days, 280 Ah, uncalibrated offset",8.6,points
+Offset allowed for 10 points on 20 Ah,3.9,mA
+"Sleep: Front end SLEEP, DSG on (TI typical)",41.0,uA
+Sleep: 3.3 V rail loads through the buck,1.5,uA
+Sleep: Buck regulator quiescent (assumed),10.0,uA
+Sleep: Secondary protector (TI typical),1.0,uA
+Sleep: TVS leakage (assumed),1.0,uA
+Sleep current total,54.5,uA
+Sleep current with SwapCell INTERLOCK loop (+30 uA),84.5,uA
+Ship-mode current total,6.0,uA
+"Self-discharge from sleep, 20 Ah pack",0.20,% per month
+CAN frames per second (pack and host),34.1,1/s
+CAN bus load at 250 kbit/s,1.84,%
+Log capacity in 2 MiB flash,65536,records
+"Flash needed for 2,000 records",64000,bytes
+Precharge time constant,0.20,s
+Time to 90 %,0.46,s
+Energy in resistor to 90 %,3.38,J
+Peak current,0.584,A
+Peak resistor and switch power,34.1,W
+Energy into a shorted load in the 1 s timeout,34.1,J
+Envelope length,220,mm
+Envelope width,110,mm
+Envelope height,32,mm
+Mass: 1 Base plate,262,g
+Mass: 2 PCB with copper (60 % fill),64,g
+Mass: 4 MOSFETs,9,g
+Mass: 7 Precharge,8,g
+Mass: 8 Fuse and holder,89,g
+Mass: 9 Studs,41,g
+"Mass: 9 Nuts, washers, lugs (assumed)",32,g
+Mass: 10 Balance connector and harness (assumed),45,g
+Mass: 11 Temperature sensors (assumed),10,g
+Mass: 12 CAN and UART connector,3,g
+Mass: 13 Cover,57,g
+"Mass: 3, 5, 6, 14, 15 Other components (assumed)",15,g
+Mass: 17 Thermal pad and screws (assumed),13,g
+Mass total without power cables,0.646,kg
+Mass total with a 3 mm plate,0.581,kg
+BOM lines,17,
+BOM total,134.00,USD
+BOM total without the secondary protector,124.00,USD
+Against budget_usd 120,11.7,% over
+Margin against recommended 140,6.00,USD

@@ -1,0 +1,152 @@
+---
+doc_id: CGD-CAL-001
+title: CellGuard sizing calculations
+project: CellGuard
+doc_type: Calculation note
+version: "0.1"
+status: Draft
+date: '2026-09-25'
+author: Amish Chadha
+license: CERN-OHL-S-2.0
+revisions:
+- version: "0.1"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: First TRL 3 sizing note (voltage range, power path loss and thermal, protection thresholds, short circuit, single-fault analysis, balancing, current and state of charge, quiescent current, CAN and log, precharge, size and mass, cost)
+---
+
+# CellGuard sizing calculations
+
+On paper, CellGuard meets 9 of its 16 requirements. **Four are not met:** the board loses about 4.4 W at 40 A against 4 W (R6), mainly because the added self-control protector fuse costs about 0.6 W; the state-of-charge error on a 20 Ah pack reaches about 10.1 points after 7 days without a full charge, against 10 (R8); the board weighs about 0.65 kg against 0.6 kg (R14); and the parts cost $134 against the $120 in `project.yaml` (R16), which would be met against the recommended $140. Three are **at risk**: cell voltage accuracy at 25 °C (R2), single-fault safety until a suitable protector fuse is confirmed (R4) and the balance resistor hotspot (R7). Two TRL 2 figures were optimistic and are corrected here: sleep current is about 55 µA, not 100 µA, and the prospective short-circuit current is about 0.7 to 4.7 kA, not 1 to 8 kA, once cables and the board are counted.
+
+Every number in this note is printed by `docs/04-calcs/sizing.py` (run from the repo root: `python docs/04-calcs/sizing.py`), which also writes `docs/04-calcs/results.csv`. The script reads part volumes and the envelope from `cad/src/model.py` and costs from `bom/bom.csv`. All values are first-principles estimates; nothing is measured.
+
+## 1. Assumptions
+
+*Table 1. Inputs. Data sheet values were checked on TI's BQ76952 and BQ77216 product pages and the BQ76952 data sheet on 2026-09-25; all other values are assumptions.*
+
+| Input | Value | Basis |
+| --- | --- | --- |
+| Cell limits (LFP) | 3.65 V maximum, 3.20 V nominal, 2.50 V minimum | Typical LFP data; each build uses its own cell data sheet |
+| Reference packs | 16S 20 Ah (3 mΩ cells, 0.3 mΩ links) and 4S or 16S 280 Ah (0.25 mΩ cells, 0.1 mΩ busbars) | CGD-REQ-001 assumptions |
+| Load | 40 A continuous, 80 A for 10 s, 40 °C ambient | R5 |
+| MOSFETs | 2.5 mΩ maximum at 25 °C, +0.67 % per K, 4 in parallel per direction, hottest carries 10 % more than its share | BOM line 4 |
+| Shunt | 0.25 mΩ, 1 %, 50 ppm/K | BOM line 5 |
+| SCP fuse | 0.40 mΩ | Assumed; no data sheet chosen yet |
+| Main fuse, holder and links | 1.0 mΩ | Assumed |
+| PCB power copper | 4 layers of 70 µm copper in parallel; positive path 60 mm by 25 mm, negative path 90 mm by 25 mm; 0.05 mΩ per stud joint; 50 °C copper | From the model layout |
+| Heat transfer | Plate 8 W/(m²·K) on both faces; PCB under the cover 6 W/(m²·K); half of the PCB copper, shunt and SCP loss reaches the plate | Natural convection plus radiation, still air |
+| Package to plate | Top-cooled TOLT 0.5 K/W, or TOLL through the mold 20 K/W; pad 0.5 mm, 3 W/(m·K), 1 cm² per FET | Assumed typical values |
+| Front end (BQ76952) | 3 to 16 cells; total cell voltage error ±15 mV from −40 to 85 °C, under 10 mV typical; SCD 10 to 500 mV, 15 to 450 µs; OCD 4 to 200 mV, 10 to 425 ms; OCC 4 to 124 mV; SLEEP 41 µA typical with DSG on; SHUTDOWN 1 µA; coulomb counter offset ±1 LSB uncalibrated, under 1 µV typical; gain 130,845 to 132,335 LSB/V; 100 mA maximum balancing current per cell | [TI BQ76952 product page](https://www.ti.com/product/BQ76952) and [data sheet](https://www.ti.com/lit/ds/symlink/bq76952.pdf) |
+| Secondary protector (BQ77216) | 3 to 16 cells; overvoltage, undervoltage, open wire and temperature; separate COUT and DOUT outputs; OV accuracy ±10 mV at 25 °C, ±20 mV from 0 to 60 °C; about 1 µA; TSSOP-24 at 0.65 mm pitch | [TI BQ77216 product page](https://www.ti.com/product/BQ77216) |
+| Other quiescent loads | Microcontroller stop mode 5 µA, CAN transceiver standby 10 µA, flash 1 µA (all at 3.3 V); buck 70 % efficient at light load with 10 µA quiescent; TVS leakage 1 µA | Assumed typical values |
+| Short-circuit loop | 1 µH loop inductance; 10 µs MOSFET turn-off after the trip | Assumed |
+| CAN | 250 kbit/s, 135 bits worst-case frame; SwapCell interface v0.3 message rates | SWC-PRC-001 v0.3 |
+| State of charge | Anchor detection 2 points; learned capacity 2 %; residual gain error 0.5 % after one-point calibration; 3.5 equivalent full cycles in 7 days | Assumed |
+
+## 2. Voltage range (R1)
+
+A 4S to 16S LFP pack spans 12.8 to 51.2 V nominal and reaches 58.4 V at full charge, below the 60 V ceiling. The 100 V MOSFETs have a margin of 1.71 times at 58.4 V. An NMC profile fits up to 14 cells under 60 V; SwapCell's 13S pack reaches 54.6 V. R1 is met by design review.
+
+## 3. Power path loss and thermal (R5, R6)
+
+**Loss (R6).** The MOSFETs lose 2.00 W at 40 A with cold junctions and 2.38 W at the converged junction temperature. The shunt adds 0.40 W, the PCB copper and stud joints (0.569 mΩ at 20 °C, 0.635 mΩ at 50 °C) 1.02 W, and the SCP fuse 0.64 W. The board loss is **4.44 W, and R6 is not met**. Without the SCP fuse it would be 3.80 W. The external main fuse adds 1.60 W, so the whole power path loses 6.04 W, 99.71 % efficient for a 16S pack at 40 A. The TRL 2 figure of about 3.2 W left out the secondary protector and the temperature rise of the MOSFETs.
+
+**Thermal (R5).** The base plate (0.0484 m² over both faces) rises 12.9 K at 40 A. The hottest MOSFET dissipates 0.361 W, so its junction reaches **53.7 °C** at 40 °C ambient with a top-cooled TOLT package and 61.4 °C with a TOLL package cooled through its mold. The plate holds 234 J/K and has a time constant of 10.1 min, so a 10 s peak at 80 A adds only 0.87 K to it. The hottest MOSFET then dissipates 1.64 W; bounding its junction by the steady-state value gives 58.1 °C (TOLT) or 97.7 °C (TOLL). Both are under the 110 °C limit, so **R5 is met**. The TOLL margin is thin, so the BOM now calls for a top-side cooled package where available.
+
+## 4. Protection thresholds, short circuit and single faults (R3, R4)
+
+**Thresholds (R3).** On the 0.25 mΩ shunt the front end's steps give the settings in Table 2, all inside its ranges. The 40 A continuous and 80 A for 10 s envelope is longer than the front end's longest hardware delay (425 ms), so the microcontroller enforces it with a current and time limit; the hardware trips in Table 2 back it up without the microcontroller.
+
+*Table 2. Proposed protection settings (engineering proposal, awaiting Amish).*
+
+| Protection | Setting | Current | Delay |
+| --- | --- | --- | --- |
+| Short circuit in discharge (SCD) | 100 mV | 400 A | 15 µs |
+| Overcurrent in discharge 2 (OCD2) | 40 mV | 160 A | 20 ms |
+| Overcurrent in discharge 1 (OCD1) | 24 mV | 96 A | 320 ms |
+| Overcurrent in charge (OCC) | 12 mV | 48 A | Front-end default range |
+| Cell overvoltage and undervoltage | 3.65 V and 2.50 V (LFP) | | Configuration file |
+| Charge lockout | Below 0 °C | | Configuration file |
+
+The smallest SCD step is 40 A, so the scale is coarse but adequate. The short-circuit trip completes within 25 µs, well inside the 500 µs of R3. **R3 is met on paper.**
+
+**Short circuit.** The board and fuse add 3.47 mΩ to the short-circuit loop and the two power cables 1.72 mΩ. The prospective current is 696 A (4S 20 Ah), 883 A (16S 20 Ah), 1,943 A (4S 280 Ah) and 4,746 A (16S 280 Ah). The 10 kA breaking capacity of the pack fuse covers all of them. With a 1 µH loop, current is still rising when the MOSFETs open. At a 15 µs SCD delay the 16S 280 Ah pack reaches 1,122 A at turn-off (about 280 A per MOSFET) and leaves 0.63 J of loop energy for the TVS diode and the MOSFETs' avalanche rating. At the front end's longer 60 µs delay the same pack reaches 2,516 A and 3.16 J. **The SCD delay must therefore be set to its 15 µs minimum**, and the TVS diode and MOSFET avalanche energy must be checked against about 1 J when parts are chosen.
+
+**Single faults (R4).** Table 3 is a first failure mode and effects analysis for the faults R4 names.
+
+*Table 3. Single faults with the secondary protector.*
+
+| Single fault | Detected by | Result |
+| --- | --- | --- |
+| Microcontroller crash | Front end runs protection on its own | Pack stays protected; no state of charge or CAN until reset |
+| Charge MOSFET shorted | Front end sees cell overvoltage but cannot open the charge path | BQ77216 COUT blows the SCP fuse; pack permanently disconnected (safe) |
+| Discharge MOSFET shorted | Front end sees cell undervoltage but cannot open the discharge path | BQ77216 DOUT blows the SCP fuse; pack disconnected (safe) |
+| Front end failed | BQ77216 monitors cells independently | SCP fuse blows on overvoltage or undervoltage |
+| Open sense wire | Front end and BQ77216 open-wire detection | Both FETs open; BQ77216 blows the SCP fuse if the front end does not act |
+| Failed temperature sensor | Out-of-range reading in the front end | Treated as over-temperature; FETs open |
+
+With the secondary protector, no single fault in Table 3 leaves the pack able to be overcharged or over-discharged. **R4 is met on paper but at risk** until an SCP fuse rated for 40 A continuous at 60 V DC or more is found; if none exists, a DC contactor or a second MOSFET pair driven by the BQ77216 is the fallback.
+
+## 5. Balancing (R7)
+
+The 33 Ω bleed resistors draw 103 mA at 3.40 V and dissipate 0.350 W each; eight non-adjacent channels at once dissipate 2.80 W. A 1 % imbalance takes 1.9 h to correct on a 20 Ah pack, 9.7 h on 100 Ah and 27.2 h on 280 Ah. R7 limits the 24 h target to packs up to 100 Ah, so the 280 Ah figure is a limitation to publish, not a failure. Under the cover the PCB bulk rises 16.4 K, to 56.4 °C at 40 °C ambient, but a balance resistor's own hotspot reaches about 73.9 °C. **R7 is at risk** on the 70 °C limit; spreading the resistors or balancing at most four channels at once would bring it under.
+
+## 6. Current measurement and state of charge (R8, R9)
+
+**Current (R9).** One coulomb counter step is 7.60 µV, 30.4 mA on the shunt; the typical calibrated offset of 1 µV is 4.0 mA. The front end's gain spread is ±0.57 %, which with the 1 % shunt gives 1.57 % uncalibrated, outside R9. A one-point gain calibration at build leaves about 0.5 %, so the error at 80 A is 0.404 A against a 0.850 A limit. **R9 is met on paper with calibration**, which is proposed as a build step.
+
+**State of charge (R8).** After a full charge the error is 5.0 points (2 for anchor detection, 2 for the learned capacity, 1 for gain over one cycle), which just meets the ±5 point target. After 7 days of partial cycling the error on the 20 Ah reference pack grows to **10.1 points with a calibrated offset and 32.3 points without**, so **R8 is not met on small packs**. It is met on 100 Ah (7.4 points) and 280 Ah (7.0 points) packs. Meeting 10 points on 20 Ah needs a total offset of 3.9 mA or less, about 1 µV across the shunt. A 0.5 mΩ shunt would halve the offset in amperes but add 0.4 W to R6.
+
+## 7. Quiescent current (R10)
+
+Sleep draws 54.5 µA: the front end 41.0 µA with the discharge FETs held on, the 3.3 V loads through the buck 1.5 µA, the buck itself 10.0 µA, the secondary protector 1.0 µA and TVS leakage 1.0 µA. That is 0.20 % per month of a 20 Ah pack. Ship mode draws 6.0 µA. **R10 is met on estimate.** With SwapCell's INTERLOCK loop (30 µA) a CellGuard used as SwapCell's BMS draws 84.5 µA, inside SwapCell's 100 µA limit. The TRL 2 estimate of about 100 µA double counted the charge pump, which the front end's SLEEP figure already includes.
+
+## 8. Interface and log (R11, R12)
+
+The SwapCell v0.3 message set adds up to 34.1 frames per second between pack and host, a bus load of 1.84 % at 250 kbit/s. **R11 is met by design.** At 32 bytes per record, the 2 MiB flash holds 65,536 records; 2,000 records need 64,000 bytes. **R12 is met.**
+
+## 9. Precharge (R13)
+
+A 100 Ω resistor into 2 mF has a time constant of 0.20 s and reaches 90 % of 58.4 V in 0.46 s, dissipating 3.38 J. Peak current is 0.584 A and peak power 34.1 W, so the precharge switch needs a DPAK-class P-channel MOSFET whose safe operating area covers 35 W for about 0.2 s. Into a shorted load the 1 s timeout limits the energy to 34.1 J. **R13 is met.**
+
+## 10. Size and mass (R14)
+
+The model envelope is 220 x 110 x 32 mm, inside 230 x 120 x 40 mm. The mass, from model volumes and stated densities plus assumed masses for bought parts, is **0.646 kg, and R14 is not met** against 0.6 kg. The base plate is the largest item at 262 g; a 3 mm plate would bring the total to 0.581 kg and raise the plate temperature rise only slightly, because heat spreading over this short distance needs little thickness. The TRL 2 estimate of about 0.5 kg left out the studs' hardware and underestimated the fuse holder.
+
+## 11. Cost (R16)
+
+The BOM has 17 lines, all priced, and totals **$134.00**: $124.00 as at TRL 2 plus $10.00 for the secondary protector. That is 11.7 % over the $120 in `project.yaml`, so **R16 is not met**. Against the recommended budget of $140 (awaiting Amish) the margin is $6.00.
+
+## 12. Results
+
+*Table 4. Requirement status at TRL 3 (not met first).*
+
+| ID | Calculated value | Target | Status |
+| --- | --- | --- | --- |
+| R6 | 4.44 W board loss at 40 A (3.80 W without the SCP fuse) | 4 W or less | **Not met** |
+| R8 | 5.0 points after a full charge; 10.1 points after 7 days on 20 Ah (32.3 uncalibrated); 7.4 on 100 Ah | ±5 and ±10 points | **Not met** (20 Ah); met on 100 Ah and larger |
+| R14 | 220 x 110 x 32 mm; 0.646 kg | 230 x 120 x 40 mm; 0.6 kg | **Not met** (mass) |
+| R16 | $134.00 | $120 (recommended $140, awaiting Amish) | **Not met** against $120; met against $140 |
+| R2 | ±15 mV from −40 to 85 °C; under 10 mV typical at 25 °C | ±10 mV at 25 °C, ±15 mV from −20 to 60 °C | At risk (no guaranteed 25 °C figure) |
+| R4 | All single faults in Table 3 end safe with the BQ77216 and SCP fuse | No single fault allows overcharge or over-discharge | At risk (SCP fuse rating unconfirmed) |
+| R7 | 103 mA; 9.7 h for 1 % on 100 Ah; PCB 56.4 °C, resistor hotspot 73.9 °C | 100 mA; 24 h; 70 °C | At risk (hotspot) |
+| R1 | 12.8 to 58.4 V; 1.71 times MOSFET margin | 4 to 16 LFP cells, under 60 V | Met |
+| R3 | Table 2 settings inside front-end ranges; SCD trip within 25 µs | Trip within 500 µs; all thresholds configurable | Met on paper |
+| R5 | Junction 53.7 °C (TOLT) or 61.4 °C (TOLL) at 40 A; 97.7 °C bound at 80 A for 10 s (TOLL) | 110 °C or less | Met on paper |
+| R9 | 0.404 A error at 80 A after calibration; 1.57 % gain error uncalibrated | ±1 % ±50 mA (0.850 A at 80 A) | Met on paper with calibration |
+| R10 | 54.5 µA sleep; 6.0 µA ship mode | 300 µA; 10 µA | Met on estimate |
+| R11 | 1.84 % bus load at 250 kbit/s; SwapCell v0.3 message set | Published message set on CAN 2.0B, UART, enable | Met by design |
+| R12 | 65,536 records of 32 bytes | 2,000 records | Met |
+| R13 | 0.46 s to 90 %; 3.38 J | 1 s for 2 mF | Met |
+| R15 | TQFP-48 at 0.5 mm, TSSOP-24 at 0.65 mm, leaded MOSFET and regulator packages | No BGA; nothing finer than 0.5 mm | Met by design review |
+
+**Options for the items not met** (for Amish; no choice made): R6, choose 1.5 mΩ-class MOSFETs (saves about 0.95 W, bringing the board to about 3.5 W) or mount the SCP fuse beside the main fuse and count it with the external fuse; R8, restate the target for packs of 50 Ah and larger, add a periodic full-charge prompt, or fit a 0.5 mΩ shunt; R14, a 3 mm plate (0.581 kg) or relax the target to 0.65 kg; R16, the recommended $140 budget.
+
+## 13. Limits of this note
+
+- Nothing here is measured. Heat transfer coefficients, copper paths, the SCP fuse resistance, loop inductance and the quiescent currents of parts not yet chosen are assumptions.
+- Balancing heat and state-of-charge error depend on firmware settings that do not exist yet.
+- The TVS diode, MOSFET avalanche energy and SCP fuse need data sheets before TRL 4.
+
+> **Safety:** CellGuard connects directly to lithium cells that can deliver several thousand amperes into a short circuit (about 4.7 kA for a 16S 280 Ah pack by this note). The pack fuse must be DC rated at 80 V or more with a breaking capacity of 10 kA or more, the SCD delay must be set to its 15 µs minimum, and every threshold change must first be tried on a cell simulator or a current-limited bench supply. The secondary protector's SCP fuse is a one-shot device: once blown, the board must be inspected before it is repaired.

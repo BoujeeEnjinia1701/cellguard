@@ -68,3 +68,75 @@ Requirements not met or at risk:
 ### Recommended next step
 
 Review this note and the media, then decide items 3 and 4. If approved, run `/advance-trl3` to check the loss, thermal, balancing, short-circuit and state-of-charge estimates by calculation, write the protection threshold table and failure mode analysis, and produce the parametric model and drawing sheet.
+
+## Session 2026-09-25: TRL 3
+
+Done under Amish's 2026-09-25 instruction for this batch ("you know the drill, nothing gets past TRL 3"). He has not reviewed the CellGuard TRL 2 items one by one, so the recommendations are adopted for TRL 3 work, open for his review. TRL 4 is on hold by Amish's instruction.
+
+### What was done
+
+- `docs/decisions/0001-trl2-review-decisions.md` (CGD-DDR-001 v0.1): items 1 to 3 and 5 to 8 adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review; the budget and seven other items left open.
+- `docs/04-calcs/01-sizing.md` (CGD-CAL-001 v0.1) and `docs/04-calcs/sizing.py`, which prints every quoted number and writes `docs/04-calcs/results.csv`: voltage range, power path loss and thermal, protection thresholds, short circuit, single-fault table, balancing, current and state-of-charge error budget, quiescent current, CAN load and log, precharge, size and mass, cost.
+- `cad/src/model.py`: parametric build123d model (14 parts, key dimensions in `PARAMS`, clash check clean) exporting `cad/step/` and `cad/stl/` for the assembly, base plate and cover. `cad/src/concept_media.py` now builds from it.
+- `cad/src/sheets.py` and `cad/drawings/CGD-DWG-001.svg`, `.pdf`, `.png`: general arrangement at Rev P1, marked "CONCEPT, NOT FOR FABRICATION" and "PRELIMINARY, NOT FOR FABRICATION". The concept sheet keeps its number CGD-DWG-010, so DWG-001 was free.
+- `bom/bom.csv`: 17 lines, all priced, with supplier types; new line 14 for the secondary protector and SCP fuse. `bom/bom-notes.md` updated.
+- Docs bumped to v0.3 with revision rows: CGD-PRB-001, CGD-PRC-001, CGD-REQ-001 (R1 adds the NMC profile, R11 the SwapCell v0.3 message set at 250 kbit/s; status table from CAL-001).
+- `media/`: all concept media regenerated from the model; every image checked. Flow diagram now shows the SCP fuse loss. Temporary `media/_views*` folders removed.
+- `README.md`: TRL badge, links to the drawing and calculations, concept numbers, key components and safety brought in line with CAL-001. Pitch and problem lines unchanged (no rewording was recommended).
+- `project.yaml`: `trl: 3`, `trl_target: 3`, evidence listed. `budget_usd` unchanged at 120.
+
+### Requirements (CGD-CAL-001)
+
+9 met on paper, 4 not met, 3 at risk.
+
+| ID | Result | Status |
+| --- | --- | --- |
+| R6 | 4.44 W board loss at 40 A (0.64 W is the SCP fuse); 3.80 W without it | **Not met** |
+| R8 | 10.1 points after 7 days on a 20 Ah pack with a calibrated offset (32.3 uncalibrated); 7.4 on 100 Ah | **Not met** on small packs |
+| R14 | 220 x 110 x 32 mm; 0.646 kg against 0.6 kg | **Not met** (mass) |
+| R16 | $134.00: 11.7 % over $120; $6.00 under the recommended $140 | **Not met** against $120 |
+| R2 | ±15 mV guaranteed over temperature; only typical under 10 mV at 25 °C | At risk |
+| R4 | Every single fault ends safe with BQ77216 and SCP fuse; SCP rating for 40 A at 60 V unconfirmed | At risk |
+| R7 | 103 mA, 9.7 h for 1 % on 100 Ah; resistor hotspot 73.9 °C against 70 °C | At risk |
+| R1, R3, R5, R9 to R13, R15 | See CAL-001 Table 4 (junction 53.7 °C at 40 A; sleep 54.5 µA; CAN load 1.84 %; precharge 0.46 s) | Met on paper |
+
+Corrections to TRL 2 figures: board loss was about 3.2 W (now 4.44 W with the SCP fuse and warm MOSFETs); sleep about 100 µA (now 54.5 µA, the charge pump was double counted); prospective short circuit 1 to 8 kA (now 0.7 to 4.7 kA with cables and board resistance); mass about 0.5 kg (now 0.646 kg); cost $124 (now $134 with the protector).
+
+### Decisions recorded (CGD-DDR-001)
+
+Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review: BQ76952-class front end; STM32G0B1 with the Libre Solar firmware base; BQ77216-class secondary protector with SCP fuse; 40 A rating; high-side switching; LFP plus NMC-capable hardware with LFP firmware first; SwapCell v0.3 CAN message set as a profile.
+
+### Still awaiting Amish
+
+1. Budget: raise `budget_usd` to $140 (recommended); unchanged at $120 meanwhile.
+2. First test partner (no preference stated).
+3. Licensing of Apache-2.0 firmware code in the MIT repo.
+4. Cover material (no recommendation).
+5. Low-cost method to check the state-of-charge estimate (no recommendation).
+6. TRL 3 engineering proposals: protection thresholds (SCD 100 mV at 15 µs, OCD2 40 mV at 20 ms, OCD1 24 mV at 320 ms, OCC 12 mV), top-cooled MOSFETs, DPAK-class precharge switch, one-point current calibration.
+7. Responses to R6, R8, R14 and R16 (options in CAL-001 section 12: 1.5 mΩ MOSFETs or moving the SCP fuse off the board; restating R8 for 50 Ah and larger packs, a full-charge prompt or a 0.5 mΩ shunt; a 3 mm plate at 0.581 kg; the $140 budget).
+
+### Cross-repo notes
+
+- SwapCell (interface v0.3): CAN at 250 kbit/s, 11-bit identifiers and 32-byte log records are consistent. As SwapCell's BMS, CellGuard would need the INTERLOCK wake input; sleep then rises to 84.5 µA, inside SwapCell's 100 µA limit. SwapCell's BMS spec says 30 A continuous FETs, which CellGuard's 40 A covers. The SwapCell project has not yet agreed to either profile.
+- MotionCore plans to read CellGuard faults over CAN; its bus must run at 250 kbit/s to share the SwapCell profile. No conflict recorded yet, but VESC-class controllers often default to 500 kbit/s, so MotionCore should state its rate.
+- FieldNode, CrossSafe and TwinKit do not use CellGuard at this stage; no interface conflict.
+
+### Safety concerns
+
+- Prospective short-circuit current up to about 4.7 kA (16S 280 Ah); fuse 60 A, DC 80 V or more, 10 kA breaking capacity.
+- SCD delay must be the 15 µs minimum; at 60 µs a large pack reaches about 2.5 kA and 3.2 J of loop energy before the MOSFETs open. TVS and MOSFET avalanche energy must be checked against about 1 J.
+- The SCP fuse is one-shot and not yet sourced at 40 A and 60 V; until it is, use chargers with a fixed, correct end-of-charge voltage.
+- Precharge switch sees a 34 W peak; a small SOT-23 MOSFET would fail.
+- Not certified; research and prototype use only.
+
+### Problems and notes
+
+- Citations: none were flagged as unchecked. The TI BQ76952 and BQ77216 figures used in CAL-001 were checked with WebFetch on the TI product pages and the BQ76952 data sheet. WebSearch is exhausted.
+- Assumed values without a data sheet: SCP fuse resistance, MOSFET package thermal resistances, buck and CAN quiescent currents, loop inductance. They are listed in CAL-001 Table 1.
+- The kit's cutaway cuts near the origin; the model is centered close to the origin, so the section passes through the PCB, MOSFETs and studs as intended.
+- No TRL 4 material exists in the repo (`build-log/` holds only its README).
+
+### Recommended next step
+
+Review CGD-DDR-001 and decide the budget and the responses to R6, R8, R14 and R16. TRL 4 is on hold by Amish's instruction. When it is released, TRL 4 would need: data sheets for the SCP fuse, MOSFETs, TVS and buck; a schematic and board layout; a bench build on a cell simulator; and a lab test report (TST) of protection trips, losses, balancing and sleep current, with build-log entries.
