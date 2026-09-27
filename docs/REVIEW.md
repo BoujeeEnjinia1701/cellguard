@@ -197,3 +197,28 @@ The README's "What sparked the idea" now traces the idea to the July 2016 CPSC r
 
 `trl: 3` and `trl_target: 3` are unchanged. TRL 4 remains on hold by Amish's instruction: the one-point calibration, firmware, schematic, board layout, bench build and tests are decided or planned but not started.
 
+
+## Session 2026-09-26: product appearance model and photoreal renders
+
+Amish chose this repo for the first batch of product renders on 2026-09-26. This session adds an appearance model for photoreal renders; it changes no design value, document, BOM line or drawing.
+
+### What was added
+
+- `cad/src/product_model.py`: `product_parts()` (61 parts: 17 shell, 19 internal, 2 accessory, 23 context), `TITLE` and `RENDER_VIEWS` (hero, exploded and a detail view without the pack). Every main dimension and interface comes from `PARAMS` and `build_parts()` in `cad/src/model.py`.
+- Board and enclosure: a clear polycarbonate cover with filleted edges, four fixing screws in bosses, a teal name plate and a warning label; the aluminium base plate with filleted corners and four counterbored mounting holes; brass M6 studs with washers, nuts and thread detail; a bolted 60 A fuse in a dark holder with blades, studs and nuts.
+- Populated board, illustrative only (no layout): the model.py chips, shunt and connectors, a finned aluminium-housed precharge resistor, 16 balance resistors, buck, flash, TVS, sleeved capacitors, silkscreen marks and three status lights (green lit), plus the thermal pad and the eight MOSFETs under the board.
+- Latching mating plugs on the balance and CAN connectors (accessory).
+- Context: an illustrative compact 4S LiFePO4 pack (four prismatic cells about 27 x 148 x 97 mm, not from a data sheet) with busbars, terminal nuts, end plates, woven straps and a label; five balance leads in a braided sleeve, two ring-lug temperature probes, B- and B+ power cables with the fuse link and heat-shrink boots, a CAN cable and a small bench mat.
+- `README.md`: hero image now points to `media/render-hero.png`, with a link to `media/render-exploded.png`. Both files are produced later by the render step; they are not in the repo yet.
+
+### Differences from model.py (each Proposed, awaiting Amish)
+
+1. **Cover shown clear.** model.py and the existing media show the cover as dark grey; the BOM says flame-retardant polycarbonate, and the cover material is already an open item. The render uses clear polycarbonate so the board reads through it. Recommendation: adopt a clear UL 94 V-0 polycarbonate cover, since it lets a user see the status lights and board state without opening it; confirm that a clear V-0 grade is available before TRL 4.
+2. **Pack beside the board, not under it.** concept_media.py shows the board on posts above a 4S pack of 280 Ah cells. The product render puts a compact illustrative 4S pack beside the board, so the balance harness tail and the two probe leads are rerouted to reach it; the 17-way connector, probe count and exits are unchanged. Recommendation: keep the model.py layout for engineering media and use the beside layout for product renders only.
+3. **Cover fixings.** model.py has no cover fixings. The render adds four screws into bosses that stop above the board. Recommendation: accept as an appearance placeholder; the real fixing method belongs with the cover material decision.
+4. **Status lights.** The concept does not name any indicator. The render adds three board LEDs (green lit) under BOM line 15. Recommendation: adopt one tri-colour status light as a low-cost aid to fault finding; it would add a few cents to BOM line 15.
+5. **Power cables and fuse link drawn.** BOM line 16 cables are not in model.py. The render shows the pack B+ lead to the fuse, a fuse link to the B+ stud and the B- lead to its stud; the fuse holder is split into a holder, blades, studs and nuts inside the model.py fuse envelope. Recommendation: accept; no dimension changes.
+
+### Scope
+
+This is an appearance model only: no tolerances, no PCB layout and no fabrication detail. `trl` and `trl_target` stay at 3, and TRL 4 remains on hold by Amish's instruction.
