@@ -3,9 +3,9 @@ doc_id: CGD-PRC-001
 title: CellGuard design precis
 project: CellGuard
 doc_type: Design precis
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-09-30'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,13 +25,17 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.5"
+  date: '2026-09-30'
+  author: Amish Chadha
+  change: Design for construction (CGD-DDR-003); figures follow CGD-CAL-001 v0.3; base plate, fuse holder and cover fixings made buildable; GA Rev P2
 ---
 
 # CellGuard design precis
 
 ## Summary
 
-CellGuard is one open battery management board for LFP packs of 4 to 16 cells in series. A single cell-monitor and protection chip measures every cell, trips the pack's MOSFET switches on its own when a limit is crossed, and balances the cells; a small microcontroller adds the state-of-charge estimate, a state-of-health log and an open CAN and UART interface. An independent secondary protector blows a self-control protector (SCP) fuse if the main protection fails. Everything sits on an aluminium base plate that spreads heat and also carries the pack fuse, so the whole protection path is one part that other lab projects can bolt on. The TRL 3 calculations (CGD-CAL-001) show 10 of 16 requirements met on paper. Three are not met: board loss 4.4 W against 4 W (R6), state of charge on small packs (R8) and mass 0.65 kg against 0.6 kg (R14). The parts cost of $134 meets the $140 budget that Amish set on 2026-09-25 (R16, CGD-DDR-002).
+CellGuard is one open battery management board for LFP packs of 4 to 16 cells in series. A single cell-monitor and protection chip measures every cell, trips the pack's MOSFET switches on its own when a limit is crossed, and balances the cells; a small microcontroller adds the state-of-charge estimate, a state-of-health log and an open CAN and UART interface. An independent secondary protector blows a self-control protector (SCP) fuse if the main protection fails. Everything sits on an aluminium base plate that spreads heat and also carries the pack fuse, so the whole protection path is one part that other lab projects can bolt on. The TRL 3 calculations (CGD-CAL-001) show 10 of 16 requirements met on paper. Three are not met: board loss 4.4 W against 4 W (R6), state of charge on small packs (R8) and mass 0.66 kg against 0.6 kg (R14). The parts cost of $138 meets the $140 budget that Amish set on 2026-09-25 (R16, CGD-DDR-002).
 
 ![CellGuard on a 4S LFP pack](../media/hero.png)
 
@@ -55,7 +59,7 @@ Table 1. Main components. Numbers match the exploded view (Figure 3) and `bom/bo
 
 | BOM | Component | Concept choice | Notes |
 | --- | --- | --- | --- |
-| 1 | Base plate and heat spreader | 6061 aluminium, 220 x 110 x 4 mm, with PCB standoffs | Takes MOSFET heat through a thermal pad; carries the fuse |
+| 1 | Base plate and heat spreader | 6061 aluminium, 220 x 110 x 4 mm, flat, drilled and tapped; the board sits on six bought 3 mm spacers (CGD-DDR-003) | Takes MOSFET heat through a gap pad; carries the fuse |
 | 2 | Main PCB | 4-layer, 2 oz (70 µm) copper, 150 x 95 mm | Power copper on inner layers; clearances for 60 V |
 | 3 | Cell monitor and protection IC | TI [BQ76952](https://www.ti.com/product/BQ76952): 3 to 16 cells, ±15 mV total cell voltage error from −40 to 85 °C, integrated high-side N-channel MOSFET driver, coulomb counter, I²C | Decided by Amish, 2026-09-25 (CGD-DDR-001 item 1, CGD-DDR-002) |
 | 4 | Charge and discharge MOSFETs | 8 x 100 V N-channel, 2.5 mΩ or less, top-side cooled (TOLT) package (decided, CGD-DDR-002): 4 in parallel for charge, 4 for discharge, back to back | Mounted on the PCB underside, pressed onto the base plate through an insulating pad |
@@ -79,7 +83,7 @@ Table 1. Main components. Numbers match the exploded view (Figure 3) and `bom/bo
 
 *Figure 4. Section through the board: MOSFETs (4) under the PCB on the base plate (1), precharge resistor (7), studs (9) and fuse (8), all under or beside the cover (13).*
 
-The general arrangement is drawing CGD-DWG-001 Rev P1 (`cad/drawings/CGD-DWG-001.pdf`), and the STEP files are in `cad/step/`.
+The general arrangement is drawing CGD-DWG-001 Rev P2 (`cad/drawings/CGD-DWG-001.pdf`), and the STEP files are in `cad/step/`.
 
 ## Key design choices
 
@@ -105,10 +109,10 @@ Table 2. Key numbers at TRL 3.
 | --- | --- | --- |
 | Board loss at 40 A (MOSFETs 2.38 W, shunt 0.40 W, copper 1.02 W, SCP fuse 0.64 W) | 4.44 W | R6, 4 W: **not met** |
 | External fuse and links at 40 A | 1.60 W | |
-| Power path efficiency, 16S at 40 A | 99.71 % | |
-| Plate temperature rise at 40 A | 12.9 K | |
-| MOSFET junction at 40 A and 40 °C ambient | 53.7 °C (TOLT), 61.4 °C (TOLL) | R5, 110 °C: met |
-| MOSFET junction bound, 80 A for 10 s | 58.1 °C (TOLT), 97.7 °C (TOLL) | R5: met |
+| Power path efficiency, 16S at 40 A | 99.70 % | |
+| Plate temperature rise at 40 A | 13.0 K | |
+| MOSFET junction at 40 A and 40 °C ambient | 54.0 °C (TOLT), 61.6 °C (TOLL) | R5, 110 °C: met |
+| MOSFET junction bound, 80 A for 10 s | 59.5 °C (TOLT), 99.1 °C (TOLL) | R5: met |
 | Protection settings (decided, CGD-DDR-002) | SCD 400 A in 15 µs, OCD2 160 A in 20 ms, OCD1 96 A in 320 ms, OCC 48 A | R3: met on paper |
 | Prospective short-circuit current | 696 A (4S 20 Ah) to 4,746 A (16S 280 Ah) | Fuse breaking capacity 10 kA |
 | Balancing | 103 mA, 0.350 W per channel; 1 % on 100 Ah in 9.7 h, on 280 Ah in 27.2 h | R7: at risk (resistor hotspot 73.9 °C) |
@@ -118,8 +122,8 @@ Table 2. Key numbers at TRL 3.
 | CAN bus load, 250 kbit/s | 1.84 % | R11: met |
 | Log capacity | 65,536 records of 32 bytes | R12: met |
 | Precharge of 2 mF to 90 % | 0.46 s, 3.38 J, 34.1 W peak | R13: met |
-| Size and mass | 220 x 110 x 32 mm; 0.646 kg | R14: **not met** (mass) |
-| Parts cost | $134.00 (95.7 % of $140) | R16, $140: met |
+| Size and mass | 220 x 110 x 33 mm; 0.664 kg | R14: **not met** (mass) |
+| Parts cost | $138.00 (98.6 % of $140) | R16, $140: met |
 
 ### State-of-charge method
 

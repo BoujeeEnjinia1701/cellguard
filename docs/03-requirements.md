@@ -3,9 +3,9 @@ doc_id: CGD-REQ-001
 title: CellGuard requirements
 project: CellGuard
 doc_type: Requirements
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-09-30'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,6 +25,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.5"
+  date: '2026-09-30'
+  author: Amish Chadha
+  change: Design for construction (CGD-DDR-003); figures follow CGD-CAL-001 v0.3; no requirement changed status
 ---
 
 # CellGuard requirements
@@ -58,14 +62,14 @@ Table 2. Status at TRL 3 (CGD-CAL-001; calculations, nothing measured).
 | --- | --- | --- |
 | R6 | **Not met** | 4.44 W on the board at 40 A, of which 0.64 W is the secondary protector's SCP fuse; 3.80 W without it |
 | R8 | **Not met** on the 20 Ah reference pack; met on 100 Ah and larger | 5.0 points after a full charge; after 7 days, 10.1 points on 20 Ah with a calibrated offset (32.3 uncalibrated), 7.4 on 100 Ah |
-| R14 | **Not met** (mass) | 220 x 110 x 32 mm meets the size; 0.646 kg exceeds 0.6 kg (0.581 kg with a 3 mm plate) |
+| R14 | **Not met** (mass) | 220 x 110 x 33 mm meets the size; 0.664 kg exceeds 0.6 kg (0.599 kg with a 3 mm plate) |
 | R2 | At risk | Total error ±15 mV from −40 to 85 °C meets the range target; at 25 °C the data sheet gives only a typical figure under 10 mV |
 | R4 | At risk | With the BQ77216-class secondary protector and SCP fuse every single fault in the failure analysis ends safe; an SCP fuse rated for 40 A at 60 V DC is not yet confirmed |
 | R7 | At risk | 103 mA; 9.7 h for 1 % on 100 Ah; PCB 56.4 °C but a balance resistor hotspot about 73.9 °C at 40 °C ambient |
-| R16 | Met | $134.00 with the secondary protector: 95.7 % of the $140 budget, $6.00 margin (11.7 % over the former $120) |
+| R16 | Met | $138.00 with the secondary protector and the parts added for construction (CGD-DDR-003): 98.6 % of the $140 budget, $2.00 margin |
 | R1 | Met | 12.8 to 58.4 V; 100 V MOSFETs with 1.71 times margin; front end rated 3 to 16 cells |
 | R3 | Met on paper | Thresholds inside the front-end ranges; short-circuit trip within 25 µs |
-| R5 | Met on paper | Junction 53.7 °C at 40 A (top-cooled package), 97.7 °C bound at 80 A for 10 s (TOLL) |
+| R5 | Met on paper | Junction 54.0 °C at 40 A (top-cooled package), 99.1 °C bound at 80 A for 10 s (TOLL) |
 | R9 | Met on paper with calibration | 0.404 A error at 80 A after a one-point gain calibration, against 0.850 A |
 | R10 | Met on estimate | 54.5 µA in sleep, 6.0 µA in ship mode |
 | R11 | Met by design | SwapCell v0.3 message set; 1.84 % bus load at 250 kbit/s |

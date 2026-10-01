@@ -8,7 +8,7 @@ An open battery management board for small LiFePO4 packs (4 to 16 cells) with ce
 
 ![CellGuard: open battery management board for small LiFePO4 packs, product render](media/render-hero.png)
 
-[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement CGD-DWG-001 (PDF)](cad/drawings/CGD-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Review note](docs/REVIEW.md)
+[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement CGD-DWG-001 (PDF)](cad/drawings/CGD-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Prototype build plan](docs/05-build-plan.md) · [Design decisions](docs/06-design-decisions.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
@@ -60,7 +60,7 @@ Full problem statement: [docs/01-problem.md](docs/01-problem.md)
 
 An open battery management board for small LiFePO4 packs (4 to 16 cells) with cell balancing, protection and a documented state-of-charge estimate, reusable across the lab's vehicles, storage and field kits.
 
-A single cell-monitor and protection chip measures every cell and opens the charge or discharge MOSFETs on its own when a limit is crossed; an independent secondary protector blows a protector fuse if that layer fails. A microcontroller adds a state-of-charge estimate anchored at full and empty, a state-of-health event log and an open CAN and UART interface carrying the SwapCell message set. Calculated at TRL 3 (CGD-CAL-001 v0.2): 40 A continuous with MOSFET junctions near 54 °C at 40 °C ambient, 4.4 W board loss at 40 A (against a 4 W target), 100 mA passive balancing, about 55 µA sleep current, 220 x 110 x 32 mm and about 0.65 kg. Three requirements are not met on paper: board loss, state of charge on small packs and mass; the $134 parts cost meets the $140 budget.
+A single cell-monitor and protection chip measures every cell and opens the charge or discharge MOSFETs on its own when a limit is crossed; an independent secondary protector blows a protector fuse if that layer fails. A microcontroller adds a state-of-charge estimate anchored at full and empty, a state-of-health event log and an open CAN and UART interface carrying the SwapCell message set. Calculated at TRL 3 (CGD-CAL-001 v0.3): 40 A continuous with MOSFET junctions near 54 °C at 40 °C ambient, 4.4 W board loss at 40 A (against a 4 W target), 100 mA passive balancing, about 55 µA sleep current, 220 x 110 x 33 mm and about 0.66 kg. Three requirements are not met on paper: board loss, state of charge on small packs and mass; the $138 parts cost meets the $140 budget.
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md) · Requirements: [docs/03-requirements.md](docs/03-requirements.md)
 
@@ -75,7 +75,13 @@ Full design precis: [docs/02-concept.md](docs/02-concept.md) · Requirements: [d
 - Fuse and precharge circuit
 - Enclosure and harness
 
-The component choices were decided by Amish on 2026-09-25 ([CGD-DDR-001](docs/decisions/0001-trl2-review-decisions.md), [CGD-DDR-002](docs/decisions/0002-recommendations-accepted.md)). The priced bill of materials is in [bom/bom.csv](bom/bom.csv): $134 in parts, within the $140 budget with a $6 margin.
+The component choices were decided by Amish on 2026-09-25 ([CGD-DDR-001](docs/decisions/0001-trl2-review-decisions.md), [CGD-DDR-002](docs/decisions/0002-recommendations-accepted.md)). The priced bill of materials is in [bom/bom.csv](bom/bom.csv): $138 in parts, within the $140 budget with a $2 margin.
+
+## Building the prototype
+
+![Every component of the prototype, pulled apart and numbered in build order](docs/05-build-plan/overview.png)
+
+The [prototype build plan](docs/05-build-plan.md) (CGD-BLD-001) shows, in pictures drawn from the model, how each of the 11 components is made and how it fits the next: a drilled and tapped aluminium plate, a cut gap pad, a populated four-layer board on six spacers, a bolted fuse holder joined to the B+ stud by a straight copper link, and a printed cover on four pillars. Making the design buildable changed some concept details, such as the board fixings, the cover notches and the fuse position; each change is recorded in [CGD-DDR-003](docs/decisions/0003-design-for-construction.md). It is a plan, not yet built: first power-up is always on a cell simulator. Open decisions are kept in the [design decisions register](docs/06-design-decisions.md).
 
 ## Safety
 

@@ -8,7 +8,7 @@ NMC 13S maximum (SwapCell),54.60,V
 PCB copper and stud joints at 20 degC,0.569,mOhm
 PCB copper and stud joints at 50 degC,0.635,mOhm
 "MOSFET loss at 40 A, 25 degC junction",2.00,W
-"MOSFET loss at 40 A, converged junction (TOLT)",2.38,W
+"MOSFET loss at 40 A, converged junction (TOLT)",2.39,W
 Shunt loss at 40 A,0.40,W
 PCB copper and stud loss at 40 A,1.02,W
 SCP fuse loss at 40 A (assumed 0.40 mOhm),0.64,W
@@ -17,19 +17,19 @@ Board loss at 40 A without SCP,3.80,W
 "Board loss at 40 A, 25 degC FETs, with SCP",4.06,W
 "Fuse, holder and links loss at 40 A (external)",1.60,W
 Total power path loss at 40 A,6.04,W
-"Power path efficiency, 16S at 40 A",99.71,%
+"Power path efficiency, 16S at 40 A",99.70,%
 "Plate area, both faces",0.0484,m2
-Plate temperature rise at 40 A,12.9,K
+Plate temperature rise at 40 A,13.0,K
 Hottest FET loss at 40 A,0.361,W
-Saving with 1.5 mOhm MOSFETs at 40 A,0.95,W
-"FET junction at 40 A, 40 degC, top-cooled TOLT",53.7,degC
-"FET junction at 40 A, 40 degC, TOLL through the mold",61.4,degC
+Saving with 1.5 mOhm MOSFETs at 40 A,0.96,W
+"FET junction at 40 A, 40 degC, top-cooled TOLT",54.0,degC
+"FET junction at 40 A, 40 degC, TOLL through the mold",61.6,degC
 Plate heat capacity,234,J/K
 Plate time constant,10.1,min
-"Extra plate rise, 80 A for 10 s",0.87,K
+"Extra plate rise, 80 A for 10 s",0.88,K
 Hottest FET loss at 80 A,1.64,W
-"FET junction after 80 A for 10 s, TOLT (steady bound)",58.1,degC
-"FET junction after 80 A for 10 s, TOLL (steady bound)",97.7,degC
+"FET junction after 80 A for 10 s, TOLT (steady bound)",59.5,degC
+"FET junction after 80 A for 10 s, TOLL (steady bound)",99.1,degC
 SCD threshold (100 mV),400,A
 SCD delay set (15 to 450 us available),15,us
 "OCD1 threshold (24 mV), 320 ms",96,A
@@ -109,12 +109,12 @@ Peak resistor and switch power,34.1,W
 Energy into a shorted load in the 1 s timeout,34.1,J
 Envelope length,220,mm
 Envelope width,110,mm
-Envelope height,32,mm
-Mass: 1 Base plate,262,g
-Mass: 2 PCB with copper (60 % fill),64,g
-Mass: 4 MOSFETs,9,g
+Envelope height,33,mm
+Mass: 1 Base plate,260,g
+Mass: 2 PCB with copper (60 % fill),63,g
+Mass: 4 MOSFETs,6,g
 Mass: 7 Precharge,8,g
-Mass: 8 Fuse and holder,89,g
+"Mass: 8 Fuse and holder (concept figure, kept until the holder is chosen)",89,g
 Mass: 9 Studs,41,g
 "Mass: 9 Nuts, washers, lugs (assumed)",32,g
 Mass: 10 Balance connector and harness (assumed),45,g
@@ -122,12 +122,13 @@ Mass: 11 Temperature sensors (assumed),10,g
 Mass: 12 CAN and UART connector,3,g
 Mass: 13 Cover,57,g
 "Mass: 3, 5, 6, 14, 15 Other components (assumed)",15,g
-Mass: 17 Thermal pad and screws (assumed),13,g
-Mass total without power cables,0.646,kg
-Mass total with a 3 mm plate,0.581,kg
-BOM lines,17,
-BOM total,134.00,USD
-BOM total without the secondary protector,124.00,USD
-Share of budget_usd 140,95.7,%
-Margin against budget_usd 140,6.00,USD
-Against former budget of 120 (before CGD-DDR-002),11.7,% over
+"Mass: 17 Gap pad, spacers, pillars, screws and nuts",25,g
+"Mass: 18 Fuse link, copper bar",12,g
+Mass total without power cables,0.664,kg
+Mass total with a 3 mm plate,0.599,kg
+BOM lines,18,
+BOM total,138.00,USD
+BOM total without the secondary protector,128.00,USD
+Share of budget_usd 140,98.6,%
+Margin against budget_usd 140,2.00,USD
+Against former budget of 120 (before CGD-DDR-002),15.0,% over

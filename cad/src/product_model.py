@@ -197,9 +197,8 @@ def product_parts(P=PARAMS):
         for hy in (-hw + 8, hw - 8):
             plate -= _zcyl(hx, hy, -1, T + 1, 2.75)
             plate -= _zcyl(hx, hy, T - 0.8, T + 1, 3.6)            # shallow counterbore
-    for sx in (-P["standoff_x"], P["standoff_x"]):
-        for sy in (-P["standoff_y"], P["standoff_y"]):
-            plate += _zcyl(sx, sy, T, P["pcb_z0"], P["standoff_r"])
+    for sx, sy, _ in P["pcb_fix"]:                         # bought spacers under the board (CGD-DDR-003)
+        plate += _zcyl(sx, sy, T, P["plate_t"] + P["spacer_h"], P["spacer_od"] / 2)
     add("Aluminium base plate and heat spreader", plate, C_PLATE, "metal", 1, "shell", E_PLATE)
 
     # thermal pad and MOSFET bank under the PCB (BOM 4, 17), same envelopes as model.py

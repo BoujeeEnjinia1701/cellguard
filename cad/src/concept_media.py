@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / ".kit"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build123d import Box, Cylinder, Pos
 from concept import Part, render_all
-from model import build_parts
+from model import PARAMS, build_parts
 
 
 def box(x0, x1, y0, y1, z0, z1):
@@ -44,10 +44,9 @@ for x in cx:
 for (i, y) in ((0, 60), (1, -60), (2, 60)):      # series busbars
     cells = cells + box(cx[i] - 10, cx[i + 1] + 10, y - 10, y + 10, PACK_TOP + 6, PACK_TOP + 9)
 posts = None
-for x in (-78, 128):
-    for y in (-35, 35):
-        p = rod(x, y, PACK_TOP, 0, 5.0)
-        posts = p if posts is None else posts + p
+for x, y in PARAMS["mount_holes"]:                # pack posts under the plate's four tapped mounting holes
+    p = rod(x, y, PACK_TOP, 0, 5.0)
+    posts = p if posts is None else posts + p
 # cell tap leads lying on the cell tops, from the harness to each series node
 taps = [(cx[0], -60), ((cx[0] + cx[1]) / 2, 60), ((cx[1] + cx[2]) / 2, -60),
         ((cx[2] + cx[3]) / 2, 60), (cx[3], -60)]
@@ -62,13 +61,13 @@ context = [Part("4S LiFePO4 pack (4 x 280 Ah cells)", cells, "#C8CDD3"),
            Part("mounting posts and cell tap leads", posts + leads, "#8A9099")]
 
 render_all(
-    parts, project="CellGuard", title="Battery management board concept", dwg_no="CGD-DWG-010", date="2026-09-25",
+    parts, project="CellGuard", title="Battery management board concept", dwg_no="CGD-DWG-010", date="2026-09-30",
     key_figures=["4 to 16 LiFePO4 cells in series (12.8 to 58.4 V)",
                  "40 A continuous, 80 A for 10 s; FET junction 54 °C (calc.)",
                  "Board loss 4.4 W at 40 A, R6 target 4 W (calc., not met)",
                  "Independent secondary protector and SCP fuse (R4)",
                  "CAN 2.0B 250 kbit/s, SwapCell v0.3 message set; UART",
-                 "220 x 110 x 32 mm, 0.65 kg; $134 in parts (est.)"],
+                 "220 x 110 x 33 mm, 0.67 kg; $138 in parts (est.)"],
     scale_figure=False, context=context,
     flow={"title": "power path, 16S pack discharging at 40 A (estimates, CGD-CAL-001)", "unit": "W (est.)",
           "stages": [("Cells, 16S at 51.2 V", 2048.0), ("Fuse and links", 2046.4),

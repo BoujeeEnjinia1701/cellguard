@@ -228,3 +228,54 @@ This is an appearance model only: no tolerances, no PCB layout and no fabricatio
 - Kit 1.5.0 synced: STANDARDS v1.5 (sections 12 to 15: product renders, storefront images and image quality, public release, authorship and signing), `.kit/cards.py`, `.kit/image_qc.py`, `.kit/release_gate.py`, issue templates, and the `/render-product` and `/release` commands. `CLAUDE.md` now matches `.kit/CLAUDE.md`.
 - Every `media/render-*.png` recaptioned from its original render with the new layout: the title, concept label and repository sit in a band above the render and the view note in a band below it, each line wrapped to the image width, so no text overlaps other text or the render or runs off the image. `media/card.png` and `media/social-preview.png` regenerated with the same rules.
 - `python .kit/image_qc.py` and `python .kit/release_gate.py` pass. trl stays 3.
+
+## Session 2026-09-30: design for construction and the prototype build plan (kit 1.7.0)
+
+Done under Amish's 2026-09-30 instruction to bring every repo to the approved build plan format, with outstanding decisions kept in a separate register, and to "fix the design assumptions to match and be physically feasible". TRL stays 3.
+
+### What was done
+
+- Kit 1.7.0 installed (`.kit/`, `.claude/commands/`); `CLAUDE.md` matches `.kit/CLAUDE.md`.
+- `cad/src/model.py`: constructable design; `build_components()` and `checks()` added; `python cad/src/model.py --check` runs 46 constructability checks (overlaps, contacts, clearances, gap pad squeeze, link height, assembly order). All pass.
+- `docs/decisions/0003-design-for-construction.md` (CGD-DDR-003 v0.1, Draft): every change below, made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review.
+- `docs/05-build-plan.md` (CGD-BLD-001 v0.1) and `docs/06-design-decisions.md` (CGD-DEC-001 v0.1), both in `trl_evidence`; `design_state: constructable` in `project.yaml`.
+- `cad/src/build_plan_media.py`: overview, 5 making sketches (CGD-DWG-101 to 105), plate hole layout, 6 joint close-ups, 10 assembly step pictures and a connections diagram, in `docs/05-build-plan/` and `cad/drawings/`. Every picture was looked at and fixed where cluttered.
+- `cad/drawings/CGD-DWG-001` Rev P2; STEP and STL regenerated (assembly, base plate, cover and the new fuse link); concept media regenerated, including `media/model.glb`.
+- `bom/bom.csv`: line 17 repriced ($5.00 to $7.00) and respecified; new line 18, copper fuse link ($2.00); lines 8 and 9 specify the holder and stud dimensions the design relies on. Total $138.00.
+- Calculations re-run: CGD-CAL-001 v0.3; CGD-PRC-001, CGD-REQ-001 and CGD-PRB-001 to v0.5; README figures, links line and "Building the prototype" section.
+- `cad/src/product_model.py` reads the new spacer positions so it still runs; its appearance details are otherwise unchanged.
+
+### Design changes made for construction (CGD-DDR-003)
+
+1. Board supports: flat plate, six bought 3 mm spacers and six M3 countersunk screws from below, in place of standoffs drawn as part of the plate with no fixing.
+2. Gap under the switches: 3.0 mm, with a 1.0 mm gap pad squeezed to 0.7 mm, in place of a 0.5 mm pad with no squeeze.
+3. Cover: carried on four 20 mm pillars and held by four M3 screws; connector and probe openings made into notches open at the bottom; walls 0.5 mm clear of the plate.
+4. Board fixings at the power end moved to the corners (71.5, ±43.5 mm) to clear the B+ stud and the protector fuse; two fixings added at (48, ±44 mm) for the cover pillars.
+5. Fuse holder moved in line with the B+ stud, fixed by four M4 screws; a straight 14 x 3 mm copper link joins it to the B+ stud at matching heights.
+6. Power studs specified as soldered through-hole terminals with an M6 stud and 13 mm shoulder.
+7. Four M4 tapped mounting holes in the plate (screws from below); hero picture pack posts moved to them.
+8. CAN and UART connector moved so its face is flush with the cover, 5 mm past the board edge (was 9 mm).
+
+### Key results (CGD-CAL-001 v0.3)
+
+- No requirement changed status: 10 met on paper, 3 not met (R6 4.44 W against 4 W; R8 on 20 Ah packs; R14 0.664 kg against 0.6 kg, worse than the 0.646 kg before), 3 at risk (R2, R4, R7).
+- Hottest switch junction 54.0 °C at 40 A (was 53.7 °C); 99.1 °C bound at 80 A for 10 s with TOLL (was 97.7 °C).
+- Envelope 220 x 110 x 33 mm; parts cost $138.00, $2.00 under the $140 budget (was $6.00).
+
+### Proposed, awaiting Amish
+
+All open items are in the register CGD-DEC-001: accept CGD-DDR-003 (recommended); keep the $140 budget and confirm the protector fuse price first (recommended); cover material and colour; responses to R6, R8 and R14; state-of-charge test method; first test partner; the render-session items (status light, pack layout in renders, cover fixing and cables in renders); SwapCell agreement.
+
+### Safety concerns
+
+- The gap pad is the only insulation between the live switch tops and the aluminium plate; it must be rated for at least 100 V and replaced if nicked. The build plan adds an insulation check (S1).
+- The copper link and stud shoulders are live at pack potential outside the cover; the link is sleeved and the plan requires boots on the studs before anything is connected.
+- Unchanged: up to about 4.7 kA prospective short circuit; 15 µs short-circuit delay; protector fuse rating unconfirmed (R4 at risk).
+
+### Stale media (made on Amish's Mac, not regenerated here)
+
+`media/render-hero.png`, `media/render-exploded.png` and `media/render-detail.png` (referenced by the README, not in this copy), `media/card.png` and `media/social-preview.png` show the concept plate, fuse position and cover fixings. They need regenerating from `cad/src/product_model.py`, which should also adopt the fuse position, copper link and pillar cover fixing.
+
+### Recommended next step
+
+Amish to review CGD-DDR-003 and the register. TRL 4 (board layout, bench build on a cell simulator, first checks) remains on hold by his instruction.

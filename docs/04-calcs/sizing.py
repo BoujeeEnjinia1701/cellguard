@@ -40,7 +40,7 @@ T_PCB = 50.0                                     # degC copper temperature at 40
 H_PLATE = 8.0                                    # W/(m2 K) effective, both faces, natural convection plus radiation
 PCB_TO_PLATE = 0.5                               # share of PCB copper and shunt loss reaching the plate
 RJC_TOLT, RJC_TOLL = 0.5, 20.0                   # K/W junction to top: top-cooled package vs through the mold
-PAD_T, PAD_K, PAD_A = 0.5e-3, 3.0, 1.0e-4        # m, W/(m K), m2 per FET
+PAD_T, PAD_K, PAD_A = 0.7e-3, 3.0, 1.0e-4        # m (1.0 mm gap pad compressed to 0.7 mm, CGD-DDR-003), W/(m K), m2 per FET
 
 AL_RHO, AL_CP = 2700.0, 896.0
 
@@ -282,15 +282,20 @@ out("Envelope length", e[1] - e[0], "mm", "{:.0f}")
 out("Envelope width", e[3] - e[2], "mm", "{:.0f}")
 out("Envelope height", e[5] - e[4], "mm", "{:.0f}")
 vol = {bom: s.volume / 1e3 for _, s, _, bom, _ in build_parts()}   # cm3
-dens = {1: 2.70, 13: 1.20, 8: 2.50, 9: 8.50, 4: 2.50, 7: 2.70, 12: 1.50}    # g/cm3 (8: average fuse and holder)
+dens = {1: 2.70, 13: 1.20, 9: 8.50, 4: 2.50, 7: 2.70, 12: 1.50, 18: 8.96}    # g/cm3
+from model import build_components  # noqa: E402
+cv = {k: s.volume / 1e3 for k, (s, _) in build_components().items()}   # cm3 per component
+m_fix = (cv["pad"] * 3.0 + (cv["spacers"] + cv["pillars"]) * 2.70          # silicone gap pad; aluminium spacers, pillars
+         + (cv["pcb_screws"] + cv["nuts"] + cv["cover_screws"] + cv["holder_screws"]) * 7.9)   # stainless screws and nuts
 mass = {"1 Base plate": vol[1] * dens[1],
         "2 PCB with copper (60 % fill)": vol[2] * 1.85 + 4 * PARAMS["pcb_l"] * PARAMS["pcb_w"] * 0.07e-3 * 8.96 * 0.6,
         "4 MOSFETs": vol[4] * dens[4], "7 Precharge": vol[7] * dens[7],
-        "8 Fuse and holder": vol[8] * dens[8], "9 Studs": vol[9] * dens[9],
+        "8 Fuse and holder (concept figure, kept until the holder is chosen)": 89.0, "9 Studs": vol[9] * dens[9],
         "9 Nuts, washers, lugs (assumed)": 32.0, "10 Balance connector and harness (assumed)": 45.0,
         "11 Temperature sensors (assumed)": 10.0, "12 CAN and UART connector": vol[12] * dens[12],
         "13 Cover": vol[13] * dens[13], "3, 5, 6, 14, 15 Other components (assumed)": 15.0,
-        "17 Thermal pad and screws (assumed)": 13.0}
+        "17 Gap pad, spacers, pillars, screws and nuts": m_fix,
+        "18 Fuse link, copper bar": vol[18] * dens[18]}
 for k, v in mass.items():
     out(f"Mass: {k}", v, "g", "{:.0f}")
 m_tot = sum(mass.values())

@@ -3,9 +3,9 @@ doc_id: CGD-PRB-001
 title: CellGuard problem statement
 project: CellGuard
 doc_type: Problem statement
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-09-30'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,6 +25,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.5"
+  date: '2026-09-30'
+  author: Amish Chadha
+  change: Design for construction (CGD-DDR-003); figures follow CGD-CAL-001 v0.3
 ---
 
 # CellGuard problem statement
@@ -67,7 +71,7 @@ Operating context assumed for the concept: LFP prismatic or cylindrical cells in
 
 ## Constraints
 
-- Garage-buildable prototype for about $140 USD in parts (`project.yaml`), excluding cells, raised from $120 by Amish on 2026-09-25 (CGD-DDR-002). CGD-CAL-001 prices the board at $134 with the secondary protector.
+- Garage-buildable prototype for about $140 USD in parts (`project.yaml`), excluding cells, raised from $120 by Amish on 2026-09-25 (CGD-DDR-002). CGD-CAL-001 v0.3 prices the board at $138 with the secondary protector and the parts added to make it buildable (CGD-DDR-003).
 - One board design covers 4 to 16 series cells, set by configuration, not by different boards.
 - Parts that a small workshop can solder: no ball grid arrays, no leadless packages finer than 0.5 mm pitch, assembly with a hot plate or hot-air station.
 - Maximum pack voltage below 60 V DC, so the design stays in the extra-low-voltage range.
