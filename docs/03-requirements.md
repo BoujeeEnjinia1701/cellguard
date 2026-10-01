@@ -3,9 +3,9 @@ doc_id: CGD-REQ-001
 title: CellGuard requirements
 project: CellGuard
 doc_type: Requirements
-version: "0.5"
+version: "0.6"
 status: Draft
-date: '2026-09-30'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -29,6 +29,10 @@ revisions:
   date: '2026-09-30'
   author: Amish Chadha
   change: Design for construction (CGD-DDR-003); figures follow CGD-CAL-001 v0.3; no requirement changed status
+- version: "0.6"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Budget treated as a value-engineering target; cost wording only, no number changed
 ---
 
 # CellGuard requirements
@@ -54,7 +58,7 @@ Table 1. Requirements.
 | R13 | Precharge the load | Charge up to 2 mF of load capacitance to 90 % of pack voltage within 1 s before closing the discharge path | Precharge calculation |
 | R14 | Be small and light | 230 x 120 x 40 mm or smaller, 0.6 kg or less without power cables | Massing model; later weighing |
 | R15 | Be buildable and open | No BGA or leadless parts finer than 0.5 mm pitch; assembly with a hot plate or hot-air station; hardware CERN-OHL-S-2.0, firmware MIT (reused Apache-2.0 files keep their own license in `firmware/third_party/`) | Design review of the parts list |
-| R16 | Stay within the concept budget | $140 or less in parts at quantity one, excluding cells (raised from $120, CGD-DDR-002) | Priced BOM |
+| R16 | Stay within the value-engineering target | $140 or less in parts at quantity one, excluding cells (a hypothetical control target, not a limit; raised from $120, CGD-DDR-002) | Priced BOM |
 
 Table 2. Status at TRL 3 (CGD-CAL-001; calculations, nothing measured).
 
@@ -66,7 +70,7 @@ Table 2. Status at TRL 3 (CGD-CAL-001; calculations, nothing measured).
 | R2 | At risk | Total error ±15 mV from −40 to 85 °C meets the range target; at 25 °C the data sheet gives only a typical figure under 10 mV |
 | R4 | At risk | With the BQ77216-class secondary protector and SCP fuse every single fault in the failure analysis ends safe; an SCP fuse rated for 40 A at 60 V DC is not yet confirmed |
 | R7 | At risk | 103 mA; 9.7 h for 1 % on 100 Ah; PCB 56.4 °C but a balance resistor hotspot about 73.9 °C at 40 °C ambient |
-| R16 | Met | $138.00 with the secondary protector and the parts added for construction (CGD-DDR-003): 98.6 % of the $140 budget, $2.00 margin |
+| R16 | Within the value-engineering target | $138.00 estimated with the secondary protector and the parts added for construction (CGD-DDR-003): 98.6 % of the $140 target, $2.00 under |
 | R1 | Met | 12.8 to 58.4 V; 100 V MOSFETs with 1.71 times margin; front end rated 3 to 16 cells |
 | R3 | Met on paper | Thresholds inside the front-end ranges; short-circuit trip within 25 µs |
 | R5 | Met on paper | Junction 54.0 °C at 40 A (top-cooled package), 99.1 °C bound at 80 A for 10 s (TOLL) |
@@ -83,5 +87,5 @@ Table 2. Status at TRL 3 (CGD-CAL-001; calculations, nothing measured).
 - Reference packs: 4S 280 Ah (12.8 V, about 3.6 kWh) for storage and 16S 20 Ah (51.2 V, about 1 kWh) for vehicles.
 - The 40 A rating covers a 400 W inverter on a 12.8 V pack (about 31 A) and a 30 A vehicle controller. Larger loads need a larger board or a contactor, which is out of scope.
 - Prices are indicative single-unit prices from distributors in September 2026 and will change.
-- `budget_usd` in `project.yaml` is $140, raised from $120 by Amish on 2026-09-25 (CGD-DDR-002); R16 is judged against $140.
+- `budget_usd` in `project.yaml` is the $140 value-engineering target, raised from $120 by Amish on 2026-09-25 (CGD-DDR-002); R16 is reported against the $140 value-engineering target.
 - R6, R8 and R14 are unchanged: CGD-CAL-001 lists options for each but recommends none, so the responses remain proposed, awaiting Amish.

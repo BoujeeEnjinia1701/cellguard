@@ -3,9 +3,9 @@ doc_id: CGD-CAL-001
 title: CellGuard sizing calculations
 project: CellGuard
 doc_type: Calculation note
-version: "0.3"
+version: "0.4"
 status: Draft
-date: '2026-09-30'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -21,11 +21,15 @@ revisions:
   date: '2026-09-30'
   author: Amish Chadha
   change: Design for construction (CGD-DDR-003). Gap pad 1.0 mm compressed to 0.7 mm; mass adds the spacers, pillars, screws and copper fuse link; cost adds BOM line 18 and reprices line 17
+- version: "0.4"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Budget treated as a value-engineering target; cost wording only, no number changed
 ---
 
 # CellGuard sizing calculations
 
-On paper, CellGuard meets 10 of its 16 requirements. **Three are not met:** the board loses about 4.4 W at 40 A against 4 W (R6), mainly because the added self-control protector fuse costs about 0.6 W; the state-of-charge error on a 20 Ah pack reaches about 10.1 points after 7 days without a full charge, against 10 (R8); and the board weighs about 0.66 kg against 0.6 kg (R14). The parts cost of $138 meets R16 against the $140 budget that Amish set on 2026-09-25 (CGD-DDR-002), with a $2 margin after the parts added to make the design buildable (CGD-DDR-003); it was $14 over the former $120 at v0.2. Three are **at risk**: cell voltage accuracy at 25 °C (R2), single-fault safety until a suitable protector fuse is confirmed (R4) and the balance resistor hotspot (R7). Two TRL 2 figures were optimistic and are corrected here: sleep current is about 55 µA, not 100 µA, and the prospective short-circuit current is about 0.7 to 4.7 kA, not 1 to 8 kA, once cables and the board are counted.
+On paper, CellGuard meets 10 of its 16 requirements. **Three are not met:** the board loses about 4.4 W at 40 A against 4 W (R6), mainly because the added self-control protector fuse costs about 0.6 W; the state-of-charge error on a 20 Ah pack reaches about 10.1 points after 7 days without a full charge, against 10 (R8); and the board weighs about 0.66 kg against 0.6 kg (R14). The estimated parts cost of $138 is within the $140 value-engineering target for R16 that Amish set on 2026-09-25 (CGD-DDR-002), $2 under the target after the parts added to make the design buildable (CGD-DDR-003); it was $14 over the former $120 target at v0.2. Three are **at risk**: cell voltage accuracy at 25 °C (R2), single-fault safety until a suitable protector fuse is confirmed (R4) and the balance resistor hotspot (R7). Two TRL 2 figures were optimistic and are corrected here: sleep current is about 55 µA, not 100 µA, and the prospective short-circuit current is about 0.7 to 4.7 kA, not 1 to 8 kA, once cables and the board are counted.
 
 Every number in this note is printed by `docs/04-calcs/sizing.py` (run from the repo root: `python docs/04-calcs/sizing.py`), which also writes `docs/04-calcs/results.csv`. The script reads part volumes and the envelope from `cad/src/model.py` and costs from `bom/bom.csv`. All values are first-principles estimates; nothing is measured.
 
@@ -124,7 +128,7 @@ The model envelope is 220 x 110 x 33 mm (to the cover screw heads), inside 230 x
 
 ## 11. Cost (R16)
 
-The BOM has 18 lines, all priced, and totals **$138.00**: $124.00 as at TRL 2, $10.00 for the secondary protector, $2.00 more for the gap pad, spacers, pillars and screws (line 17) and $2.00 for the copper fuse link (line 18, CGD-DDR-003). Against `budget_usd: 140` in `project.yaml`, set by Amish on 2026-09-25 (CGD-DDR-002), that is 98.6 % of the budget with a margin of $2.00, so **R16 is met**, with little room left for the unconfirmed SCP fuse price. Against the former $120 it would be 15.0 % over.
+The BOM has 18 lines, all priced, and totals **$138.00**: $124.00 as at TRL 2, $10.00 for the secondary protector, $2.00 more for the gap pad, spacers, pillars and screws (line 17) and $2.00 for the copper fuse link (line 18, CGD-DDR-003). Against the value-engineering target `budget_usd: 140` in `project.yaml` (a hypothetical control target, not a limit), set by Amish on 2026-09-25 (CGD-DDR-002), the estimated cost is 98.6 % of the target, $2.00 under it, so **R16 is within the value-engineering target**, with little room left for the unconfirmed SCP fuse price. Against the former $120 target it would be 15.0 % over.
 
 ## 12. Results
 
@@ -138,7 +142,7 @@ The BOM has 18 lines, all priced, and totals **$138.00**: $124.00 as at TRL 2, $
 | R2 | ±15 mV from −40 to 85 °C; under 10 mV typical at 25 °C | ±10 mV at 25 °C, ±15 mV from −20 to 60 °C | At risk (no guaranteed 25 °C figure) |
 | R4 | All single faults in Table 3 end safe with the BQ77216 and SCP fuse | No single fault allows overcharge or over-discharge | At risk (SCP fuse rating unconfirmed) |
 | R7 | 103 mA; 9.7 h for 1 % on 100 Ah; PCB 56.4 °C, resistor hotspot 73.9 °C | 100 mA; 24 h; 70 °C | At risk (hotspot) |
-| R16 | $138.00; 98.6 % of budget | $140 (raised from $120, CGD-DDR-002) | Met ($2.00 margin) |
+| R16 | $138.00; 98.6 % of target | $140 value-engineering target (raised from $120, CGD-DDR-002) | Within the value-engineering target ($2.00 under) |
 | R1 | 12.8 to 58.4 V; 1.71 times MOSFET margin | 4 to 16 LFP cells, under 60 V | Met |
 | R3 | Table 2 settings inside front-end ranges; SCD trip within 25 µs | Trip within 500 µs; all thresholds configurable | Met on paper |
 | R5 | Junction 54.0 °C (TOLT) or 61.6 °C (TOLL) at 40 A; 99.1 °C bound at 80 A for 10 s (TOLL) | 110 °C or less | Met on paper |

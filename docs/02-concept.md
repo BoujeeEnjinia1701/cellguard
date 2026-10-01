@@ -3,9 +3,9 @@ doc_id: CGD-PRC-001
 title: CellGuard design precis
 project: CellGuard
 doc_type: Design precis
-version: "0.5"
+version: "0.6"
 status: Draft
-date: '2026-09-30'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -29,6 +29,10 @@ revisions:
   date: '2026-09-30'
   author: Amish Chadha
   change: Design for construction (CGD-DDR-003); figures follow CGD-CAL-001 v0.3; base plate, fuse holder and cover fixings made buildable; GA Rev P2
+- version: "0.6"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Budget treated as a value-engineering target; cost wording only, no number changed
 ---
 
 # CellGuard design precis
@@ -123,7 +127,7 @@ Table 2. Key numbers at TRL 3.
 | Log capacity | 65,536 records of 32 bytes | R12: met |
 | Precharge of 2 mF to 90 % | 0.46 s, 3.38 J, 34.1 W peak | R13: met |
 | Size and mass | 220 x 110 x 33 mm; 0.664 kg | R14: **not met** (mass) |
-| Parts cost | $138.00 (98.6 % of $140) | R16, $140: met |
+| Parts cost | $138.00 estimated (98.6 % of the $140 value-engineering target) | R16, $140 target: within the value-engineering target |
 
 ### State-of-charge method
 
@@ -148,7 +152,7 @@ Maximum pack voltage stays below 60 V DC. CellGuard is a research, educational a
 ## Open questions
 
 - [x] Licensing of reused Apache-2.0 firmware: separate `firmware/third_party/` folder with original notices, listed in `LICENSE-SOFTWARE`. Decided by Amish, 2026-09-25: go with recommendation.
-- [x] Budget: `budget_usd` raised from $120 to $140. Decided by Amish, 2026-09-25: go with recommendation.
+- [x] Value-engineering target: `budget_usd` (a hypothetical control target, not a limit) raised from $120 to $140. Decided by Amish, 2026-09-25: go with recommendation.
 - [ ] Responses to R6, R8 and R14 not met (options in CGD-CAL-001 section 12; none recommended). Proposed, awaiting Amish.
 - [ ] SwapCell project's agreement to the NMC profile and the message set profile.
 - [ ] Cover rating: is a printed flame-retardant cover enough, or should the cover be sheet aluminium? Proposed, awaiting Amish.

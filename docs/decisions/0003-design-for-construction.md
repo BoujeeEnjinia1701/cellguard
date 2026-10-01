@@ -3,9 +3,9 @@ doc_id: CGD-DDR-003
 title: CellGuard design for construction
 project: CellGuard
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-09-30'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,6 +13,10 @@ revisions:
   date: '2026-09-30'
   author: Amish Chadha
   change: Changes that make the concept physically buildable, with the reason for each; made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review
+- version: "0.2"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Budget treated as a value-engineering target; cost wording only, no number changed
 ---
 
 # 0003: Design for construction
@@ -58,7 +62,7 @@ The changes keep the board's function, electrical design, size class and main in
 | # | Question | Options | Recommendation |
 | --- | --- | --- | --- |
 | A1 | Accept the changes P1 to P8. | (a) accept; (b) ask for changes. | (a). |
-| A2 | The $2.00 budget margin left after lines 17 and 18 could be used up by the SCP fuse, whose price is not confirmed. | (a) keep $140 and confirm the SCP fuse price first; (b) raise `budget_usd`. | (a); raise the budget only if the SCP fuse price needs it. |
+| A2 | The estimated cost is $2.00 under the $140 value-engineering target after lines 17 and 18, and the SCP fuse, whose price is not confirmed, could use it up. | Confirm the SCP fuse price first; any overrun is reported as over the value-engineering target, a hypothetical control target, not a limit. | Confirm the SCP fuse price first. |
 
 ## Consequences
 

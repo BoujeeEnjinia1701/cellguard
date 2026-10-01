@@ -260,11 +260,11 @@ Done under Amish's 2026-09-30 instruction to bring every repo to the approved bu
 
 - No requirement changed status: 10 met on paper, 3 not met (R6 4.44 W against 4 W; R8 on 20 Ah packs; R14 0.664 kg against 0.6 kg, worse than the 0.646 kg before), 3 at risk (R2, R4, R7).
 - Hottest switch junction 54.0 °C at 40 A (was 53.7 °C); 99.1 °C bound at 80 A for 10 s with TOLL (was 97.7 °C).
-- Envelope 220 x 110 x 33 mm; parts cost $138.00, $2.00 under the $140 budget (was $6.00).
+- Envelope 220 x 110 x 33 mm; estimated parts cost $138.00, $2.00 under the $140 value-engineering target (was $6.00 under).
 
 ### Proposed, awaiting Amish
 
-All open items are in the register CGD-DEC-001: accept CGD-DDR-003 (recommended); keep the $140 budget and confirm the protector fuse price first (recommended); cover material and colour; responses to R6, R8 and R14; state-of-charge test method; first test partner; the render-session items (status light, pack layout in renders, cover fixing and cables in renders); SwapCell agreement.
+All open items are in the register CGD-DEC-001: accept CGD-DDR-003 (recommended); cover material and colour; responses to R6, R8 and R14; state-of-charge test method; first test partner; the render-session items (status light, pack layout in renders, cover fixing and cables in renders); SwapCell agreement.
 
 ### Safety concerns
 

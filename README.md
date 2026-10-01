@@ -2,7 +2,7 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![DOI](https://zenodo.org/badge/1388475655.svg)](https://zenodo.org/badge/latestdoi/1388475655) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/cellguard/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/cellguard/actions/workflows/reuse.yml) [![Archived in Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/BoujeeEnjinia1701/cellguard/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/BoujeeEnjinia1701/cellguard)
 
-**Area:** Shared Components · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** about $140 USD · **Difficulty:** 4 of 5
+**Area:** Shared Components · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** about $140 USD (a hypothetical control target, not a limit) · **Difficulty:** 4 of 5
 
 An open battery management board for small LiFePO4 packs (4 to 16 cells) with cell balancing, protection and a documented state-of-charge estimate, reusable across the lab's vehicles, storage and field kits.
 
@@ -75,7 +75,7 @@ Full design precis: [docs/02-concept.md](docs/02-concept.md) · Requirements: [d
 - Fuse and precharge circuit
 - Enclosure and harness
 
-The component choices were decided by Amish on 2026-09-25 ([CGD-DDR-001](docs/decisions/0001-trl2-review-decisions.md), [CGD-DDR-002](docs/decisions/0002-recommendations-accepted.md)). The priced bill of materials is in [bom/bom.csv](bom/bom.csv): $138 in parts, within the $140 budget with a $2 margin.
+The component choices were decided by Amish on 2026-09-25 ([CGD-DDR-001](docs/decisions/0001-trl2-review-decisions.md), [CGD-DDR-002](docs/decisions/0002-recommendations-accepted.md)). The priced bill of materials is in [bom/bom.csv](bom/bom.csv): an estimated $138 in parts, within the $140 value-engineering target ($2 under).
 
 ## Building the prototype
 
