@@ -3,9 +3,9 @@ doc_id: CGD-DDR-002
 title: CellGuard recommendations accepted
 project: CellGuard
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,12 +13,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.2"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: "Items left open on 2026-09-25 decided by Amish as recommended (CGD-DEC-001)"
 ---
 
 # 0002: Recommendations accepted
 
 - **Date:** 2026-09-25
-- **Status:** accepted
+- **Status:** accepted. The items in Table 2, which had no recommendation on 2026-09-25, were decided by Amish on 2026-10-02 as later recommended: "i approve your recommendations for all 555 open decisions." (CGD-DEC-001).
 
 ## Context
 
@@ -49,18 +53,18 @@ The options for each item are in `docs/REVIEW.md` (TRL 2 and TRL 3 sessions), CG
 | 14d | Current calibration | One-point gain calibration at build | CGD-REQ-001 v0.4 R9; CGD-CAL-001 v0.2 section 6. Decided but on hold: the build and calibration are TRL 4 work |
 | 15 (R16 part) | Response to R16 | The recommended $140 budget | Covered by item 4 |
 
-## Items still open
+## Items left open on 2026-09-25
 
-*Table 2. Items without a recommendation: Proposed, awaiting Amish.*
+*Table 2. Items without a recommendation on 2026-09-25, decided by Amish on 2026-10-02.*
 
 | # (DDR-001) | Item | Status |
 | --- | --- | --- |
-| 9 | First test partner (solar installer, e-bike repair shop or makerspace) | Proposed, awaiting Amish. No preference stated |
-| 12 | Cover material: printed flame-retardant polycarbonate or sheet aluminium | Proposed, awaiting Amish. No recommendation was made |
-| 13 | Low-cost method to check the state-of-charge estimate | Proposed, awaiting Amish. No recommendation was made |
-| 15 (R6) | Board loss 4.44 W against 4 W: 1.5 mΩ-class MOSFETs or the SCP fuse moved off the board | Proposed, awaiting Amish. No option was recommended |
-| 15 (R8) | State of charge on 20 Ah packs: restate R8 for 50 Ah and larger, a full-charge prompt, or a 0.5 mΩ shunt | Proposed, awaiting Amish. No option was recommended |
-| 15 (R14) | Mass 0.646 kg against 0.6 kg: a 3 mm plate (0.581 kg) or relax the target to 0.65 kg | Proposed, awaiting Amish. No option was recommended |
+| 9 | First test partner (solar installer, e-bike repair shop or makerspace) | Decided by Amish, 2026-10-02, as recommended: a small off-grid solar installer that builds 16S LFP packs is the first candidate to approach, testing on their bench rather than in a customer system (CGD-DEC-001) |
+| 12 | Cover material: printed flame-retardant polycarbonate or sheet aluminium | Decided by Amish, 2026-10-02, as recommended: printed flame-retardant polycarbonate, as drawn; sheet aluminium is not used (CGD-DEC-001) |
+| 13 | Low-cost method to check the state-of-charge estimate | Decided by Amish, 2026-10-02, as recommended: cycle a 4S 20 Ah LFP pack through seven days of partial cycles with a bench supply and a low-cost DC electronic load, count charge with a calibrated reference shunt and meter, then discharge fully to measure the true state of charge (CGD-DEC-001) |
+| 15 (R6) | Board loss 4.44 W against 4 W: 1.5 mΩ-class MOSFETs or the SCP fuse moved off the board | Decided by Amish, 2026-10-02, as recommended: 1.5 mΩ-class switches in the TOLT package, about 3.5 W (CGD-DEC-001) |
+| 15 (R8) | State of charge on 20 Ah packs: restate R8 for 50 Ah and larger, a full-charge prompt, or a 0.5 mΩ shunt | Decided by Amish, 2026-10-02, as recommended: a firmware prompt for a full charge when about five days pass without one, with R8's partial-cycling clause restated to apply between prompted full charges; no 0.5 mΩ shunt (CGD-DEC-001) |
+| 15 (R14) | Mass 0.646 kg against 0.6 kg: a 3 mm plate (0.581 kg) or relax the target to 0.65 kg | Decided by Amish, 2026-10-02, as recommended: R14 relaxed to 0.7 kg, 4 mm plate kept (CGD-DEC-001) |
 
 ## Consequences
 

@@ -3,9 +3,9 @@ doc_id: CGD-DDR-001
 title: CellGuard TRL 2 review decisions
 project: CellGuard
 doc_type: Design decision record
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,12 +17,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: "Items 9, 12, 13 and the R6, R8 and R14 parts of item 15 decided by Amish as recommended (CGD-DEC-001)"
 ---
 
 # 0001: TRL 2 review decisions
 
 - **Date:** 2026-09-25
-- **Status:** accepted in part. On 2026-09-25 Amish accepted all recommendations ("i accept all your recommendations, go with them across all repos"). Items 1 to 8, 10, 11 and 14 and the R16 part of item 15 are decided by Amish, 2026-09-25: go with recommendation (see CGD-DDR-002). Items 9, 12, 13 and the R6, R8 and R14 parts of item 15 had no recommendation and stay proposed, awaiting Amish.
+- **Status:** accepted in part. On 2026-09-25 Amish accepted all recommendations ("i accept all your recommendations, go with them across all repos"). Items 1 to 8, 10, 11 and 14 and the R16 part of item 15 are decided by Amish, 2026-09-25: go with recommendation (see CGD-DDR-002). Items 9, 12, 13 and the R6, R8 and R14 parts of item 15 had no recommendation at TRL 2; recommendations were written for them later, and Amish approved them on 2026-10-02: "i approve your recommendations for all 555 open decisions." (CGD-DEC-001).
 
 ## Context
 
@@ -57,13 +61,13 @@ No pitch or problem rewording was recommended at TRL 2, so `project.yaml` and th
 
 | # | Item | Status |
 | --- | --- | --- |
-| 9 | First test partner (solar installer, e-bike repair shop or makerspace) | Proposed, awaiting Amish. No preference stated |
+| 9 | First test partner (solar installer, e-bike repair shop or makerspace) | Decided by Amish, 2026-10-02, as recommended: a small off-grid solar installer that builds 16S LFP packs is the first candidate to approach, testing on their bench rather than in a customer system (CGD-DEC-001) |
 | 10 | Licensing of Apache-2.0 firmware code in an MIT-licensed repo | Decided by Amish, 2026-09-25: go with recommendation. Reused files keep Apache-2.0 and their notices in `firmware/third_party/` and are listed in `LICENSE-SOFTWARE` |
 | 11 | Budget figure (item 4) | Decided by Amish, 2026-09-25: go with recommendation ($140) |
-| 12 | Cover material: printed flame-retardant polycarbonate or sheet aluminium | Proposed, awaiting Amish. No recommendation was made |
-| 13 | Low-cost method to check the state-of-charge estimate (for example a calibrated shunt and a bench load) | Proposed, awaiting Amish. No recommendation was made |
+| 12 | Cover material: printed flame-retardant polycarbonate or sheet aluminium | Decided by Amish, 2026-10-02, as recommended: printed flame-retardant polycarbonate, as drawn; sheet aluminium is not used (CGD-DEC-001) |
+| 13 | Low-cost method to check the state-of-charge estimate (for example a calibrated shunt and a bench load) | Decided by Amish, 2026-10-02, as recommended: cycle a 4S 20 Ah LFP pack through seven days of partial cycles with a bench supply and a low-cost DC electronic load, count charge with a calibrated reference shunt and meter, then discharge fully to measure the true state of charge (CGD-DEC-001) |
 | 14 | TRL 3 engineering proposals from CGD-CAL-001: protection thresholds (SCD 100 mV with 15 µs delay, OCD1 24 mV with 320 ms, OCD2 40 mV with 20 ms, OCC 12 mV), a top-side cooled MOSFET package, a DPAK-class precharge switch, one-point current calibration at build | Decided by Amish, 2026-09-25: go with recommendation |
-| 15 | Responses to the requirements CGD-CAL-001 finds not met (R6 board loss, R8 state of charge on small packs, R14 mass, R16 cost): options are listed in CGD-CAL-001 section 12 | R16: decided by the $140 budget (item 11). R6, R8 and R14: Proposed, awaiting Amish; no option was recommended |
+| 15 | Responses to the requirements CGD-CAL-001 finds not met (R6 board loss, R8 state of charge on small packs, R14 mass, R16 cost): options are listed in CGD-CAL-001 section 12 | R16: decided by the $140 budget (item 11). R6, R8 and R14: decided by Amish, 2026-10-02, as recommended (CGD-DEC-001): 1.5 mΩ-class switches for R6; a full-charge prompt after about five days, with R8 restated to apply between prompted full charges; R14 relaxed to 0.7 kg |
 
 ## Consequences
 

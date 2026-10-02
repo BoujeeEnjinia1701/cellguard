@@ -3,9 +3,9 @@ doc_id: CGD-DDR-003
 title: CellGuard design for construction
 project: CellGuard
 doc_type: Design decision record
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,12 +17,16 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Budget treated as a value-engineering target; cost wording only, no number changed
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: "Accepted by Amish, including the recommendation for A1; A2 carried as a part to confirm"
 ---
 
 # 0003: Design for construction
 
 - **Date:** 2026-09-30
-- **Status:** Draft. Made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review. Nothing here changes what CellGuard does, its pitch or its safety case. The one item that would need his decision is listed in Table 3 as proposed, awaiting Amish.
+- **Status:** accepted. Amish, 2026-10-02: "i approve your recommendations for all 555 open decisions." This covers every change in Tables 1 and 2 and the recommendation for A1, which is now decided as recommended and recorded in the design decisions register (CGD-DEC-001). A2 is carried in the register as To confirm item 1. Nothing here changes what CellGuard does, its pitch or its safety case.
 
 ## Context
 
@@ -57,16 +61,16 @@ The changes keep the board's function, electrical design, size class and main in
 | Documents | CGD-CAL-001 v0.3, CGD-PRC-001 v0.5, CGD-REQ-001 v0.5, CGD-PRB-001 v0.5: figures above. No requirement changed status: 10 met on paper, 3 not met (R6, R8, R14), 3 at risk (R2, R4, R7). | Follow the model. |
 | Appearance model | `cad/src/product_model.py` reads the new spacer positions; the photoreal renders made on Amish's Mac still show the concept plate and fuse position. | Renders are made on the Mac. |
 
-*Table 3. Proposed, awaiting Amish.*
+*Table 3. Items proposed for Amish; A1 accepted by Amish as recommended on 2026-10-02.*
 
 | # | Question | Options | Recommendation |
 | --- | --- | --- | --- |
-| A1 | Accept the changes P1 to P8. | (a) accept; (b) ask for changes. | (a). |
-| A2 | The estimated cost is $2.00 under the $140 value-engineering target after lines 17 and 18, and the SCP fuse, whose price is not confirmed, could use it up. | Confirm the SCP fuse price first; any overrun is reported as over the value-engineering target, a hypothetical control target, not a limit. | Confirm the SCP fuse price first. |
+| A1 | Accept the changes P1 to P8. | (a) accept; (b) ask for changes. | (a). Accepted by Amish, 2026-10-02. |
+| A2 | The estimated cost is $2.00 under the $140 value-engineering target after lines 17 and 18, and the SCP fuse, whose price is not confirmed, could use it up. | Confirm the SCP fuse price first; any overrun is reported as over the value-engineering target, a hypothetical control target, not a limit. | Confirm the SCP fuse price first. Carried as To confirm item 1 in CGD-DEC-001. |
 
 ## Consequences
 
 - `design_state: constructable` in `project.yaml`. The build plan CGD-BLD-001 shows every component and step in pictures generated from the model (`cad/src/build_plan_media.py`).
-- Open decisions are kept in the design decisions register CGD-DEC-001 (`docs/06-design-decisions.md`).
+- Open decisions are kept in the design decisions register CGD-DEC-001 (`docs/06-design-decisions.md`). With A1 accepted on 2026-10-02, the changes P1 to P8 stand as made.
 - The copper layout of the board is TRL 4 work. It must keep the outline, fixing holes, stud positions and MOSFET positions on CGD-DWG-103.
 - The photoreal renders (`media/render-*.png`), `media/card.png` and `media/social-preview.png` show the concept fuse position and plate; they need regenerating on Amish's Mac.

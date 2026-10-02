@@ -3,9 +3,9 @@ doc_id: CGD-PRC-001
 title: CellGuard design precis
 project: CellGuard
 doc_type: Design precis
-version: "0.6"
+version: "0.7"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -33,6 +33,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Budget treated as a value-engineering target; cost wording only, no number changed
+- version: "0.7"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: "Responses to R6, R8 and R14, cover, status light, state-of-charge check and first test partner as decided on 2026-10-02 (CGD-DEC-001)"
 ---
 
 # CellGuard design precis
@@ -111,7 +115,7 @@ Table 2. Key numbers at TRL 3.
 
 | Quantity | Value | Requirement |
 | --- | --- | --- |
-| Board loss at 40 A (MOSFETs 2.38 W, shunt 0.40 W, copper 1.02 W, SCP fuse 0.64 W) | 4.44 W | R6, 4 W: **not met** |
+| Board loss at 40 A (MOSFETs 2.38 W, shunt 0.40 W, copper 1.02 W, SCP fuse 0.64 W) | 4.44 W | R6, 4 W: **not met**; about 3.5 W with the 1.5 mΩ-class switches decided on 2026-10-02 |
 | External fuse and links at 40 A | 1.60 W | |
 | Power path efficiency, 16S at 40 A | 99.70 % | |
 | Plate temperature rise at 40 A | 13.0 K | |
@@ -120,13 +124,13 @@ Table 2. Key numbers at TRL 3.
 | Protection settings (decided, CGD-DDR-002) | SCD 400 A in 15 µs, OCD2 160 A in 20 ms, OCD1 96 A in 320 ms, OCC 48 A | R3: met on paper |
 | Prospective short-circuit current | 696 A (4S 20 Ah) to 4,746 A (16S 280 Ah) | Fuse breaking capacity 10 kA |
 | Balancing | 103 mA, 0.350 W per channel; 1 % on 100 Ah in 9.7 h, on 280 Ah in 27.2 h | R7: at risk (resistor hotspot 73.9 °C) |
-| State-of-charge error after 7 days without a full charge | 10.1 points (20 Ah), 7.4 points (100 Ah) | R8, 10 points: **not met** on 20 Ah |
+| State-of-charge error after 7 days without a full charge | 10.1 points (20 Ah), 7.4 points (100 Ah) | R8, 10 points: **not met** on 20 Ah over 7 days; R8 now applies between prompted full charges, about five days apart |
 | Current error at 80 A after one-point calibration | 0.404 A | R9, 0.850 A: met |
 | Sleep and ship-mode current | 54.5 µA and 6.0 µA | R10: met |
 | CAN bus load, 250 kbit/s | 1.84 % | R11: met |
 | Log capacity | 65,536 records of 32 bytes | R12: met |
 | Precharge of 2 mF to 90 % | 0.46 s, 3.38 J, 34.1 W peak | R13: met |
-| Size and mass | 220 x 110 x 33 mm; 0.664 kg | R14: **not met** (mass) |
+| Size and mass | 220 x 110 x 33 mm; 0.664 kg | R14, 0.7 kg (relaxed 2026-10-02): met |
 | Parts cost | $138.00 estimated (98.6 % of the $140 value-engineering target) | R16, $140 target: within the value-engineering target |
 
 ### State-of-charge method
@@ -153,10 +157,10 @@ Maximum pack voltage stays below 60 V DC. CellGuard is a research, educational a
 
 - [x] Licensing of reused Apache-2.0 firmware: separate `firmware/third_party/` folder with original notices, listed in `LICENSE-SOFTWARE`. Decided by Amish, 2026-09-25: go with recommendation.
 - [x] Value-engineering target: `budget_usd` (a hypothetical control target, not a limit) raised from $120 to $140. Decided by Amish, 2026-09-25: go with recommendation.
-- [ ] Responses to R6, R8 and R14 not met (options in CGD-CAL-001 section 12; none recommended). Proposed, awaiting Amish.
-- [ ] SwapCell project's agreement to the NMC profile and the message set profile.
-- [ ] Cover rating: is a printed flame-retardant cover enough, or should the cover be sheet aluminium? Proposed, awaiting Amish.
-- [ ] How to test the state-of-charge method without expensive lab equipment (for example, a calibrated shunt and a bench load)? Proposed, awaiting Amish.
-- [ ] First test partner (solar installer, e-bike repair shop or makerspace). Proposed, awaiting Amish.
+- [x] Responses to R6, R8 and R14: 1.5 mΩ-class switches in the TOLT package (about 3.5 W); a firmware prompt for a full charge when about five days pass without one, with R8 restated to apply between prompted full charges; R14 relaxed to 0.7 kg with the 4 mm plate kept. Decided by Amish, 2026-10-02 (CGD-DEC-001).
+- [ ] SwapCell project's agreement to the NMC profile and the message set profile: to be recorded in the SwapCell repo once the board envelope question is settled (SwapCell expects about 230 x 58 x 10 mm; CellGuard is 220 x 110 x 33 mm). Decided by Amish, 2026-10-02 (CGD-DEC-001).
+- [x] Cover: printed flame-retardant polycarbonate, not sheet aluminium; opaque for the prototype, with a light pipe over a three-colour status light. Decided by Amish, 2026-10-02 (CGD-DEC-001).
+- [x] State-of-charge check: cycle a 4S 20 Ah LFP pack through seven days of partial cycles with a bench supply and a low-cost DC electronic load, count charge with a calibrated reference shunt and meter, then discharge fully to measure the true state of charge. Decided by Amish, 2026-10-02 (CGD-DEC-001).
+- [ ] First test partner: a small off-grid solar installer that builds 16S LFP packs, testing on their bench, is the first candidate to approach. Decided by Amish, 2026-10-02 (CGD-DEC-001).
 
 Concept media: [blueprint sheet](../media/concept-blueprint.pdf), [interactive 3D model](../media/viewer.html).

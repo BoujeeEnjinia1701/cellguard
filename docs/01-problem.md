@@ -3,9 +3,9 @@ doc_id: CGD-PRB-001
 title: CellGuard problem statement
 project: CellGuard
 doc_type: Problem statement
-version: "0.6"
+version: "0.7"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -33,6 +33,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Budget treated as a value-engineering target; cost wording only, no number changed
+- version: "0.7"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: "First test partner as decided on 2026-10-02 (CGD-DEC-001)"
 ---
 
 # CellGuard problem statement
@@ -94,4 +98,4 @@ Operating context assumed for the concept: LFP prismatic or cylindrical cells in
 
 - NMC profile for SwapCell's 13S pack: decided by Amish, 2026-09-25: go with recommendation (hardware for both, LFP firmware first). The SwapCell project's agreement is still needed.
 - Current rating: 40 A continuous, decided by Amish, 2026-09-25: go with recommendation; a 100 A variant only if storage users need it.
-- Which partner should supply real packs and use cases for first testing (a solar installer, an e-bike repair shop or a makerspace)? Proposed, awaiting Amish.
+- Which partner should supply real packs and use cases for first testing? Decided by Amish, 2026-10-02 (CGD-DEC-001): a small off-grid solar installer that builds 16S LFP packs, testing on their bench rather than in a customer system, is the first candidate to approach.

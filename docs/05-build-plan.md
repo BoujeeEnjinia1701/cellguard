@@ -3,9 +3,9 @@ doc_id: CGD-BLD-001
 title: CellGuard prototype build plan
 project: CellGuard
 doc_type: Build plan
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-09-30'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,6 +13,10 @@ revisions:
     date: '2026-09-30'
     author: Amish Chadha
     change: First build plan, with pictures by component and step; design made constructable (CGD-DDR-003)
+  - version: "0.2"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: "Mass check against the relaxed 0.7 kg R14 target (CGD-DEC-001)"
 ---
 
 # CellGuard prototype build plan
@@ -288,7 +292,7 @@ These are the checks a TRL 4 test report would record; this plan only lists them
 | CAN and UART | R11 | USB-to-CAN adapter at 250 kbit/s; terminal at 115,200 baud | Status frames received; the output stays off until the enable line is pulled |
 | Board loss and temperatures at 40 A | R5, R6 | Current-limited supply and electronic load at 40 A for 30 minutes, thermocouples on the plate and next to the hottest switch; measure the drop from B+ to P+ and from P- to B- | Plate rise near the calculated 13 K; switch case well under 110 °C; loss recorded against the 4 W target |
 | Balancing temperature | R7 | Simulated cells 20 mV apart, balancing on, 40 °C room or hot box | A balance resistor stays at 70 °C or less |
-| Mass | R14 | Weigh the assembly without power cables | Recorded against 0.6 kg (0.664 kg calculated) |
+| Mass | R14 | Weigh the assembly without power cables | Recorded against 0.7 kg (0.664 kg calculated; R14 relaxed on 2026-10-02) |
 
 ## 6. Safety stops
 

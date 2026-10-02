@@ -3,9 +3,9 @@ doc_id: CGD-CAL-001
 title: CellGuard sizing calculations
 project: CellGuard
 doc_type: Calculation note
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,11 +25,15 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Budget treated as a value-engineering target; cost wording only, no number changed
+- version: "0.5"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: "Requirement table: R14 relaxed to 0.7 kg and met on paper; R6 and R8 responses decided (CGD-DEC-001); no calculation re-run"
 ---
 
 # CellGuard sizing calculations
 
-On paper, CellGuard meets 10 of its 16 requirements. **Three are not met:** the board loses about 4.4 W at 40 A against 4 W (R6), mainly because the added self-control protector fuse costs about 0.6 W; the state-of-charge error on a 20 Ah pack reaches about 10.1 points after 7 days without a full charge, against 10 (R8); and the board weighs about 0.66 kg against 0.6 kg (R14). The estimated parts cost of $138 is within the $140 value-engineering target for R16 that Amish set on 2026-09-25 (CGD-DDR-002), $2 under the target after the parts added to make the design buildable (CGD-DDR-003); it was $14 over the former $120 target at v0.2. Three are **at risk**: cell voltage accuracy at 25 °C (R2), single-fault safety until a suitable protector fuse is confirmed (R4) and the balance resistor hotspot (R7). Two TRL 2 figures were optimistic and are corrected here: sleep current is about 55 µA, not 100 µA, and the prospective short-circuit current is about 0.7 to 4.7 kA, not 1 to 8 kA, once cables and the board are counted.
+On paper, CellGuard meets 10 of its 16 requirements. **Three are not met:** the board loses about 4.4 W at 40 A against 4 W (R6), mainly because the added self-control protector fuse costs about 0.6 W; the state-of-charge error on a 20 Ah pack reaches about 10.1 points after 7 days without a full charge, against 10 (R8); and the board weighs about 0.66 kg against 0.6 kg (R14). On 2026-10-02 Amish relaxed R14 to 0.7 kg, so it is now met on paper, and decided the responses to R6 and R8 (CGD-DEC-001); the R6 and R8 figures here are not yet re-run for them. The estimated parts cost of $138 is within the $140 value-engineering target for R16 that Amish set on 2026-09-25 (CGD-DDR-002), $2 under the target after the parts added to make the design buildable (CGD-DDR-003); it was $14 over the former $120 target at v0.2. Three are **at risk**: cell voltage accuracy at 25 °C (R2), single-fault safety until a suitable protector fuse is confirmed (R4) and the balance resistor hotspot (R7). Two TRL 2 figures were optimistic and are corrected here: sleep current is about 55 µA, not 100 µA, and the prospective short-circuit current is about 0.7 to 4.7 kA, not 1 to 8 kA, once cables and the board are counted.
 
 Every number in this note is printed by `docs/04-calcs/sizing.py` (run from the repo root: `python docs/04-calcs/sizing.py`), which also writes `docs/04-calcs/results.csv`. The script reads part volumes and the envelope from `cad/src/model.py` and costs from `bom/bom.csv`. All values are first-principles estimates; nothing is measured.
 
@@ -136,9 +140,9 @@ The BOM has 18 lines, all priced, and totals **$138.00**: $124.00 as at TRL 2, $
 
 | ID | Calculated value | Target | Status |
 | --- | --- | --- | --- |
-| R6 | 4.44 W board loss at 40 A (3.80 W without the SCP fuse) | 4 W or less | **Not met** |
-| R8 | 5.0 points after a full charge; 10.1 points after 7 days on 20 Ah (32.3 uncalibrated); 7.4 on 100 Ah | ±5 and ±10 points | **Not met** (20 Ah); met on 100 Ah and larger |
-| R14 | 220 x 110 x 33 mm; 0.664 kg | 230 x 120 x 40 mm; 0.6 kg | **Not met** (mass) |
+| R6 | 4.44 W board loss at 40 A (3.80 W without the SCP fuse) | 4 W or less | **Not met** with the concept switches; to be recalculated for the 1.5 mΩ-class switches decided on 2026-10-02 |
+| R8 | 5.0 points after a full charge; 10.1 points after 7 days on 20 Ah (32.3 uncalibrated); 7.4 on 100 Ah | ±5 points; ±10 points between prompted full charges, about five days (restated, CGD-DEC-001) | **Not met** (20 Ah, 7 days); to be recalculated against the restated target; met on 100 Ah and larger |
+| R14 | 220 x 110 x 33 mm; 0.664 kg | 230 x 120 x 40 mm; 0.7 kg (relaxed from 0.6 kg, CGD-DEC-001) | Met on paper |
 | R2 | ±15 mV from −40 to 85 °C; under 10 mV typical at 25 °C | ±10 mV at 25 °C, ±15 mV from −20 to 60 °C | At risk (no guaranteed 25 °C figure) |
 | R4 | All single faults in Table 3 end safe with the BQ77216 and SCP fuse | No single fault allows overcharge or over-discharge | At risk (SCP fuse rating unconfirmed) |
 | R7 | 103 mA; 9.7 h for 1 % on 100 Ah; PCB 56.4 °C, resistor hotspot 73.9 °C | 100 mA; 24 h; 70 °C | At risk (hotspot) |
@@ -153,7 +157,7 @@ The BOM has 18 lines, all priced, and totals **$138.00**: $124.00 as at TRL 2, $
 | R13 | 0.46 s to 90 %; 3.38 J | 1 s for 2 mF | Met |
 | R15 | TQFP-48 at 0.5 mm, TSSOP-24 at 0.65 mm, leaded MOSFET and regulator packages | No BGA; nothing finer than 0.5 mm | Met by design review |
 
-**Options for the items not met** (no option was recommended, so these stay proposed, awaiting Amish): R6, choose 1.5 mΩ-class MOSFETs (saves about 0.96 W, bringing the board to about 3.5 W) or mount the SCP fuse beside the main fuse and count it with the external fuse; R8, restate the target for packs of 50 Ah and larger, add a periodic full-charge prompt, or fit a 0.5 mΩ shunt; R14, a 3 mm plate (0.599 kg) or relax the target to 0.65 kg. R16 was closed by the $140 budget (CGD-DDR-002).
+**Responses decided by Amish on 2026-10-02** (CGD-DEC-001): R6, 1.5 mΩ-class switches; R8, a full-charge prompt after about five days, with the target restated to apply between prompted full charges; R14, the target relaxed to 0.7 kg with the 4 mm plate kept. The figures in this note are not yet re-run for the R6 and R8 responses. The options were: R6, choose 1.5 mΩ-class MOSFETs (saves about 0.96 W, bringing the board to about 3.5 W) or mount the SCP fuse beside the main fuse and count it with the external fuse; R8, restate the target for packs of 50 Ah and larger, add a periodic full-charge prompt, or fit a 0.5 mΩ shunt; R14, a 3 mm plate (0.599 kg) or relax the target to 0.65 kg. R16 was closed by the $140 budget (CGD-DDR-002).
 
 ## 13. Limits of this note
 

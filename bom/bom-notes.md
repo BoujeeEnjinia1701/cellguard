@@ -6,4 +6,6 @@
 - Against the value-engineering target `budget_usd: 140` in `project.yaml` (a hypothetical control target, not a limit; raised from $120 by Amish on 2026-09-25, CGD-DDR-002) the estimated cost is 98.6 % of the target, $2.00 under, so R16 is within the target. Against the former $120 target it would be 15.0 % over.
 - Lines 3, 6 and 14 follow the choices decided by Amish on 2026-09-25 (CGD-DDR-001, CGD-DDR-002).
 - Line 14: an SCP fuse rated for 40 A continuous at 60 V DC or more is not yet confirmed; the price is an estimate.
-- Line 4: a top-side cooled (TOLT) package is specified for the thermal path to the base plate (decided, CGD-DDR-002); 1.5 mΩ-class parts would save about 0.95 W at 40 A (CGD-CAL-001) at a higher price.
+- Line 4: a top-side cooled (TOLT) package is specified for the thermal path to the base plate (decided, CGD-DDR-002). On 2026-10-02 Amish decided on 1.5 mΩ-class parts (CGD-DEC-001), which save about 0.95 W at 40 A (CGD-CAL-001) at a higher price; the line's specification and price are still those of the 2.5 mΩ parts and need updating.
+- Line 13: printed flame-retardant polycarbonate, opaque for the prototype, with a light pipe over the status light (CGD-DEC-001, 2026-10-02); sheet aluminium is not used.
+- Line 15: one three-colour status light is to be added (CGD-DEC-001, 2026-10-02); it is not yet in the line's specification or price.

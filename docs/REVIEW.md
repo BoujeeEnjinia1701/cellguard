@@ -279,3 +279,44 @@ All open items are in the register CGD-DEC-001: accept CGD-DDR-003 (recommended)
 ### Recommended next step
 
 Amish to review CGD-DDR-003 and the register. TRL 4 (board layout, bench build on a cell simulator, first checks) remains on hold by his instruction.
+
+## 2026-10-02: open decisions decided
+
+Amish, 2026-10-02: "i approve your recommendations for all 555 open decisions." The recommendations written for this repo's open decisions are recorded as decided.
+
+### Decisions recorded
+
+12 decisions, moved from "Open decisions" to "Decisions made" in the register (CGD-DEC-001 v0.3): design for construction P1 to P8 accepted (CGD-DDR-003, A1); printed flame-retardant polycarbonate cover; opaque prototype cover with a light pipe; 1.5 mΩ-class switches for R6; a full-charge prompt after about five days with R8 restated; R14 relaxed to 0.7 kg; the 4S 20 Ah state-of-charge check; a small off-grid solar installer that builds 16S LFP packs as the first candidate test partner; a three-colour status light; pack beside the board in product renders only; cover fixing and cables kept in renders; SwapCell agreement recorded there once the board envelope question is settled.
+
+### Documents changed
+
+- `docs/06-design-decisions.md`: CGD-DEC-001 v0.3
+- `docs/decisions/0001-trl2-review-decisions.md`: CGD-DDR-001 v0.3
+- `docs/decisions/0002-recommendations-accepted.md`: CGD-DDR-002 v0.2
+- `docs/decisions/0003-design-for-construction.md`: CGD-DDR-003 v0.3 (accepted; status kept Draft)
+- `docs/01-problem.md`: CGD-PRB-001 v0.7 (first test partner)
+- `docs/02-concept.md`: CGD-PRC-001 v0.7 (key numbers and open questions)
+- `docs/03-requirements.md`: CGD-REQ-001 v0.7 (R8 restated, R14 relaxed, status)
+- `docs/04-calcs/01-sizing.md`: CGD-CAL-001 v0.5 (requirement table and summary; no calculation re-run)
+- `docs/05-build-plan.md`: CGD-BLD-001 v0.2 (mass check against 0.7 kg)
+- `README.md` and `bom/bom-notes.md` (not controlled)
+
+### Follow-up actions to carry approved decisions into the design
+
+1. Decision 3: add the light pipe over the status light to the cover in the model, the cover making sketch CGD-DWG-104 and the build plan pictures; state "opaque" in BOM line 13 (model, drawings, pictures, BOM).
+2. Decision 4: respecify BOM line 4 as 1.5 mΩ-class TOLT switches and reprice it (BOM).
+3. Decision 4: re-run `docs/04-calcs/sizing.py` for the 1.5 mΩ-class switches (board loss, junction temperatures) and update R6 status (calculations).
+4. Decision 5: re-run the state-of-charge error for about five days between prompted full charges and update R8 status; the firmware prompt is TRL 4 work (calculations).
+5. Decision 7: write the 4S 20 Ah partial-cycling check into the TRL 4 test plan when TRL 4 is opened (docs).
+6. Decision 8: approach a small off-grid solar installer that builds 16S LFP packs as the first candidate test partner (docs).
+7. Decision 9: add the three-colour status light to BOM line 15 (specification and price) and to the board in the model (BOM, model).
+8. Decision 10: regenerate the product renders on Amish's Mac with the pack beside the board (pictures).
+9. Decision 11: regenerate the product renders with the four cover pillars and the cables of CGD-DDR-003 (pictures).
+10. Decision 12: once the board envelope question is settled, record the agreement to the NMC profile and the v0.3 CAN message set in the SwapCell repo (docs).
+
+### Points found in the review
+
+- SwapCell expects a battery management board about 230 x 58 mm and 10 mm or less thick (SwapCell register, 'To confirm' item 3), and prices it at $120; CellGuard is 220 x 110 x 33 mm and $138. Item 12 cannot be closed as stated until one side changes.
+- Option (b) for R6 does not compare like with like: it reduces the counted board loss by redefining the boundary, not by reducing heat.
+- The value-engineering margin is $2, and the protector fuse price is still unconfirmed (DDR-003 A2); fitting 1.5 milliohm switches (item 4) will likely put the board over the $140 target.
+- The register listed 'decision 4 is (a)' under 'To confirm' item 8 for a clear sheet, but the clear cover is decision 3, not 4. Corrected in CGD-DEC-001 v0.3.
