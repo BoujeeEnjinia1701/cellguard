@@ -3,7 +3,7 @@ doc_id: CGD-REQ-001
 title: CellGuard requirements
 project: CellGuard
 doc_type: Requirements
-version: "0.7"
+version: "0.8"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -37,11 +37,15 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: "R8 restated and R14 relaxed to 0.7 kg; R6, R8 and R14 status after the 2026-10-02 decisions (CGD-DEC-001)"
+- version: "0.8"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: "Status from CGD-CAL-001 v0.6, re-run for the decided responses: R6 and R8 now met on paper; R16 over the value-engineering target by USD 19.15"
 ---
 
 # CellGuard requirements
 
-These are first-pass requirements for the concept. Targets are proposals for review, not user-validated needs, and will be revised after the lab projects that depend on CellGuard confirm their needs. Status in Table 2 is judged against the TRL 3 calculations in CGD-CAL-001. On paper, 11 of 16 are met; R6 and R8 are not met at the CGD-CAL-001 v0.3 figures, and R2, R4 and R7 are at risk. On 2026-10-02 Amish decided the responses to R6, R8 and R14 (CGD-DEC-001): R8 and R14 are restated below, and R6 and R8 are to be recalculated for the decided responses. Changes in v0.3 follow CGD-DDR-001. In v0.4, R16 follows the $140 budget that Amish set on 2026-09-25, when he accepted the recommendations (CGD-DDR-002); R3 cites the decided protection settings and R9 the decided one-point calibration.
+These are first-pass requirements for the concept. Targets are proposals for review, not user-validated needs, and will be revised after the lab projects that depend on CellGuard confirm their needs. Status in Table 2 is judged against the TRL 3 calculations in CGD-CAL-001. On paper, 12 of 16 are met; R2, R4 and R7 are at risk, and the estimated cost is over the R16 value-engineering target. On 2026-10-02 Amish decided the responses to R6, R8 and R14 (CGD-DEC-001): R8 and R14 are restated below, and CGD-CAL-001 v0.6 is re-run for them, so R6 and R8 are now met on paper. Changes in v0.3 follow CGD-DDR-001. In v0.4, R16 follows the $140 budget that Amish set on 2026-09-25, when he accepted the recommendations (CGD-DDR-002); R3 cites the decided protection settings and R9 the decided one-point calibration.
 
 Table 1. Requirements.
 
@@ -68,21 +72,21 @@ Table 2. Status at TRL 3 (CGD-CAL-001; calculations, nothing measured).
 
 | ID | Status | Basis |
 | --- | --- | --- |
-| R6 | **Not met** with the concept switches; to be recalculated | 4.44 W on the board at 40 A, of which 0.64 W is the secondary protector's SCP fuse; 3.80 W without it. The 1.5 mΩ-class switches decided on 2026-10-02 (CGD-DEC-001) bring it to about 3.5 W |
-| R8 | **Not met** on the 20 Ah reference pack over 7 days; to be recalculated against the restated target; met on 100 Ah and larger | 5.0 points after a full charge; after 7 days, 10.1 points on 20 Ah with a calibrated offset (32.3 uncalibrated), 7.4 on 100 Ah. The restated target applies over about five days between prompted full charges |
-| R14 | Met on paper | 220 x 110 x 33 mm meets the size; 0.664 kg against the 0.7 kg target relaxed on 2026-10-02 (CGD-DEC-001) |
+| R16 | Over the value-engineering target by $19.15 | Value-engineering target: USD 140.00. Estimated cost of the constructable design: USD 159.15 (USD 19.15 over the target), mainly the 1.5 mΩ-class switches decided on 2026-10-02 ($20.00 more than the 2.5 mΩ parts) |
 | R2 | At risk | Total error ±15 mV from −40 to 85 °C meets the range target; at 25 °C the data sheet gives only a typical figure under 10 mV |
 | R4 | At risk | With the BQ77216-class secondary protector and SCP fuse every single fault in the failure analysis ends safe; an SCP fuse rated for 40 A at 60 V DC is not yet confirmed |
 | R7 | At risk | 103 mA; 9.7 h for 1 % on 100 Ah; PCB 56.4 °C but a balance resistor hotspot about 73.9 °C at 40 °C ambient |
-| R16 | Within the value-engineering target | $138.00 estimated with the secondary protector and the parts added for construction (CGD-DDR-003): 98.6 % of the $140 target, $2.00 under |
 | R1 | Met | 12.8 to 58.4 V; 100 V MOSFETs with 1.71 times margin; front end rated 3 to 16 cells |
 | R3 | Met on paper | Thresholds inside the front-end ranges; short-circuit trip within 25 µs |
-| R5 | Met on paper | Junction 54.0 °C at 40 A (top-cooled package), 99.1 °C bound at 80 A for 10 s (TOLL) |
+| R5 | Met on paper | Junction 51.0 °C at 40 A (top-cooled package), 77.6 °C bound at 80 A for 10 s (TOLL) |
+| R6 | Met on paper (was not met at v0.7) | 3.47 W on the board at 40 A with the 1.5 mΩ-class switches decided on 2026-10-02, of which 0.64 W is the secondary protector's SCP fuse; about 4.4 W with the former 2.5 mΩ parts |
+| R8 | Met on paper with calibration (was not met at v0.7) | 5.0 points after a full charge; 8.7 points on 20 Ah after five days between prompted full charges with a calibrated coulomb counter offset (24.5 uncalibrated), 6.7 on 100 Ah. The calibrated offset is TI's typical figure; the 4S 20 Ah check decided on 2026-10-02 tests it |
 | R9 | Met on paper with calibration | 0.404 A error at 80 A after a one-point gain calibration, against 0.850 A |
 | R10 | Met on estimate | 54.5 µA in sleep, 6.0 µA in ship mode |
 | R11 | Met by design | SwapCell v0.3 message set; 1.84 % bus load at 250 kbit/s |
 | R12 | Met | 65,536 records of 32 bytes in 2 MiB |
 | R13 | Met | 90 % in 0.46 s; 3.38 J |
+| R14 | Met on paper | 220 x 110 x 33 mm meets the size; 0.664 kg against the 0.7 kg target relaxed on 2026-10-02 (CGD-DEC-001) |
 | R15 | Met by design review | TQFP-48 at 0.5 mm, TSSOP-24 at 0.65 mm, no BGA |
 
 ## Assumptions

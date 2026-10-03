@@ -3,7 +3,7 @@ doc_id: CGD-CAL-001
 title: CellGuard sizing calculations
 project: CellGuard
 doc_type: Calculation note
-version: "0.5"
+version: "0.6"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -29,11 +29,15 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: "Requirement table: R14 relaxed to 0.7 kg and met on paper; R6 and R8 responses decided (CGD-DEC-001); no calculation re-run"
+- version: "0.6"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: "Re-run for the 2026-10-02 decisions: 1.5 mOhm-class switches (R6 now met on paper, R5 junctions lower, short-circuit currents slightly higher); state-of-charge error over five days between prompted full charges (R8 now met on paper with calibration); status light and light pipe in mass and cost; cost USD 159.15, over the value-engineering target"
 ---
 
 # CellGuard sizing calculations
 
-On paper, CellGuard meets 10 of its 16 requirements. **Three are not met:** the board loses about 4.4 W at 40 A against 4 W (R6), mainly because the added self-control protector fuse costs about 0.6 W; the state-of-charge error on a 20 Ah pack reaches about 10.1 points after 7 days without a full charge, against 10 (R8); and the board weighs about 0.66 kg against 0.6 kg (R14). On 2026-10-02 Amish relaxed R14 to 0.7 kg, so it is now met on paper, and decided the responses to R6 and R8 (CGD-DEC-001); the R6 and R8 figures here are not yet re-run for them. The estimated parts cost of $138 is within the $140 value-engineering target for R16 that Amish set on 2026-09-25 (CGD-DDR-002), $2 under the target after the parts added to make the design buildable (CGD-DDR-003); it was $14 over the former $120 target at v0.2. Three are **at risk**: cell voltage accuracy at 25 °C (R2), single-fault safety until a suitable protector fuse is confirmed (R4) and the balance resistor hotspot (R7). Two TRL 2 figures were optimistic and are corrected here: sleep current is about 55 µA, not 100 µA, and the prospective short-circuit current is about 0.7 to 4.7 kA, not 1 to 8 kA, once cables and the board are counted.
+On paper, CellGuard meets 12 of its 16 requirements and none is failed outright. This version is re-run for the responses Amish decided on 2026-10-02 (CGD-DEC-001). With 1.5 mΩ-class switches the board loses about 3.5 W at 40 A, so **R6 is now met** (it was 4.4 W against 4 W). With the firmware prompting for a full charge after about five days, the state-of-charge error on a 20 Ah pack reaches 8.7 points between prompted full charges against the restated ±10 points, so **R8 is now met on paper**, provided the coulomb counter offset is calibrated at build. R14 was relaxed to 0.7 kg, and the board's 0.664 kg meets it. The estimated parts cost is $159.15: value-engineering target USD 140.00, estimated cost of the constructable design USD 159.15 (USD 19.15 over the target), mainly because the 1.5 mΩ-class switches cost about twice as much as the 2.5 mΩ parts (R16 is reported against the target, not as a failure). Three are **at risk**: cell voltage accuracy at 25 °C (R2), single-fault safety until a suitable protector fuse is confirmed (R4) and the balance resistor hotspot (R7). Two TRL 2 figures were optimistic and are corrected here: sleep current is about 55 µA, not 100 µA, and the prospective short-circuit current is about 0.7 to 5.0 kA, not 1 to 8 kA, once cables and the board are counted.
 
 Every number in this note is printed by `docs/04-calcs/sizing.py` (run from the repo root: `python docs/04-calcs/sizing.py`), which also writes `docs/04-calcs/results.csv`. The script reads part volumes and the envelope from `cad/src/model.py` and costs from `bom/bom.csv`. All values are first-principles estimates; nothing is measured.
 
@@ -46,7 +50,7 @@ Every number in this note is printed by `docs/04-calcs/sizing.py` (run from the 
 | Cell limits (LFP) | 3.65 V maximum, 3.20 V nominal, 2.50 V minimum | Typical LFP data; each build uses its own cell data sheet |
 | Reference packs | 16S 20 Ah (3 mΩ cells, 0.3 mΩ links) and 4S or 16S 280 Ah (0.25 mΩ cells, 0.1 mΩ busbars) | CGD-REQ-001 assumptions |
 | Load | 40 A continuous, 80 A for 10 s, 40 °C ambient | R5 |
-| MOSFETs | 2.5 mΩ maximum at 25 °C, +0.67 % per K, 4 in parallel per direction, hottest carries 10 % more than its share | BOM line 4 |
+| MOSFETs | 1.5 mΩ class at 25 °C (decided 2026-10-02, CGD-DEC-001; 2.5 mΩ before), +0.67 % per K, 4 in parallel per direction, hottest carries 10 % more than its share | BOM line 4 |
 | Shunt | 0.25 mΩ, 1 %, 50 ppm/K | BOM line 5 |
 | SCP fuse | 0.40 mΩ | Assumed; no data sheet chosen yet |
 | Main fuse, holder and links | 1.0 mΩ | Assumed |
@@ -58,7 +62,7 @@ Every number in this note is printed by `docs/04-calcs/sizing.py` (run from the 
 | Other quiescent loads | Microcontroller stop mode 5 µA, CAN transceiver standby 10 µA, flash 1 µA (all at 3.3 V); buck 70 % efficient at light load with 10 µA quiescent; TVS leakage 1 µA | Assumed typical values |
 | Short-circuit loop | 1 µH loop inductance; 10 µs MOSFET turn-off after the trip | Assumed |
 | CAN | 250 kbit/s, 135 bits worst-case frame; SwapCell interface v0.3 message rates | SWC-PRC-001 v0.3 |
-| State of charge | Anchor detection 2 points; learned capacity 2 %; residual gain error 0.5 % after one-point calibration; 3.5 equivalent full cycles in 7 days | Assumed |
+| State of charge | Anchor detection 2 points; learned capacity 2 %; residual gain error 0.5 % after one-point calibration; 0.5 equivalent full cycles a day (3.5 in 7 days); the firmware prompts for a full charge after 5 days without one (CGD-DEC-001) | Assumed; prompt interval decided 2026-10-02 |
 
 ## 2. Voltage range (R1)
 
@@ -66,9 +70,9 @@ A 4S to 16S LFP pack spans 12.8 to 51.2 V nominal and reaches 58.4 V at full cha
 
 ## 3. Power path loss and thermal (R5, R6)
 
-**Loss (R6).** The MOSFETs lose 2.00 W at 40 A with cold junctions and 2.39 W at the converged junction temperature. The shunt adds 0.40 W, the PCB copper and stud joints (0.569 mΩ at 20 °C, 0.635 mΩ at 50 °C) 1.02 W, and the SCP fuse 0.64 W. The board loss is **4.44 W, and R6 is not met**. Without the SCP fuse it would be 3.80 W. The external main fuse adds 1.60 W, so the whole power path loses 6.04 W, 99.70 % efficient for a 16S pack at 40 A. The TRL 2 figure of about 3.2 W left out the secondary protector and the temperature rise of the MOSFETs.
+**Loss (R6).** With the 1.5 mΩ-class switches decided on 2026-10-02, the MOSFETs lose 1.20 W at 40 A with cold junctions and 1.41 W at the converged junction temperature. The shunt adds 0.40 W, the PCB copper and stud joints (0.569 mΩ at 20 °C, 0.635 mΩ at 50 °C) 1.02 W, and the SCP fuse 0.64 W. The board loss is **3.47 W, and R6 is met on paper** with 0.53 W to spare; without the SCP fuse it would be 2.83 W. The former 2.5 mΩ parts would lose about 0.94 W more, about 4.4 W in all, which is why R6 was not met at v0.5. The external main fuse adds 1.60 W, so the whole power path loses 5.07 W, 99.75 % efficient for a 16S pack at 40 A. The TRL 2 figure of about 3.2 W left out the secondary protector and the temperature rise of the MOSFETs.
 
-**Thermal (R5).** The base plate (0.0484 m² over both faces) rises 13.0 K at 40 A. The hottest MOSFET dissipates 0.361 W, so its junction reaches **54.0 °C** at 40 °C ambient with a top-cooled TOLT package and 61.6 °C with a TOLL package cooled through its mold. The plate holds 234 J/K and has a time constant of 10.1 min, so a 10 s peak at 80 A adds only 0.88 K to it. The hottest MOSFET then dissipates 1.64 W; bounding its junction by the steady-state value gives 59.5 °C (TOLT) or 99.1 °C (TOLL). Both are under the 110 °C limit, so **R5 is met**. The TOLL margin is thin, so the BOM specifies a top-side cooled TOLT package (decided, CGD-DDR-002).
+**Thermal (R5).** The base plate (0.0484 m² over both faces) rises 10.4 K at 40 A. The hottest MOSFET dissipates 0.213 W, so its junction reaches **51.0 °C** at 40 °C ambient with a top-cooled TOLT package and 55.4 °C with a TOLL package cooled through its mold. The plate holds 234 J/K and has a time constant of 10.1 min, so a 10 s peak at 80 A adds only 0.60 K to it. The hottest MOSFET then dissipates 0.97 W; bounding its junction by the steady-state value gives 54.4 °C (TOLT) or 77.6 °C (TOLL). Both are under the 110 °C limit, so **R5 is met**. The TOLL margin was thin with the 2.5 mΩ parts (99.1 °C), so the BOM specifies a top-side cooled TOLT package (decided, CGD-DDR-002).
 
 ## 4. Protection thresholds, short circuit and single faults (R3, R4)
 
@@ -87,7 +91,7 @@ A 4S to 16S LFP pack spans 12.8 to 51.2 V nominal and reaches 58.4 V at full cha
 
 The smallest SCD step is 40 A, so the scale is coarse but adequate. The short-circuit trip completes within 25 µs, well inside the 500 µs of R3. **R3 is met on paper.**
 
-**Short circuit.** The board and fuse add 3.47 mΩ to the short-circuit loop and the two power cables 1.72 mΩ. The prospective current is 696 A (4S 20 Ah), 883 A (16S 20 Ah), 1,943 A (4S 280 Ah) and 4,746 A (16S 280 Ah). The 10 kA breaking capacity of the pack fuse covers all of them. With a 1 µH loop, current is still rising when the MOSFETs open. At a 15 µs SCD delay the 16S 280 Ah pack reaches 1,122 A at turn-off (about 280 A per MOSFET) and leaves 0.63 J of loop energy for the TVS diode and the MOSFETs' avalanche rating. At the front end's longer 60 µs delay the same pack reaches 2,516 A and 3.16 J. **The SCD delay must therefore be set to its 15 µs minimum**, and the TVS diode and MOSFET avalanche energy must be checked against about 1 J when parts are chosen.
+**Short circuit.** The board and fuse add 2.97 mΩ to the short-circuit loop (3.47 mΩ with the former 2.5 mΩ switches) and the two power cables 1.72 mΩ. The prospective current is 716 A (4S 20 Ah), 891 A (16S 20 Ah), 2,102 A (4S 280 Ah) and 4,976 A (16S 280 Ah), a little higher than at v0.5 because the lower-resistance switches take less out of the loop. The 10 kA breaking capacity of the pack fuse covers all of them. With a 1 µH loop, current is still rising when the MOSFETs open. At a 15 µs SCD delay the 16S 280 Ah pack reaches 1,129 A at turn-off (about 282 A per MOSFET) and leaves 0.64 J of loop energy for the TVS diode and the MOSFETs' avalanche rating. At the front end's longer 60 µs delay the same pack reaches 2,555 A and 3.26 J. **The SCD delay must therefore be set to its 15 µs minimum**, and the TVS diode and MOSFET avalanche energy must be checked against about 1 J when parts are chosen.
 
 **Single faults (R4).** Table 3 is a first failure mode and effects analysis for the faults R4 names.
 
@@ -112,7 +116,7 @@ The 33 Ω bleed resistors draw 103 mA at 3.40 V and dissipate 0.350 W each; eigh
 
 **Current (R9).** One coulomb counter step is 7.60 µV, 30.4 mA on the shunt; the typical calibrated offset of 1 µV is 4.0 mA. The front end's gain spread is ±0.57 %, which with the 1 % shunt gives 1.57 % uncalibrated, outside R9. A one-point gain calibration at build leaves about 0.5 %, so the error at 80 A is 0.404 A against a 0.850 A limit. **R9 is met on paper with calibration**, which is now a decided build step (CGD-DDR-002); the build itself is TRL 4 work, on hold.
 
-**State of charge (R8).** After a full charge the error is 5.0 points (2 for anchor detection, 2 for the learned capacity, 1 for gain over one cycle), which just meets the ±5 point target. After 7 days of partial cycling the error on the 20 Ah reference pack grows to **10.1 points with a calibrated offset and 32.3 points without**, so **R8 is not met on small packs**. It is met on 100 Ah (7.4 points) and 280 Ah (7.0 points) packs. Meeting 10 points on 20 Ah needs a total offset of 3.9 mA or less, about 1 µV across the shunt. A 0.5 mΩ shunt would halve the offset in amperes but add 0.4 W to R6.
+**State of charge (R8).** After a full charge the error is 5.0 points (2 for anchor detection, 2 for the learned capacity, 1 for gain over one cycle), which just meets the ±5 point target. On 2026-10-02 Amish decided that the firmware prompts for a full charge when about five days pass without one, and restated R8's partial-cycling clause to apply between prompted full charges (CGD-DEC-001). Over five days of partial cycling the error on the 20 Ah reference pack grows to **8.7 points with a calibrated offset**, against the ±10 point target, so **R8 is met on paper with calibration**; it is 6.7 points on 100 Ah and 6.4 points on 280 Ah. Without offset calibration the 20 Ah figure is 24.5 points, so the result depends on calibrating the coulomb counter offset at build. Over five days the offset may be up to 6.2 mA (about 1.5 µV across the shunt) for 10 points on 20 Ah; the calibrated figure assumed here, 4.0 mA, is TI's typical value, not a guaranteed one, and is to be checked in the 4S 20 Ah state-of-charge test decided on 2026-10-02. For comparison, 7 days without a full charge would give 10.1 points on 20 Ah (32.3 uncalibrated), 7.4 on 100 Ah and 7.0 on 280 Ah; the 0.5 mΩ shunt that would have halved the offset is not fitted.
 
 ## 7. Quiescent current (R10)
 
@@ -128,36 +132,36 @@ A 100 Ω resistor into 2 mF has a time constant of 0.20 s and reaches 90 % of 58
 
 ## 10. Size and mass (R14)
 
-The model envelope is 220 x 110 x 33 mm (to the cover screw heads), inside 230 x 120 x 40 mm. The mass, from model volumes and stated densities plus assumed masses for bought parts, is **0.664 kg, and R14 is not met** against 0.6 kg. Version 0.3 adds the parts that make the design buildable (CGD-DDR-003): the gap pad, spacers, pillars, screws and nuts (25 g) and the copper fuse link (12 g). The fuse and holder stay at the concept figure of 89 g until the holder is chosen, although the holder is now drawn smaller. The base plate is the largest item at 260 g; a 3 mm plate would bring the total to 0.599 kg and raise the plate temperature rise only slightly, because heat spreading over this short distance needs little thickness. The TRL 2 estimate of about 0.5 kg left out the studs' hardware and underestimated the fuse holder.
+The model envelope is 220 x 110 x 33 mm (to the cover screw heads), inside 230 x 120 x 40 mm. The mass, from model volumes and stated densities plus assumed masses for bought parts, is **0.664 kg, and R14 is met on paper** against the 0.7 kg target Amish set on 2026-10-02 (relaxed from 0.6 kg, CGD-DEC-001). The status light and light pipe added on 2026-10-02 weigh well under 1 g together, and the 1.5 mΩ-class switches are in the same package as before, so the total is unchanged. Version 0.3 adds the parts that make the design buildable (CGD-DDR-003): the gap pad, spacers, pillars, screws and nuts (25 g) and the copper fuse link (12 g). The fuse and holder stay at the concept figure of 89 g until the holder is chosen, although the holder is now drawn smaller. The base plate is the largest item at 260 g; the 4 mm plate is kept (decided 2026-10-02), although a 3 mm plate would bring the total to 0.599 kg. The TRL 2 estimate of about 0.5 kg left out the studs' hardware and underestimated the fuse holder.
 
 ## 11. Cost (R16)
 
-The BOM has 18 lines, all priced, and totals **$138.00**: $124.00 as at TRL 2, $10.00 for the secondary protector, $2.00 more for the gap pad, spacers, pillars and screws (line 17) and $2.00 for the copper fuse link (line 18, CGD-DDR-003). Against the value-engineering target `budget_usd: 140` in `project.yaml` (a hypothetical control target, not a limit), set by Amish on 2026-09-25 (CGD-DDR-002), the estimated cost is 98.6 % of the target, $2.00 under it, so **R16 is within the value-engineering target**, with little room left for the unconfirmed SCP fuse price. Against the former $120 target it would be 15.0 % over.
+The BOM has 19 lines, all priced, and totals **$159.15**: $124.00 as at TRL 2, $10.00 for the secondary protector, $2.00 more for the gap pad, spacers, pillars and screws (line 17) and $2.00 for the copper fuse link (line 18, CGD-DDR-003), then, for the decisions of 2026-10-02 (CGD-DEC-001), $20.00 more for the eight 1.5 mΩ-class switches (line 4, $5.00 each in place of $2.50), $0.35 for the three-colour status light (line 15) and $0.80 for the light pipe (new line 19). Value-engineering target: USD 140.00 (`budget_usd: 140` in `project.yaml`, a hypothetical control target, not a limit, set by Amish on 2026-09-25, CGD-DDR-002). Estimated cost of the constructable design: USD 159.15 (USD 19.15 over the target), 113.7 % of it, so **R16 is over the value-engineering target by $19.15**; the unconfirmed SCP fuse price is still to come. Against the former $120 target it would be 32.6 % over.
 
 ## 12. Results
 
-*Table 4. Requirement status at TRL 3 (not met first).*
+*Table 4. Requirement status at TRL 3 (over target and at risk first).*
 
 | ID | Calculated value | Target | Status |
 | --- | --- | --- | --- |
-| R6 | 4.44 W board loss at 40 A (3.80 W without the SCP fuse) | 4 W or less | **Not met** with the concept switches; to be recalculated for the 1.5 mΩ-class switches decided on 2026-10-02 |
-| R8 | 5.0 points after a full charge; 10.1 points after 7 days on 20 Ah (32.3 uncalibrated); 7.4 on 100 Ah | ±5 points; ±10 points between prompted full charges, about five days (restated, CGD-DEC-001) | **Not met** (20 Ah, 7 days); to be recalculated against the restated target; met on 100 Ah and larger |
-| R14 | 220 x 110 x 33 mm; 0.664 kg | 230 x 120 x 40 mm; 0.7 kg (relaxed from 0.6 kg, CGD-DEC-001) | Met on paper |
+| R16 | $159.15; 113.7 % of target | $140 value-engineering target (raised from $120, CGD-DDR-002) | Over the value-engineering target by $19.15 |
 | R2 | ±15 mV from −40 to 85 °C; under 10 mV typical at 25 °C | ±10 mV at 25 °C, ±15 mV from −20 to 60 °C | At risk (no guaranteed 25 °C figure) |
 | R4 | All single faults in Table 3 end safe with the BQ77216 and SCP fuse | No single fault allows overcharge or over-discharge | At risk (SCP fuse rating unconfirmed) |
 | R7 | 103 mA; 9.7 h for 1 % on 100 Ah; PCB 56.4 °C, resistor hotspot 73.9 °C | 100 mA; 24 h; 70 °C | At risk (hotspot) |
-| R16 | $138.00; 98.6 % of target | $140 value-engineering target (raised from $120, CGD-DDR-002) | Within the value-engineering target ($2.00 under) |
 | R1 | 12.8 to 58.4 V; 1.71 times MOSFET margin | 4 to 16 LFP cells, under 60 V | Met |
 | R3 | Table 2 settings inside front-end ranges; SCD trip within 25 µs | Trip within 500 µs; all thresholds configurable | Met on paper |
-| R5 | Junction 54.0 °C (TOLT) or 61.6 °C (TOLL) at 40 A; 99.1 °C bound at 80 A for 10 s (TOLL) | 110 °C or less | Met on paper |
+| R5 | Junction 51.0 °C (TOLT) or 55.4 °C (TOLL) at 40 A; 77.6 °C bound at 80 A for 10 s (TOLL) | 110 °C or less | Met on paper |
+| R6 | 3.47 W board loss at 40 A with 1.5 mΩ-class switches (2.83 W without the SCP fuse; about 4.4 W with the former 2.5 mΩ parts) | 4 W or less | Met on paper (was not met at v0.5) |
+| R8 | 5.0 points after a full charge; 8.7 points after 5 days on 20 Ah with a calibrated offset (24.5 uncalibrated); 6.7 on 100 Ah | ±5 points; ±10 points between prompted full charges, about five days (restated, CGD-DEC-001) | Met on paper with calibration (was not met at v0.5) |
 | R9 | 0.404 A error at 80 A after calibration; 1.57 % gain error uncalibrated | ±1 % ±50 mA (0.850 A at 80 A) | Met on paper with calibration |
 | R10 | 54.5 µA sleep; 6.0 µA ship mode | 300 µA; 10 µA | Met on estimate |
 | R11 | 1.84 % bus load at 250 kbit/s; SwapCell v0.3 message set | Published message set on CAN 2.0B, UART, enable | Met by design |
 | R12 | 65,536 records of 32 bytes | 2,000 records | Met |
 | R13 | 0.46 s to 90 %; 3.38 J | 1 s for 2 mF | Met |
+| R14 | 220 x 110 x 33 mm; 0.664 kg | 230 x 120 x 40 mm; 0.7 kg (relaxed from 0.6 kg, CGD-DEC-001) | Met on paper |
 | R15 | TQFP-48 at 0.5 mm, TSSOP-24 at 0.65 mm, leaded MOSFET and regulator packages | No BGA; nothing finer than 0.5 mm | Met by design review |
 
-**Responses decided by Amish on 2026-10-02** (CGD-DEC-001): R6, 1.5 mΩ-class switches; R8, a full-charge prompt after about five days, with the target restated to apply between prompted full charges; R14, the target relaxed to 0.7 kg with the 4 mm plate kept. The figures in this note are not yet re-run for the R6 and R8 responses. The options were: R6, choose 1.5 mΩ-class MOSFETs (saves about 0.96 W, bringing the board to about 3.5 W) or mount the SCP fuse beside the main fuse and count it with the external fuse; R8, restate the target for packs of 50 Ah and larger, add a periodic full-charge prompt, or fit a 0.5 mΩ shunt; R14, a 3 mm plate (0.599 kg) or relax the target to 0.65 kg. R16 was closed by the $140 budget (CGD-DDR-002).
+**Responses decided by Amish on 2026-10-02** (CGD-DEC-001): R6, 1.5 mΩ-class switches; R8, a full-charge prompt after about five days, with the target restated to apply between prompted full charges; R14, the target relaxed to 0.7 kg with the 4 mm plate kept. This version (v0.6) is re-run for them: R6, R8 and R14 are now met on paper, and the switches move R16 to $19.15 over the value-engineering target. The options were: R6, choose 1.5 mΩ-class MOSFETs (saves about 0.96 W, bringing the board to about 3.5 W) or mount the SCP fuse beside the main fuse and count it with the external fuse; R8, restate the target for packs of 50 Ah and larger, add a periodic full-charge prompt, or fit a 0.5 mΩ shunt; R14, a 3 mm plate (0.599 kg) or relax the target to 0.65 kg. R16 was closed by the $140 budget (CGD-DDR-002).
 
 ## 13. Limits of this note
 
@@ -165,4 +169,4 @@ The BOM has 18 lines, all priced, and totals **$138.00**: $124.00 as at TRL 2, $
 - Balancing heat and state-of-charge error depend on firmware settings that do not exist yet.
 - The TVS diode, MOSFET avalanche energy and SCP fuse need data sheets before TRL 4.
 
-> **Safety:** CellGuard connects directly to lithium cells that can deliver several thousand amperes into a short circuit (about 4.7 kA for a 16S 280 Ah pack by this note). The pack fuse must be DC rated at 80 V or more with a breaking capacity of 10 kA or more, the SCD delay must be set to its 15 µs minimum, and every threshold change must first be tried on a cell simulator or a current-limited bench supply. The secondary protector's SCP fuse is a one-shot device: once blown, the board must be inspected before it is repaired.
+> **Safety:** CellGuard connects directly to lithium cells that can deliver several thousand amperes into a short circuit (about 5.0 kA for a 16S 280 Ah pack by this note). The pack fuse must be DC rated at 80 V or more with a breaking capacity of 10 kA or more, the SCD delay must be set to its 15 µs minimum, and every threshold change must first be tried on a cell simulator or a current-limited bench supply. The secondary protector's SCP fuse is a one-shot device: once blown, the board must be inspected before it is repaired.

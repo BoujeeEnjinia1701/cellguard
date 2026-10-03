@@ -3,7 +3,7 @@ doc_id: CGD-DEC-001
 title: CellGuard design decisions register
 project: CellGuard
 doc_type: Design decisions register
-version: "0.3"
+version: "0.4"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -21,6 +21,10 @@ revisions:
     date: '2026-10-02'
     author: Amish Chadha
     change: "Amish approved the recommendations for open decisions 1 to 12 (CGD-DDR-003 accepted); moved to decisions made; To confirm item 5 and 8 and the value-engineering savings updated"
+  - version: "0.4"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: "Approved follow-ups carried out: switches, status light and light pipe priced; value engineering restated (USD 159.15, USD 19.15 over the target); To confirm items for the switches, status light and light pipe"
 ---
 
 # CellGuard design decisions register
@@ -37,25 +41,26 @@ None. All open decisions were decided on 2026-10-02.
 
 | # | What to confirm | Why it matters | Source |
 | --- | --- | --- | --- |
-| 1 | A protector fuse rated for 40 A continuous at 60 V DC or more, and its price | R4 depends on it; the $2.00 budget margin may not cover it | CGD-CAL-001 section 4; BOM line 14 |
+| 1 | A protector fuse rated for 40 A continuous at 60 V DC or more, and its price | R4 depends on it; the estimate is already over the value-engineering target, and this price could add to it | CGD-CAL-001 section 4; BOM line 14 |
 | 2 | The fuse holder: base no larger than 44 x 32 mm, four M4 fixing holes at the drawn positions, M8 terminal studs, and fuse blade faces 12.6 mm above its mounting face | The copper link is flat only if the blade faces and the B+ stud shoulder are at the same height; the plate holes follow the holder | CGD-DDR-003 P5; BOM line 8 |
 | 3 | The fuse and holder mass | The mass result keeps the concept figure of 89 g | CGD-CAL-001 v0.3 section 10 |
 | 4 | The stud terminals: M6 male stud, 13 mm shoulder 6 mm tall, through-hole pins | The cable lugs and the link clamp on the shoulder; the shoulder height sets the link height | CGD-DDR-003 P6; BOM line 9 |
-| 5 | The power switch package height of 2.3 mm (TOLT), in the 1.5 mΩ class decided on 2026-10-02 | It sets the gap pad squeeze with 3 mm spacers; a different height needs a different spacer | CGD-DDR-003 P2; BOM line 4 |
+| 5 | The power switch package height of 2.3 mm (TOLT), in the 1.5 mΩ class decided on 2026-10-02, and its price of about $5.00 each | It sets the gap pad squeeze with 3 mm spacers (a different height needs a different spacer); the price sets most of the cost over the target | CGD-DDR-003 P2; BOM line 4 |
 | 6 | The gap pad: squeezes from 1.0 to 0.7 mm at a load the board fixings can apply, and insulates to at least 100 V | It is the only insulation between the live switch tops and the plate | CGD-DDR-003 P2; BOM line 17 |
 | 7 | The TVS diode and switch avalanche energy against about 1 J | Short-circuit turn-off energy at a 15 µs delay | CGD-CAL-001 section 4 |
 | 8 | A printable flame-retardant polycarbonate filament (the cover is opaque, decided 2026-10-02); a clear cover only if clear polycarbonate sheet with a V-0 rating at the cover's wall thickness can be bought and formed | The cover is drawn for printing | BOM line 13 |
+| 9 | The light pipe: 3 mm round, 19.6 mm below a flange about 6 mm across, and the hole it presses into (drawn 3.2 mm); the status light's package (PLCC-4, 3.5 x 2.8 x 1.9 mm) | The pipe's foot is drawn 0.5 mm above the light; a different length or hole needs the cover or pipe changed | BOM lines 13, 15 and 19 |
 
 ## Value engineering
 
-Value-engineering target: USD 140.00 (a hypothetical control target, not a limit). Estimated cost of the constructable design: USD 138.00 (USD 2.00 under the target).
+Value-engineering target: USD 140.00 (a hypothetical control target, not a limit). Estimated cost of the constructable design: USD 159.15 (USD 19.15 over the target).
 
-Main cost drivers (CGD-CAL-001, section 11): the eight charge and discharge MOSFETs (line 4, $20.00), supporting electronics (line 15, $16.00), the pack fuse and holder (line 8, $12.00), the aluminium base plate, the main PCB and the secondary protector with its SCP fuse (lines 1, 2 and 14, $10.00 each). The secondary protector and the parts added for construction (lines 17 and 18) account for $14.00 of the estimate.
+Main cost drivers (CGD-CAL-001 v0.6, section 11): the eight 1.5 mΩ-class charge and discharge MOSFETs (line 4, $40.00, of which $20.00 is the step up from the 2.5 mΩ parts decided on 2026-10-02), supporting electronics with the status light (line 15, $16.35), the pack fuse and holder (line 8, $12.00), the aluminium base plate, the main PCB and the secondary protector with its SCP fuse (lines 1, 2 and 14, $10.00 each). The secondary protector and the parts added for construction (lines 17 and 18) account for $14.00 of the estimate; the status light and light pipe for $1.15.
 
 Savings worth trying:
 
-- Confirm the SCP fuse price first, since the $2.00 under the target could be used up by it (CGD-DDR-003, A2).
-- The 1.5 mΩ-class switches decided on 2026-10-02 (line 4) and the status light (line 15) are not yet priced into the BOM; the switches will likely put the board over the target, which is reported as over the target, not as a limit.
+- Ask for a quantity price on the switches: power MOSFETs are usually markedly cheaper at quantity 100 or more, and each $1.00 off the unit price saves $8.00 on the board.
+- Confirm the SCP fuse price, which may add to the estimate (CGD-DDR-003, A2).
 - The status light stays (decided 2026-10-02) and the cover stays printed flame-retardant polycarbonate (decided 2026-10-02), so neither is a saving to try.
 
 ## Decisions made

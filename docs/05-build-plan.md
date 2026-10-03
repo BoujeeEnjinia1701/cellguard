@@ -3,7 +3,7 @@ doc_id: CGD-BLD-001
 title: CellGuard prototype build plan
 project: CellGuard
 doc_type: Build plan
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
     date: '2026-10-02'
     author: Amish Chadha
     change: "Mass check against the relaxed 0.7 kg R14 target (CGD-DEC-001)"
+  - version: "0.3"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: "Decisions of 2026-10-02 carried into the plan: three-colour status light on the board, opaque cover with a light pipe (new joint picture), 1.5 milliohm-class switches; pictures regenerated; figures from CGD-CAL-001 v0.6"
 ---
 
 # CellGuard prototype build plan
@@ -29,13 +33,13 @@ revisions:
 
 *Figure 1. Every component pulled apart and numbered in build order.*
 
-The prototype is one CellGuard board assembly: a flat aluminium plate that spreads heat, a four-layer circuit board held 3 mm above it on six spacers with its eight power switches pressing down on an insulating gap pad, a pack fuse in a bolted holder beside the board, a short copper link from the fuse to the board's B+ stud, and a printed cover over the electronics. Figure 1 shows the 11 components in the order you make or fit them. Four are made in a small workshop: the plate (cut, drilled, countersunk and tapped), the gap pad (cut from sheet), the copper link (cut and drilled) and the cover (3D printed). The circuit board is ordered from a board maker and populated by hand with a hot plate and soldering iron. Everything else is bought: spacers, pillars, screws, the fuse and holder, the stud terminals, connectors, plugs and probe leads. The parts cost about $138 from the bill of materials.
+The prototype is one CellGuard board assembly: a flat aluminium plate that spreads heat, a four-layer circuit board held 3 mm above it on six spacers with its eight power switches pressing down on an insulating gap pad, a pack fuse in a bolted holder beside the board, a short copper link from the fuse to the board's B+ stud, and a printed opaque cover over the electronics, with a light pipe that shows the board's three-colour status light. Figure 1 shows the 11 components in the order you make or fit them. Four are made in a small workshop: the plate (cut, drilled, countersunk and tapped), the gap pad (cut from sheet), the copper link (cut and drilled) and the cover (3D printed). The circuit board is ordered from a board maker and populated by hand with a hot plate and soldering iron. Everything else is bought: spacers, pillars, screws, the fuse and holder, the stud terminals, the light pipe, connectors, plugs and probe leads. The parts cost about $159 from the bill of materials.
 
 > **Safety:** CellGuard connects straight to lithium cells. A large pack can drive several thousand amperes into a short circuit, and every exposed stud, busbar and the fuse holder is live once a pack is connected. Do all first power-ups on a cell simulator or a current-limited bench supply, keep the fuse out until section 6 says otherwise, use insulated tools and never leave a test unattended. Printing polycarbonate gives off fumes; print in a ventilated space. Hot-plate soldering uses flux that fumes; use fume extraction.
 
 ## 2. What changed to make it buildable
 
-The concept showed what the board does; some of its parts could not be made or fixed as drawn. Each change below keeps what CellGuard does, and all of them are recorded in decision record CGD-DDR-003, open for Amish's review.
+The concept showed what the board does; some of its parts could not be made or fixed as drawn. Each change below keeps what CellGuard does; all of them are recorded in decision record CGD-DDR-003, which Amish accepted on 2026-10-02.
 
 *Table 1. Changes from the concept.*
 
@@ -60,12 +64,12 @@ Make and check each component before the assembly step that needs it. Sizes are 
 
 *Figure 2. Main board outline and fixed positions (CGD-DWG-103). The copper layout is drawn at TRL 4 and keeps every position shown.*
 
-**What it is and what it is made from.** The circuit board that carries the cell monitor and protection chip, the secondary protector, the controller, the current shunt, the precharge parts, the connectors and the four power studs on its top face, and the eight power switches on its underside. A four-layer glass-epoxy board 150 x 95 x 1.6 mm with 70 µm (2 oz) copper, ordered from a board maker together with a solder paste stencil for the top face.
+**What it is and what it is made from.** The circuit board that carries the cell monitor and protection chip, the secondary protector, the controller, the current shunt, the precharge parts, the three-colour status light, the connectors and the four power studs on its top face, and the eight power switches on its underside. The switches are 100 V parts of about 1.5 mΩ each in a package cooled through its top face. A four-layer glass-epoxy board 150 x 95 x 1.6 mm with 70 µm (2 oz) copper, ordered from a board maker together with a solder paste stencil for the top face.
 
 **How to make it.**
 
 1. Check the board as delivered: six 3.4 mm unplated fixing holes, each with a 3 mm ring free of copper, at the positions of Figure 2; nothing bent or scratched through the solder mask.
-2. Top face, fine-pitch parts: print solder paste through the stencil, place the cell monitor and protection chip, the secondary protector, the controller, the CAN transceiver, the flash memory, the regulator, the shunt and the small parts, and reflow on a hot plate following the paste maker's temperature curve.
+2. Top face, fine-pitch parts: print solder paste through the stencil, place the cell monitor and protection chip, the secondary protector, the controller, the CAN transceiver, the flash memory, the regulator, the shunt, the status light and the small parts. The status light sits 30 mm to the signal-end side of the board centre and 20 mm to the B+ side, where the cover's light pipe comes down over it. Reflow on a hot plate following the paste maker's temperature curve.
 3. Inspect every fine-pitch chip under a magnifier for bridges and lifted pins; clear any bridge with flux and braid.
 4. Underside: turn the board over on a support that does not touch the top-face parts. Solder the eight power switches in their two rows of four with a hot-air station. Their flat tops must end up level: lay a steel rule across each row and check that no top stands more than 0.1 mm above or below the others.
 5. Fit the precharge switch and resistor by hand; hold the resistor down with a bead of high-temperature silicone under its body.
@@ -170,7 +174,7 @@ One end lies flat on the B+ stud's shoulder, held by an M6 nut and spring washer
 
 *Figure 11. Cover making sketch (CGD-DWG-104).*
 
-**What it is and what it is made from.** The lid over the electronics, from the signal end to just short of the studs. Flame-retardant polycarbonate (UL 94 V-0 grade), printed, 2 mm walls.
+**What it is and what it is made from.** The lid over the electronics, from the signal end to just short of the studs, with a bought light pipe pressed into its top so the status light can be seen. Opaque flame-retardant polycarbonate (UL 94 V-0 grade), printed, 2 mm walls. The light pipe is a round, flanged clear pipe 3 mm across and 19.6 mm long below its flange.
 
 **How to make it.**
 
@@ -178,7 +182,9 @@ One end lies flat on the B+ stud's shoulder, held by an M6 nut and spring washer
 2. Check the outside size: 134 x 104 x 26.1 mm.
 3. Check the four 3.4 mm holes in the top: 12 mm from the signal-end face at 40 mm each side, and 128 mm from it at 44 mm each side. Open them with a 3.4 mm drill by hand if needed.
 4. Check the three notches, all open at the bottom: at the signal end, 68 mm wide and 15.1 mm tall, from 26 mm on the side away from the fuse to 42 mm on the B+ side; at the power end, 98 mm wide and 5.1 mm tall; in the long side away from the fuse, 8 mm wide and 9.1 mm tall, 42 to 50 mm from the signal-end face.
-5. Remove strings and sharp edges.
+5. Check the 3.2 mm light pipe hole in the top, 50 mm from the signal-end face and 20 mm to the B+ side of the centre line. Open it with a 3.2 mm drill by hand if needed; it must hold the light pipe snugly.
+6. Remove strings and sharp edges.
+7. Press the light pipe into its hole from above until its flange sits flat on the top face.
 
 **How it fits the parts next to it.**
 
@@ -190,23 +196,28 @@ One end lies flat on the B+ stud's shoulder, held by an M6 nut and spring washer
 
 *Figure 13. The two probe leads leave through the side notch; they are plugged in before the cover goes on.*
 
-The cover rests only on the tops of the four pillars and is held by four M3 x 6 pan-head screws. Its walls stand 0.5 mm clear of the plate. The board passes under the power-end wall with 1 mm to spare. The studs and the fuse stay outside the cover, at least 5.5 mm from it, so cables can be fitted with the cover on.
+![Figure 14. Joint 7: light pipe over the status light](05-build-plan/joint-07.png)
 
-**Check before moving on.** On the pillars of an assembled board it does not rock and touches nothing but the pillar tops.
+*Figure 14. The light pipe's flange sits on the cover top; its foot stops 0.5 mm above the status light, so the cover lifts off without touching the board.*
+
+The cover rests only on the tops of the four pillars and is held by four M3 x 6 pan-head screws. Its walls stand 0.5 mm clear of the plate. The board passes under the power-end wall with 1 mm to spare. The studs and the fuse stay outside the cover, at least 5.5 mm from it, so cables can be fitted with the cover on. The light pipe stands directly over the status light (Figure 14).
+
+**Check before moving on.** On the pillars of an assembled board it does not rock and touches nothing but the pillar tops; the light pipe flange sits flat on the top face and the pipe stands square to it.
 
 ### 3.6 Bought components and connections
 
 Buy to specification, not brand. Line numbers are those of the bill of materials.
 
-- **Electronic parts (lines 3 to 7, 10 to 12, 14, 15).** As listed in the bill of materials, with a mating plug for the balance header and for the CAN and UART connector.
+- **Electronic parts (lines 3 to 7, 10 to 12, 14, 15).** As listed in the bill of materials, with a mating plug for the balance header and for the CAN and UART connector. The eight power switches are 100 V, about 1.5 mΩ each, in a 2.3 mm tall package cooled through its top face; the status light is one three-colour light in a 3.5 x 2.8 mm package.
+- **Light pipe (line 19).** A round, flanged light pipe 3 mm across, 19.6 mm long below a flange about 6 mm across and 1 mm thick. Cut a longer one to length with a fine saw and polish the cut end.
 - **Pack fuse and holder (line 8).** 60 A fuse, DC rated 80 V or more, breaking capacity 10 kA or more. Holder with an insulating base no larger than 44 x 32 mm, four M4 fixing holes, two M8 terminal studs, and the fuse blade faces 12.6 mm above its mounting face (10.6 mm above the plate top once fitted).
 - **Power terminals (line 9).** Four through-hole soldered brass terminals with an M6 stud and a 13 mm shoulder 6 mm tall, with nuts, spring washers and ring lugs.
 - **Gap pad and fixings (line 17).** Gap pad sheet as section 3.3; six round aluminium spacers M3 x 3 mm, 6 mm across; four round aluminium pillars M3 female-female x 20 mm, 5 mm across; six M3 x 12 countersunk screws; two M3 nyloc nuts; four M3 x 6 pan-head screws; four M4 x 12 pan-head screws; conformal coating.
 - **Power cables (line 16).** 10 mm² (8 AWG) silicone cable with ring lugs: from the pack's B+ to the holder's outer terminal (M8), from the pack's B- to the B- stud, and from the P+ and P- studs to the load or charger (M6).
 
-![Figure 14. How the board connects to the pack, the load and the host](05-build-plan/wiring.png)
+![Figure 15. How the board connects to the pack, the load and the host](05-build-plan/wiring.png)
 
-*Figure 14. Connections at block level, with the order in which they are made.*
+*Figure 15. Connections at block level, with the order in which they are made.*
 
 ## 4. Putting it together
 
@@ -264,13 +275,13 @@ Plug both probe leads into the probe header and lay them along the board toward 
 
 ![Step 9](05-build-plan/step-09.png)
 
-Lower the cover straight down over the pillars, with the probe leads in the side notch and the connectors in the signal-end notch. Fit four M3 x 6 pan-head screws into the pillars, hand tight. **Hold point:** the cover touches nothing but the pillar tops.
+With the light pipe already pressed into the cover (section 3.5), lower the cover straight down over the pillars, with the probe leads in the side notch and the connectors in the signal-end notch. Fit four M3 x 6 pan-head screws into the pillars, hand tight. **Hold point:** the cover touches nothing but the pillar tops.
 
 ### Step 10: balance harness and CAN plug
 
 ![Step 10](05-build-plan/step-10.png)
 
-Seen from the signal end. Only at the safety stops of section 6, and in the order of Figure 14: first the balance harness plug, with the cell simulator connected to its far end, then the CAN and UART plug from the host.
+Seen from the signal end. Only at the safety stops of section 6, and in the order of Figure 15: first the balance harness plug, with the cell simulator connected to its far end, then the CAN and UART plug from the host.
 
 ## 5. First checks
 
@@ -290,7 +301,7 @@ These are the checks a TRL 4 test report would record; this plan only lists them
 | Precharge | R13 | 2 mF capacitor bank on P+ and P-; enable the output from the host | The bank reaches 90 % of the input voltage within 1 s before the main switches close |
 | Sleep and ship-mode current | R10 | Microammeter in the supply lead, output on, CAN in standby; then ship mode | 300 µA or less, then 10 µA or less |
 | CAN and UART | R11 | USB-to-CAN adapter at 250 kbit/s; terminal at 115,200 baud | Status frames received; the output stays off until the enable line is pulled |
-| Board loss and temperatures at 40 A | R5, R6 | Current-limited supply and electronic load at 40 A for 30 minutes, thermocouples on the plate and next to the hottest switch; measure the drop from B+ to P+ and from P- to B- | Plate rise near the calculated 13 K; switch case well under 110 °C; loss recorded against the 4 W target |
+| Board loss and temperatures at 40 A | R5, R6 | Current-limited supply and electronic load at 40 A for 30 minutes, thermocouples on the plate and next to the hottest switch; measure the drop from B+ to P+ and from P- to B- | Plate rise near the calculated 10 K; switch case well under 110 °C; loss recorded against the 4 W target |
 | Balancing temperature | R7 | Simulated cells 20 mV apart, balancing on, 40 °C room or hot box | A balance resistor stays at 70 °C or less |
 | Mass | R14 | Weigh the assembly without power cables | Recorded against 0.7 kg (0.664 kg calculated; R14 relaxed on 2026-10-02) |
 
@@ -317,10 +328,10 @@ Stop at each point. Carry on only when everything listed is true.
 
 ## 8. Where the numbers come from
 
-- Model and constructability checks: `cad/src/model.py` (`python cad/src/model.py --check`, 46 checks); STEP and STL exports in `cad/step/` and `cad/stl/`.
-- Pictures: `cad/src/build_plan_media.py`, using `.kit/build_views.py`; written to `docs/05-build-plan/` and `cad/drawings/CGD-DWG-101` to `CGD-DWG-105`.
-- General arrangement: `cad/drawings/CGD-DWG-001.pdf`, Rev P2.
-- Calculations: `docs/04-calcs/01-sizing.md` (CGD-CAL-001 v0.3) and `docs/04-calcs/sizing.py`: losses and temperatures (section 3), protection settings (section 4), mass (section 10), cost (section 11).
+- Model and constructability checks: `cad/src/model.py` (`python cad/src/model.py --check`, 55 checks); STEP and STL exports in `cad/step/` and `cad/stl/`.
+- Pictures: `cad/src/build_plan_media.py`, using `.kit/build_views.py`; written to `docs/05-build-plan/` and `cad/drawings/CGD-DWG-101` to `CGD-DWG-105` (CGD-DWG-103 and CGD-DWG-104 at Rev P2).
+- General arrangement: `cad/drawings/CGD-DWG-001.pdf`, Rev P3.
+- Calculations: `docs/04-calcs/01-sizing.md` (CGD-CAL-001 v0.6) and `docs/04-calcs/sizing.py`: losses and temperatures (section 3), protection settings (section 4), mass (section 10), cost (section 11).
 - Bill of materials: `bom/bom.csv`.
-- Decisions: `docs/decisions/0003-design-for-construction.md` (CGD-DDR-003), with CGD-DDR-001 and CGD-DDR-002.
-- Requirements: `docs/03-requirements.md` (CGD-REQ-001 v0.5).
+- Decisions: `docs/decisions/0003-design-for-construction.md` (CGD-DDR-003), with CGD-DDR-001, CGD-DDR-002 and the design decisions register `docs/06-design-decisions.md` (CGD-DEC-001).
+- Requirements: `docs/03-requirements.md` (CGD-REQ-001 v0.8).

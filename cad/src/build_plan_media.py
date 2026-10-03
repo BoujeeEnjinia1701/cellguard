@@ -6,7 +6,7 @@ With no argument it draws everything. Every picture is drawn from cad/src/model.
     docs/05-build-plan/overview.png        every component pulled apart, numbered in build order
     cad/drawings/CGD-DWG-101 to 105        making sketches for the made components
     docs/05-build-plan/plate-holes.png     hole positions on the base plate (matplotlib)
-    docs/05-build-plan/joint-NN.png        close-ups of the joints that need explaining
+    docs/05-build-plan/joint-NN.png        close-ups of the joints that need explaining (joint7: light pipe)
     docs/05-build-plan/step-NN.png         one picture per assembly step
     docs/05-build-plan/wiring.png          how the board connects to the pack, load and host (matplotlib)
 Uses .kit/build_views.py. BUILD PLAN ILLUSTRATION, PLAN NOT YET BUILT.
@@ -23,6 +23,9 @@ from model import PARAMS as P, build_components, derived  # noqa: E402
 OUT = ROOT / "docs" / "05-build-plan"
 DWG = ROOT / "cad" / "drawings"
 DATE = "2026-09-30"
+DATE2 = "2026-10-02"                 # status light and light pipe (CGD-DEC-001)
+REV_P2 = [("P1", "Making sketch for the prototype build plan", DATE, "AC"),
+          ("P2", "Status light and light pipe added (CGD-DEC-001)", DATE2, "AC")]
 D = derived(P)
 C = {k: v[0] for k, v in build_components(P).items()}
 
@@ -31,8 +34,8 @@ COL = {"plate": "#A8A29E", "pad": "#F59E0B", "spacers": "#6B7280", "pcb_screws":
        "studs": "#CA8A04", "bal_header": "#1F2937", "harness": "#334155", "ntc_board": "#0369A1",
        "probes": "#38BDF8", "comm": "#6B7280", "can_plug": "#4B5563", "sec": "#DC2626", "pillars": "#9CA3AF",
        "nuts": "#111827", "fuse": "#C2410C", "holder_screws": "#111827", "link": "#B87333", "cover": "#475569",
-       "cover_screws": "#111827"}
-BOARD = ("pcb", "afe", "fets", "shunt", "mcu", "pre", "studs", "bal_header", "ntc_board", "comm", "sec")
+       "cover_screws": "#111827", "led": "#22C55E", "light_pipe": "#E5E7EB"}
+BOARD = ("pcb", "afe", "fets", "shunt", "mcu", "pre", "studs", "bal_header", "ntc_board", "comm", "sec", "led")
 
 
 def S(*ks):
@@ -60,7 +63,7 @@ def made():
         "fuse": part("Fuse holder, fuse and 4 screws", S("fuse", "holder_screws"), COL["fuse"]),
         "link": part("Fuse link", C["link"], COL["link"]),
         "probes": part("Temperature probe leads (2)", C["probes"], COL["probes"]),
-        "cover": part("Cover and 4 screws", S("cover", "cover_screws"), COL["cover"]),
+        "cover": part("Cover, light pipe and 4 screws", S("cover", "cover_screws", "light_pipe"), COL["cover"]),
         "harness": part("Balance harness plug", C["harness"], "#7C3AED"),
         "can": part("CAN and UART plug (host side)", C["can_plug"], "#0EA5E9"),
     }
@@ -81,12 +84,18 @@ def overview():
 
 
 # ----------------------------------------------------------------- making sketches
-def sheets():
+def sheets(only=None):
+    """only: drawing numbers to draw (for example ("103", "104")); all five when None."""
     M = made()
     base = dict(project="CellGuard", date=DATE)
     out = []
+
+    def cs(prt, nb, **kw):
+        if only and kw["dwg_no"][-3:] not in only:
+            return None
+        return bv.component_sheet(prt, nb, **kw)
     # 101 base plate
-    out.append(bv.component_sheet(
+    out.append(cs(
         Part("Base plate", C["plate"], COL["plate"]), [M["pad"], M["fuse"], M["fix"]],
         dwg_no="CGD-DWG-101", title="CellGuard base plate: making sketch", material="Aluminium sheet 4 mm, 6061 class",
         inset_view=(30, -55),
@@ -105,7 +114,7 @@ def sheets():
                "Check: lay the board on it; all six holes line up with the board's."],
         **base))
     # 102 gap pad
-    out.append(bv.component_sheet(
+    out.append(cs(
         Part("Gap pad", C["pad"], COL["pad"]), [M["plate"], M["fix"]],
         dwg_no="CGD-DWG-102", title="CellGuard gap pad: cutting sketch", material="Insulating gap pad 1.0 mm, 3 W/m.K",
         inset_view=(35, -55),
@@ -122,7 +131,7 @@ def sheets():
         **base))
     # 103 main board (outline and fixed positions; the layout is TRL 4 work)
     board = S(*BOARD)
-    out.append(bv.component_sheet(
+    out.append(cs(
         Part("Main board", board, COL["pcb"]), [M["plate"], M["fix"], M["pillars"], M["fuse"]],
         dwg_no="CGD-DWG-103", title="CellGuard main board: outline and fixed positions", material="FR-4 1.6 mm, 4 layers, 2 oz copper",
         view_shape=board, inset_view=(30, -55),
@@ -136,15 +145,18 @@ def sheets():
                "  B-, P-, P+, B+ at 33 and 11 mm each side (B+ on the far side).",
                "Top, signal end: balance header and CAN and UART connector at the",
                "  left edge; the CAN connector overhangs the edge by 5 mm.",
+               "Top: three-colour status light 30 mm left of the board centre,",
+               "  20 mm to the B+ side, under the cover's light pipe.",
                "Solder fine-pitch parts on a hot plate, then the MOSFETs from below,",
                "  then the stud terminals and connectors by hand.",
                "Check: MOSFET tops level within 0.1 mm; stud pins trimmed to",
                "  1 mm under the board."],
-        **base))
+        rev="P2", revisions=REV_P2, **{**base, "date": DATE2}))
     # 104 cover
-    out.append(bv.component_sheet(
-        Part("Cover", C["cover"], COL["cover"]), [M["board"], M["pillars"], M["plate"]],
-        dwg_no="CGD-DWG-104", title="CellGuard cover: making sketch", material="Flame-retardant polycarbonate, printed, 2 mm wall",
+    out.append(cs(
+        Part("Cover", C["cover"], COL["cover"]), [M["board"], M["pillars"], M["plate"],
+                                                  part("Light pipe", C["light_pipe"], COL["light_pipe"])],
+        dwg_no="CGD-DWG-104", title="CellGuard cover: making sketch", material="Flame-retardant polycarbonate, opaque, printed, 2 mm wall",
         view_shape=C["cover"], inset_view=(30, -55),
         notes=["Print upside down (top face on the bed), 2 mm walls, 100 % infill,",
                "  in flame-retardant polycarbonate in an enclosed printer.",
@@ -156,12 +168,15 @@ def sheets():
                "  harness sit in it. Power-end notch 98 wide, 5.1 mm tall, open",
                "  at the bottom: the board passes under it with 1 mm clear.",
                "Probe notch 8 wide, 9.1 mm tall, in the near side wall.",
+               "Light pipe hole 3.2 mm in the top, 50 mm from the signal end,",
+               "  20 to the B+ side: press the flanged 3 mm light pipe in from",
+               "  above; its foot stops 0.5 mm over the status light.",
                "Fit: it rests on the four pillars only; its walls stand 0.5 mm",
                "  clear of the plate. Four M3 x 6 pan-head screws.",
                "Check: on the pillars it does not rock and touches no part."],
-        **base))
+        rev="P2", revisions=REV_P2, **{**base, "date": DATE2}))
     # 105 fuse link
-    out.append(bv.component_sheet(
+    out.append(cs(
         Part("Fuse link", C["link"], COL["link"]), [M["board"], M["fuse"], M["plate"]],
         dwg_no="CGD-DWG-105", title="CellGuard fuse link: making sketch", material="Copper flat bar 14 x 3 mm, C101 or C110",
         view_shape=C["link"], inset_view=(40, -40),
@@ -328,6 +343,25 @@ def joints():
     return out
 
 
+def joint7():
+    """Light pipe over the status light, cut through the light pipe axis (2026-10-02, CGD-DEC-001)."""
+    import build123d as b
+    top = D["top"]
+    lx, ly = P["led_xy"]
+
+    def win(sh, x0, x1, y0, y1, z0, z1):
+        return sh & (b.Pos((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2) * b.Box(x1 - x0, y1 - y0, z1 - z0))
+    bx = (lx - 14, lx + 14, ly - 12, ly, D["pcb_z0"] - 0.5, D["cover_top"] + 2)
+    return bv.joint([
+        part("Main board", win(C["pcb"], *bx), COL["pcb"]),
+        part("Status light, three-colour", win(C["led"], *bx), "#16A34A"),
+        part("Light pipe, 3 mm, flanged", win(C["light_pipe"], *bx), "#93C5FD"),
+        part("Cover top, opaque", win(C["cover"], *bx), COL["cover"])],
+        OUT / "joint-07.png", "Joint 7: light pipe over the status light, cut through its axis",
+        subtitle="Pressed into the cover from above; its foot stops 0.5 mm over the light, so the cover lifts off freely",
+        elev=10, azim=-90, size=(8, 6))
+
+
 # ----------------------------------------------------------------- assembly steps
 def steps():
     M = made()
@@ -336,7 +370,7 @@ def steps():
     def st(n, done, new, title, sub, **kw):
         out.append(bv.step(done, new, OUT / f"step-{n:02d}.png", f"Step {n}: {title}", subtitle=sub, **kw))
     pcb = part("Bare board", C["pcb"], COL["pcb"])
-    st(1, [pcb], [mv(part("Front end, protector, controller", S("afe", "sec", "mcu"), "#111827"), (0, 0, 40)),
+    st(1, [pcb], [mv(part("Front end, protector, controller, status light", S("afe", "sec", "mcu", "led"), "#111827"), (0, 0, 40)),
                   mv(part("Shunt and precharge parts", S("shunt", "pre"), COL["pre"]), (0, 0, 55)),
                   mv(part("Connectors and probe header", S("bal_header", "comm", "ntc_board"), COL["comm"]), (0, 0, 70)),
                   mv(part("Stud terminals (4)", C["studs"], COL["studs"]), (0, 0, 60)),
@@ -371,7 +405,7 @@ def steps():
        "Plug both probe leads into the probe header and lay them in line with the side notch",
        elev=26, azim=-70, label_done=False)
     st(9, bd + [M["fuse"], M["link"], M["probes"]], [mv(M["cover"], (0, 0, 70))], "cover",
-       "Lower it over the pillars; leads and connectors sit in the notches; four M3 x 6 screws, hand tight",
+       "Light pipe pressed in first. Lower it over the pillars; leads and connectors in the notches; four M3 x 6 screws",
        elev=24, azim=-55, label_done=False)
     st(10, bd + [M["fuse"], M["link"], M["probes"], M["cover"]],
        [mv(M["harness"], (-50, 0, 0)), mv(M["can"], (-50, 0, 0))], "balance harness and CAN plug",
@@ -457,7 +491,8 @@ def wiring():
 
 
 if __name__ == "__main__":
-    what = sys.argv[1:] or ["overview", "sheets", "layouts", "joints", "steps", "wiring"]
-    fns = {"overview": overview, "sheets": sheets, "layouts": layouts, "joints": joints, "steps": steps, "wiring": wiring}
+    what = sys.argv[1:] or ["overview", "sheets", "layouts", "joints", "joint7", "steps", "wiring"]
+    fns = {"overview": overview, "sheets": sheets, "layouts": layouts, "joints": joints, "steps": steps, "wiring": wiring,
+           "joint7": joint7, "sheets103-104": lambda: sheets(("103", "104"))}
     for w in what:
         print(w, "->", fns[w]())

@@ -11,6 +11,8 @@ board-to-plate gap with a gap pad compressed from 1.0 to 0.7 mm, six board fixin
 four pillars that carry the cover, a cover with notches open at the bottom, a fuse
 holder in line with the B+ stud joined by a straight copper link, and tapped holes
 for mounting the plate.
+Added on 2026-10-02 for the decisions in CGD-DEC-001: a three-colour status light on the
+board (BOM line 15) and a flanged light pipe pressed into the opaque cover above it (line 19).
 
 Axes: X along the board (power end at +X, signal end at -X), Y across, Z up. Units mm.
 The base plate bottom face is z = 0.
@@ -47,6 +49,10 @@ PARAMS = {
     "cover_x0": -80.0, "cover_x1": 54.0, "cover_w": 104.0, "cover_wall": 2.0, "cover_lift": 0.5,
     # 14 Secondary protector (BQ77216 class, TSSOP-24) and self-control protector fuse
     "sec_ic": (7.8, 6.4), "scp": (10.0, 6.5, 3.2),
+    # 15 Status light: one three-colour LED (PLCC-4, 3.5 x 2.8 x 1.9 mm) on the board top (CGD-DEC-001, 2026-10-02)
+    "led_xy": (-30.0, 20.0), "led": (3.5, 2.8, 1.9),
+    # 19 Light pipe: flanged round light pipe pressed into a hole in the cover top, over the status light
+    "lp_d": 3.0, "lp_hole": 3.2, "lp_flange_d": 6.0, "lp_flange_t": 1.0, "lp_gap": 0.5,
 }
 
 
@@ -194,6 +200,10 @@ def build_components(p=PARAMS):
     sl, sw = p["sec_ic"]; ql, qw, qh = p["scp"]
     add("sec", b(-19.5, -19.5 + sl, -20.5, -20.5 + sw, top, top + 1.2) + b(57, 57 + ql, 40, 40 + qw, top, top + qh), 14)
 
+    # 15 Status light: one three-colour LED on the board top, under the light pipe (CGD-DEC-001, 2026-10-02)
+    lx, ly = p["led_xy"]; ll, lw_, lh = p["led"]
+    add("led", b(lx - ll / 2, lx + ll / 2, ly - lw_ / 2, ly + lw_ / 2, top, top + lh), 15)
+
     # 17 Pillars on the board (carry the cover) and nuts at the two outer fixings
     pil = None; nuts = None
     for x, y, kind in p["pcb_fix"]:
@@ -247,8 +257,13 @@ def build_components(p=PARAMS):
             cover = cover - rod(x, y, ct - wl - 1, ct + 1, 1.7)
             s = rod(x, y, ct - wl - 4.0, ct, 1.4) + rod(x, y, ct, ct + 2.1, 2.75)
             cscr = s if cscr is None else cscr + s
+    cover = cover - rod(lx, ly, ct - wl - 1, ct + 1, p["lp_hole"] / 2)        # light pipe hole over the status light
     add("cover", cover, 13)
     add("cover_screws", cscr, 17)
+
+    # 19 Light pipe: round, flanged, pressed into the cover top from above; its foot stops just above the LED
+    lp = rod(lx, ly, top + lh + p["lp_gap"], ct, p["lp_d"] / 2) + rod(lx, ly, ct, ct + p["lp_flange_t"], p["lp_flange_d"] / 2)
+    add("light_pipe", lp, 19)
     return C
 
 
@@ -263,13 +278,14 @@ NAMES = {
     7: "Precharge resistor and switch", 8: "Pack fuse and holder", 9: "Power terminals (B-, P-, P+, B+)",
     10: "Balance connector and lead harness", 11: "Temperature sensors (3)", 12: "CAN and UART connector",
     13: "Flame-retardant cover", 14: "Secondary protector", 17: "Gap pad, spacers, pillars and screws",
-    18: "Fuse link (copper bar)"}
+    15: "Status light, three-colour", 18: "Fuse link (copper bar)", 19: "Light pipe"}
 COLOURS = {1: "#9CA3AF", 2: "#15803D", 3: "#111827", 4: "#374151", 5: "#B45309", 6: "#0F766E", 7: "#D4A017",
            8: "#C2410C", 9: "#E5E7EB", 10: "#1F2937", 11: "#38BDF8", 12: "#6B7280", 13: "#334155", 14: "#DC2626",
-           17: "#78716C", 18: "#B87333"}
+           15: "#22C55E", 17: "#78716C", 18: "#B87333", 19: "#E5E7EB"}
 EXPLODE = {1: (0, 0, -110), 2: (0, 0, 45), 3: (0, 0, 95), 4: (0, 0, -50), 5: (0, -40, 95), 6: (0, 30, 95),
            7: (0, 40, 95), 8: (110, 0, 20), 9: (40, 0, 95), 10: (-20, 0, -75), 11: (0, -80, 85), 12: (-40, 60, 15),
-           13: (40, 0, 200), 14: (0, 70, 95), 17: (0, 0, -80), 18: (60, 40, 60)}
+           13: (40, 0, 200), 14: (0, 70, 95), 15: (-20, 60, 95), 17: (0, 0, -80), 18: (60, 40, 60),
+           19: (40, 0, 250)}
 
 
 def build_parts(p=PARAMS):
@@ -285,7 +301,7 @@ def build_parts(p=PARAMS):
 def envelope(p=PARAMS):
     """Overall board envelope (x0, x1, y0, y1, z0, z1) without cables, harness tail, probes or the host plug."""
     C = build_components(p)
-    z1 = max(C[k][0].bounding_box().max.Z for k in ("cover", "cover_screws", "studs", "fuse"))
+    z1 = max(C[k][0].bounding_box().max.Z for k in ("cover", "cover_screws", "studs", "fuse", "light_pipe"))
     return (p["plate_x0"], p["plate_x0"] + p["plate_l"], -p["plate_w"] / 2, p["plate_w"] / 2, 0.0, z1)
 
 
@@ -338,7 +354,9 @@ def checks(p=PARAMS, verbose=True):
                       ("link", "studs", "link on the B+ stud shoulder"), ("link", "fuse", "link on the fuse terminal blade"),
                       ("studs", "pcb", "studs soldered to the board"), ("comm", "pcb", "CAN connector on the board"),
                       ("bal_header", "pcb", "balance connector on the board"), ("cover_screws", "cover", "cover screws on the cover"),
-                      ("pcb_screws", "plate", "board screws seated in the countersinks")]:
+                      ("pcb_screws", "plate", "board screws seated in the countersinks"),
+                      ("led", "pcb", "status light soldered to the board"),
+                      ("light_pipe", "cover", "light pipe flange on the cover top")]:
         g = gap(a, b)
         res.append((g < 0.02, f"contact: {why} (gap {g:.2f} mm)"))
 
@@ -355,7 +373,11 @@ def checks(p=PARAMS, verbose=True):
                             ("pillars", "pre", 1.0, "pillars clear of the precharge resistor"),
                             ("pillars", "shunt", 0.4, "pillars clear of the shunt"),
                             ("fuse", "pcb", 10.0, "fuse holder clear of the board edge"),
-                            ("spacers", "fets", 10.0, "spacers clear of the MOSFETs")]:
+                            ("spacers", "fets", 10.0, "spacers clear of the MOSFETs"),
+                            ("light_pipe", "led", p["lp_gap"] - 0.01, "light pipe foot clear of the status light"),
+                            ("light_pipe", "mcu", 1.0, "light pipe clear of the controller"),
+                            ("led", "mcu", 1.0, "status light clear of the controller"),
+                            ("led", "pillars", 3.0, "status light clear of the pillars")]:
         g = gap(a, b)
         res.append((g >= need, f"clearance: {why} {g:.2f} mm (need {need:.1f})"))
     # link to the P+ stud: live parts at different potential, keep 6 mm for the P+ ring lug and nut
@@ -368,6 +390,12 @@ def checks(p=PARAMS, verbose=True):
     res.append((abs(d["pad_t"] - 0.7) < 1e-6, f"gap pad compressed from {p['pad_nominal']:.1f} to {d['pad_t']:.1f} mm "
                 f"({100 * (1 - d['pad_t'] / p['pad_nominal']):.0f} %, within the 10 to 40 % a gap pad takes)"))
     res.append((abs(C["link"].bounding_box().min.Z - d["stud_face"]) < 1e-6, "link is flat: stud shoulder and fuse blade at the same height"))
+    lpc = C["light_pipe"].bounding_box().center(); ldc = C["led"].bounding_box().center()
+    off = ((lpc.X - ldc.X) ** 2 + (lpc.Y - ldc.Y) ** 2) ** 0.5
+    res.append((off < 0.3, f"light pipe on the status light axis (offset {off:.2f} mm, need under 0.3)"))
+    lp_top = C["light_pipe"].bounding_box().max.Z
+    res.append((lp_top <= C["cover_screws"].bounding_box().max.Z + 1e-6,
+                f"light pipe flange top {lp_top:.1f} mm, inside the envelope set by the cover screw heads"))
 
     # 5 assembly order: each part reaches its place along its fitting direction without passing through fitted parts
     order = [("pad", (0, 0, 1), ["plate"]),
@@ -380,10 +408,11 @@ def checks(p=PARAMS, verbose=True):
              ("link", (0, 0, 1), ["plate", "pcb+", "fuse", "holder_screws", "nuts"]),
              ("cover", (0, 0, 1), ["plate", "pcb+", "pillars", "nuts", "fuse", "link", "probes"]),
              ("cover_screws", (0, 0, 1), ["cover", "pillars"]),
+             ("light_pipe", (0, 0, 1), ["cover", "pcb+"]),
              ("harness", (-1, 0, 0), ["plate", "pcb+", "cover"]),
              ("can_plug", (-1, 0, 0), ["plate", "pcb+", "cover"])]
     board = None
-    for k in ("pcb", "afe", "fets", "shunt", "mcu", "pre", "studs", "bal_header", "ntc_board", "comm", "sec"):
+    for k in ("pcb", "afe", "fets", "shunt", "mcu", "pre", "studs", "bal_header", "ntc_board", "comm", "sec", "led"):
         board = C[k] if board is None else board + C[k]
     C["pcb+"] = board
     for key, (dx, dy, dz), fitted in order:

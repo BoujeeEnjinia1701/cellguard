@@ -1,23 +1,24 @@
 """CellGuard product appearance model (build123d), TRL 3.
 
-Finished-product look for photoreal renders: the battery management board under a clear
-flame-retardant polycarbonate cover (filleted, with fixing screws, a name plate and a warning
-label), so the populated board shows through. The aluminium base plate has filleted corners and
-mounting holes; the board carries the cell monitor, secondary protector, microcontroller, shunt,
-finned precharge resistor, balance resistors, capacitors and a lit green status light. Brass M6
-studs with nuts and ring lugs, a bolted pack fuse in its holder, and latching plugs on the
+Finished-product look for photoreal renders, matching the constructable design of model.py
+(CGD-DDR-003) and the decisions of 2026-10-02 (CGD-DEC-001): the battery management board under an
+opaque printed flame-retardant polycarbonate cover carried on four pillars and held by four
+screws, with a light pipe in its top showing the lit three-colour status light, a name plate and a
+warning label. The aluminium base plate is flat with filleted corners and four tapped mounting
+holes; the board sits on six spacers. Brass M6 stud terminals with nuts, the bolted pack fuse in
+its holder in line with the B+ stud, the straight copper fuse link, and latching plugs on the
 balance and CAN connectors complete the device. Context is a compact 4S LiFePO4 pack beside the
-board, with its balance leads (in a braided sleeve), the two temperature probes and the power
-cables connected, all on a small bench mat.
+board (product renders only, decided 2026-10-02), with its balance leads in a braided sleeve, the
+two temperature probes, the B- cable to its stud and the B+ cable to the fuse holder's outer
+terminal, all on a small bench mat.
 APPEARANCE MODEL ONLY: no tolerances, no PCB layout, no fabrication detail.
 CONCEPT, NOT FOR FABRICATION. A research prototype design, not a certified BMS.
 
-Every main dimension and interface comes from PARAMS and build_parts() in model.py (model.py has
-no derived(); positions are taken from PARAMS and from the same literal coordinates model.py uses).
-Axes as model.py: X along the board (power end at +X, signal end at -X), Y across, Z up, base plate
-bottom face at Z = 0. The pack beside the board is illustrative (compact prismatic cells, sizes not
-from a data sheet); in concept_media.py the board sits on posts above a 4S pack of 280 Ah cells.
-See docs/REVIEW.md, session 2026-09-26.
+Every main dimension and interface comes from PARAMS, derived(), holder_screws() and
+build_components() in model.py. Axes as model.py: X along the board (power end at +X, signal end
+at -X), Y across, Z up, base plate bottom face at Z = 0. The pack beside the board is illustrative
+(compact prismatic cells, sizes not from a data sheet); in concept_media.py the board sits on posts
+above a 4S pack of 280 Ah cells. See docs/REVIEW.md, sessions 2026-09-26 and 2026-10-02.
 
     from product_model import product_parts
     for p in product_parts(): print(p["name"], p["group"], p["material"])
@@ -29,28 +30,31 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from build123d import (Axis, Box, Cylinder, Plane, Pos, RegularPolygon, Rot, Solid, Sphere, Vector,
                        extrude, fillet)
-from model import PARAMS, build_parts
+from model import PARAMS, build_components, build_parts, derived, holder_screws
 
 TITLE = "CellGuard: open battery management board for small LiFePO4 packs"
 
 RENDER_VIEWS = [
     {"name": "hero", "groups": ["shell", "internal", "accessory", "context"], "explode": False, "el": 30, "az": -40,
-     "note": "Product render from the front right and above (about 30 deg elevation); board under its clear "
-             "cover at right with the power studs and pack fuse at the right end, compact 4S LiFePO4 pack at "
-             "left with balance leads, temperature probes and power cables connected"},
+     "note": "Product render from the front right and above (about 30 deg elevation); board under its opaque "
+             "cover with the status light showing through the light pipe, power studs, copper fuse link and pack "
+             "fuse at the right end, compact 4S LiFePO4 pack at left with balance leads, temperature probes and "
+             "power cables connected"},
     {"name": "exploded", "groups": ["shell", "internal", "accessory"], "explode": True, "el": 28, "az": -55,
-     "note": "Exploded view from the front right and above (about 28 deg elevation): clear cover and screws, "
-             "power studs and nuts, populated main board, balance and CAN plugs, MOSFETs and thermal pad, "
-             "pack fuse and holder, aluminium base plate"},
+     "note": "Exploded view from the front right and above (about 28 deg elevation): opaque cover with light "
+             "pipe and screws, pillars, power studs and nuts, populated main board with the status light, balance "
+             "and CAN plugs, MOSFETs and gap pad, spacers, pack fuse, holder and copper link, aluminium base plate"},
     {"name": "detail", "groups": ["shell", "internal", "accessory"], "explode": False, "el": 34, "az": -35,
-     "note": "Detail from the front right and above (about 34 deg elevation) without the pack: board seen "
-             "through the clear cover, green status light lit, studs and fuse at right, plugs at left"},
+     "note": "Detail from the front right and above (about 34 deg elevation) without the pack: opaque cover "
+             "with the green status light lit in its light pipe, studs, copper fuse link and fuse at right, "
+             "the cable slot in the cover at left"},
 ]
 
 # Colours (restrained product palette; kit accent)
 C_ACCENT = "#0F766E"
 C_PLATE = "#A9AFB6"
 C_CLEAR = "#DCEBF5"
+C_COVER = "#2F3A45"                          # opaque flame-retardant polycarbonate (decided 2026-10-02)
 C_PCB = "#166534"
 C_CHIP = "#111827"
 C_DARK = "#2B2F36"
@@ -81,7 +85,7 @@ END_T = 5.0                                  # pack end plate thickness
 PCX = -204.0                                 # pack centre X (pack spans x -278 .. -130, beside the -X end)
 TERM_DX = 45.0                               # terminal offset from the cell centre along X
 TOP_CAP = 1.5
-MAT = (-292.0, 152.0, -80.0, 78.0, 3.0)      # bench mat x0, x1, y0, y1, thickness
+MAT = (-292.0, 162.0, -80.0, 78.0, 3.0)      # bench mat x0, x1, y0, y1, thickness
 
 
 def _fillet_try(shape, edges, radii):
@@ -168,6 +172,8 @@ def _lug(x, y, z0, t, r_out, r_in, dx, dy, w):
 
 def product_parts(P=PARAMS):
     m = {bom: s for _, s, _, bom, _ in build_parts(P)}
+    C = {k: v[0] for k, v in build_components(P).items()}
+    d = derived(P)
     T = P["plate_t"]
     top = P["pcb_z0"] + P["pcb_t"]                     # PCB top face, 8.4 mm
     out = []
@@ -193,13 +199,17 @@ def product_parts(P=PARAMS):
     plate = _b(x0, x1, -hw, hw, 0, T)
     plate = _fillet_try(plate, _zedges(plate), [8.0, 6.0, 4.0])
     plate = _fillet_try(plate, _top(plate), [1.2, 0.8, 0.5])
-    for hx in (x0 + 8, x1 - 8):
-        for hy in (-hw + 8, hw - 8):
-            plate -= _zcyl(hx, hy, -1, T + 1, 2.75)
-            plate -= _zcyl(hx, hy, T - 0.8, T + 1, 3.6)            # shallow counterbore
-    for sx, sy, _ in P["pcb_fix"]:                         # bought spacers under the board (CGD-DDR-003)
-        plate += _zcyl(sx, sy, T, P["plate_t"] + P["spacer_h"], P["spacer_od"] / 2)
+    for hx, hy in P["mount_holes"]:                        # four M4 tapped mounting holes (CGD-DDR-003)
+        plate -= _zcyl(hx, hy, -1, T + 1, 1.65)
+    for hx, hy in holder_screws(P):                        # fuse holder screws go into these
+        plate -= _zcyl(hx, hy, -1, T + 1, 1.65)
+    for sx, sy, _ in P["pcb_fix"]:                         # board fixings, countersunk from below
+        plate -= _zcyl(sx, sy, -1, T + 1, P["hole_m3"] / 2)
     add("Aluminium base plate and heat spreader", plate, C_PLATE, "metal", 1, "shell", E_PLATE)
+    # bought spacers under the board, pillars that carry the cover, nuts at the power-end corners (BOM 17)
+    add("Board spacers, aluminium (6)", C["spacers"], C_METAL, "metal", 17, "internal", E_PAD)
+    add("Cover pillars, aluminium (4)", C["pillars"], C_METAL, "metal", 17, "internal", E_STUD)
+    add("Board fixing nuts (2)", C["nuts"], C_METAL, "metal", 17, "internal", E_STUD)
 
     # thermal pad and MOSFET bank under the PCB (BOM 4, 17), same envelopes as model.py
     pad = _b(15, 70, -22, 22, T, T + P["pad_t"])
@@ -267,15 +277,12 @@ def product_parts(P=PARAMS):
         silk.append(_b(x, x + 10, -36, -35.4, top, top + 0.05))
     add("Silkscreen markings", _union(silk), C_SILK, "paper", 2, "internal", E_PCB)
 
-    # status lights on the board: green lit, amber and red off (BOM 15)
-    leds = []
-    for k, (col, mat, nm) in enumerate([(C_LED_G, "emissive", "Status light, green (lit)"),
-                                        (C_LED_A, "plastic", "Status light, amber"),
-                                        (C_LED_R, "plastic", "Status light, red")]):
-        x = -32.0 + 5.0 * k
-        d = _b(x - 1.2, x + 1.2, 19.4, 21.0, top, top + 0.6) + Pos(x, 20.2, top + 0.6) * Sphere(1.0)
-        d &= _b(x - 1.3, x + 1.3, 19.3, 21.1, top, top + 1.6)
-        add(nm, d, col, mat, 15, "internal", E_PCB)
+    # one three-colour status light on the board, lit green (BOM 15, decided 2026-10-02), from model.py
+    lx, ly = P["led_xy"]; ll, lw_, lh = P["led"]
+    add("Status light housing, white", _b(lx - ll / 2, lx + ll / 2, ly - lw_ / 2, ly + lw_ / 2, top, top + lh - 0.3),
+        "#F1F1EE", "plastic", 15, "internal", E_PCB)
+    add("Status light, three-colour (lit green)", _b(lx - 1.2, lx + 1.2, ly - 1.0, ly + 1.0, top + lh - 0.3, top + lh),
+        C_LED_G, "emissive", 15, "internal", E_PCB)
 
     # balance connector header (BOM 10): body of model.py, with the mating socket on the -X face
     bal = _b(-74, -65, -24, 20, top, top + 9.0)
@@ -300,61 +307,73 @@ def product_parts(P=PARAMS):
             zk = top + 12.6 + 0.9 * k
             s -= _zcyl(sx, y, zk, zk + 0.35, 3.4) - _zcyl(sx, y, zk - 1, zk + 1, 2.65)
         studs.append(s)
-        washers.append(_zcyl(sx, y, top + 7.2, top + 8.2, 6.0) - _zcyl(sx, y, top + 6, top + 9, 3.2))
-        nuts.append(_nut(sx, y, top + 8.2, 10.0, 5.0))
+        zw = d["stud_face"] + {P["stud_y"][3]: P["link_t"], P["stud_y"][0]: 1.5}.get(y, 0.0)  # link (B+), lug (B-)
+        washers.append(_zcyl(sx, y, zw, zw + 1.0, 6.0) - _zcyl(sx, y, zw - 1, zw + 2, 3.2))
+        nuts.append(_nut(sx, y, zw + 1.0, 10.0, 5.0))
     add("Power terminal studs, M6 brass (B-, P-, P+, B+)", _union(studs), C_BRASS, "metal", 9, "shell", E_STUD)
     add("Stud washers", _union(washers), C_METAL, "metal", 9, "shell", E_NUT)
     add("Stud nuts", _union(nuts), C_METAL, "metal", 9, "shell", E_NUT)
 
-    # ------------------------------------------------------------ pack fuse and holder (BOM 8)
-    fx0, fl, fw = P["fuse_x0"], P["fuse_l"], P["fuse_w"]
+    # ------------------------------------------------------------ pack fuse and holder (BOM 8), copper link (BOM 18)
+    fx0, fl, fw, fy = P["fuse_x0"], P["fuse_l"], P["fuse_w"], P["fuse_y"]
     fx1 = fx0 + fl
-    holder = _b(fx0, fx1, -fw / 2, fw / 2, T, T + 12)
+    ht = d["holder_top"]                                           # holder top, where the fuse blades sit
+    t0, t1 = d["fuse_term"]                                        # inner (link) and outer (B+ cable) terminals
+    holder = _b(fx0, fx1, fy - fw / 2, fy + fw / 2, T, ht)
     holder = _fillet_try(holder, _zedges(holder), [4.0, 3.0, 2.0])
-    holder = _fillet_try(holder, _top(holder), [1.5, 1.0])
-    for xt in (fx0 + 5, fx1 - 5):                                  # terminal towers
-        tw = _b(xt - 4.5, xt + 4.5, -7, 7, T + 11, T + 18)
-        holder += _fillet_try(tw, _zedges(tw), [1.5, 1.0])
-    for xs in (fx0 + 5, fx1 - 5):
-        for ys in (-11.0, 11.0):
-            holder -= _zcyl(xs, ys, T + 10.5, T + 13, 2.2)         # screw counterbores
+    holder = _fillet_try(holder, _top(holder), [1.0, 0.6])
+    HS = holder_screws(P)
+    for xs, ys in HS:
+        holder -= _zcyl(xs, ys, ht - 1.5, ht + 1, 3.6)              # screw counterbores
+        holder -= _zcyl(xs, ys, T - 1, ht + 1, 2.2)
     add("Fuse holder", holder, C_DARK, "plastic", 8, "shell", E_FUSE)
-    hs = _union([_screw(xs, ys, T + 10.5, 1.9, 1.2) for xs in (fx0 + 5, fx1 - 5) for ys in (-11.0, 11.0)])
+    hs = _union([_screw(xs, ys, ht - 1.5, 3.2, 2.0) for xs, ys in HS])
     add("Fuse holder screws", hs, C_METAL, "metal", 17, "shell", E_FUSE)
-    body = _b(fx0 + 12, fx1 - 12, -9, 9, T + 12, T + 24)
-    body = _fillet_try(body, body.edges(), [1.5, 1.0])
+    body = _xcyl((t0 + t1) / 2, fy, ht + 9.0, 7.0, (t1 - 7) - (t0 + 7))
+    body = _fillet_try(body, body.edges(), [1.0, 0.6])
     add("Pack fuse, 60 A", body, C_FUSE, "plastic", 8, "shell", E_FUSE)
-    flab = _b(fx0 + 15, fx1 - 15, -5, 5, T + 24, T + 24.2)
+    flab = _b(t0 + 11, t1 - 11, fy - 4, fy + 4, ht + 15.9, ht + 16.1)
     add("Fuse rating label", flab, "#B45309", "paper", 8, "shell", E_FUSE)
-    tabs = _b(fx0 + 1, fx1 - 1, -6, 6, T + 18, T + 19.5)
-    for xt in (fx0 + 5, fx1 - 5):
-        tabs -= _zcyl(xt, 0, T + 17, T + 21, 3.3)
+    tabs = (_b(t0 - 6, t0 + 8, fy - 6, fy + 6, ht, ht + 2.0) - _zcyl(t0, fy, ht - 1, ht + 3, 4.25)) + \
+           (_b(t1 - 8, t1 + 6, fy - 6, fy + 6, ht, ht + 2.0) - _zcyl(t1, fy, ht - 1, ht + 3, 4.25))
     add("Fuse blades", tabs, C_METAL, "metal", 8, "shell", E_FUSE)
     fb = []
-    for xt in (fx0 + 5, fx1 - 5):
-        s = _zcyl(xt, 0, T + 18, T + 28, 3.0)
-        fb.append(_fillet_try(s, _top(s), [0.5, 0.3]))
-    add("Fuse studs", _union(fb), C_BRASS, "metal", 8, "shell", E_FNUT)
-    fn = _union([_nut(xt, 0, T + 20.5, 10.0, 4.5) for xt in (fx0 + 5, fx1 - 5)])
-    add("Fuse nuts", fn, C_METAL, "metal", 8, "shell", E_FNUT)
+    for xt in (t0, t1):
+        sb = _zcyl(xt, fy, ht, ht + 15.0, 4.0)
+        fb.append(_fillet_try(sb, _top(sb), [0.6, 0.3]))
+    add("Fuse terminal studs, M8", _union(fb), C_BRASS, "metal", 8, "shell", E_FNUT)
+    lt = P["link_t"]
+    fn = _union([_nut(t0, fy, ht + 2.0 + lt, 13.0, 6.5), _nut(t1, fy, ht + 2.0 + 1.5, 13.0, 6.5)])
+    add("Fuse terminal nuts", fn, C_METAL, "metal", 8, "shell", E_FNUT)
+    link = C["link"]
+    add("Fuse link, copper bar", link, C_COPPER, "metal", 18, "shell", E_FNUT)
+    sb_ = P["stud_y"][3]
+    sleeve = _b(P["stud_x"] + 8, t0 - 9, sb_ - P["link_w"] / 2 - 0.4, sb_ + P["link_w"] / 2 + 0.4,
+                d["stud_face"] - 0.4, d["stud_face"] + lt + 0.4)
+    add("Fuse link heat-shrink sleeve", sleeve, C_RED, "rubber", 18, "shell", E_FNUT)
 
-    # ------------------------------------------------------------ clear cover (BOM 13)
+    # ------------------------------------------------------------ opaque cover on four pillars (BOM 13), light pipe (BOM 19)
     cx0, cx1, cw, ct, wl = P["cover_x0"], P["cover_x1"], P["cover_w"] / 2, P["cover_top"], P["cover_wall"]
-    outer = _b(cx0, cx1, -cw, cw, T, ct)
+    zb = T + P["cover_lift"]
+    outer = _b(cx0, cx1, -cw, cw, zb, ct)
     outer = _fillet_try(outer, _zedges(outer), [6.0, 4.0, 3.0])
-    outer = _fillet_try(outer, _top(outer), [3.0, 2.0, 1.5])
-    inner = _b(cx0 + wl, cx1 - wl, -cw + wl, cw - wl, T - 1, ct - wl)
+    outer = _fillet_try(outer, _top(outer), [2.0, 1.5, 1.0])
+    inner = _b(cx0 + wl, cx1 - wl, -cw + wl, cw - wl, zb - 1, ct - wl)
     inner = _fillet_try(inner, _zedges(inner), [4.0, 2.5, 1.5])
     cover = outer - inner
-    cover -= _b(cx0 - 1, cx0 + 3, -26, 42, top - 0.4, top + 11.0)     # connector window (model.py)
-    cover -= _b(cx1 - 3, cx1 + 1, -cw + 3, cw - 3, T - 1, top + 1.0)  # PCB and MOSFET pass-through
-    cover -= _b(-38, -30, -cw - 1, -cw + 3, top + 0.6, top + 5.0)     # probe lead exit
-    CS = [(-73.0, -46.0), (-73.0, 46.0), (49.0, -46.0), (49.0, 46.0)]
+    cover -= _b(cx0 - 1, cx0 + 3, -26, 42, zb - 1, top + 11.0)        # connector notch, open at the bottom (model.py)
+    cover -= _b(cx1 - 3, cx1 + 1, -cw + 3, cw - 3, zb - 1, top + 1.0)  # board pass-through, open at the bottom
+    cover -= _b(-38, -30, -cw - 1, -cw + 3, zb - 1, top + 5.0)        # probe lead notch, open at the bottom
+    CS = [(x, y) for x, y, kind in P["pcb_fix"] if kind == "pillar"]
     for (x, y) in CS:
-        cover += _zcyl(x, y, top + 1.6, ct - 0.5, 3.4)                # screw bosses
-        cover -= _zcyl(x, y, top + 1.0, ct + 1, 1.3)
-    add("Flame-retardant cover, clear polycarbonate", cover, C_CLEAR, "clear", 13, "shell", E_COVER)
+        cover -= _zcyl(x, y, ct - wl - 1, ct + 1, 1.7)
+    cover -= _zcyl(lx, ly, ct - wl - 1, ct + 1, P["lp_hole"] / 2)    # light pipe hole
+    add("Flame-retardant cover, opaque printed", cover, C_COVER, "plastic", 13, "shell", E_COVER)
     add("Cover screws", _union([_screw(x, y, ct) for (x, y) in CS]), C_METAL, "metal", 17, "shell", E_CSCREW)
+    lp = C["light_pipe"]
+    add("Light pipe, clear", lp, C_CLEAR, "clear", 19, "shell", E_COVER)
+    glow = _zcyl(lx, ly, ct + P["lp_flange_t"], ct + P["lp_flange_t"] + 0.15, P["lp_d"] / 2)
+    add("Light pipe tip, lit green", glow, C_LED_G, "emissive", 19, "shell", E_COVER)
 
     plate_lab = _b(-62, -22, 32, 42, ct, ct + 0.3)
     plate_lab = _fillet_try(plate_lab, _zedges(plate_lab), [1.5, 0.8])
@@ -476,25 +495,22 @@ def product_parts(P=PARAMS):
     rc = 3.6
     zp = 106.0                                                     # power lug level on the pack
     zs = top + 6.0                                                 # stud lug level (on the stud base)
+    zf = ht + 2.0                                                  # outer fuse blade face, B+ cable lug
     plugs_p = [_lug(N, ys[0], zp, 1.5, 6.5, 3.3, 12, 0, 7.0), _lug(N, ys[3], zp, 1.5, 6.5, 3.3, 12, 0, 7.0),
                _lug(sx, -33.0, zs, 1.5, 6.5, 3.3, 0, -11, 7.0),
-               _lug(fx1 - 5, 0, T + 19.5, 1.0, 6.0, 3.3, 11, 0, 7.0),
-               _lug(fx0 + 5, 0, T + 19.5, 1.0, 6.0, 3.3, -11, 0, 7.0),
-               _lug(sx, 33.0, zs, 1.5, 6.5, 3.3, 11, 0, 7.0)]
+               _lug(t1, fy, zf, 1.5, 6.8, 4.3, 12, 0, 8.0)]
     add("Power cable ring lugs", _union(plugs_p), "#C9CDD2", "metal", 9, "context", (0, 0, 0))
     neg = _pipe([(N + 20, ys[0], zp + 0.8), (-134, ys[0] - 2, zp), (-126, -46, 96), (-117, -52, 58),
                  (-110, -64, rc), (40, -64, rc), (56, -64, 6), (sx, -58, zs + 0.8), (sx, -46.5, zs + 0.8)], rc)
     add("B- power cable (black)", neg, C_BLACK, "rubber", 16, "context", (0, 0, 0))
     pos = _pipe([(N + 20, ys[3], zp + 0.8), (-134, ys[3] + 2, zp), (-126, 46, 96), (-117, 52, 58),
-                 (-110, 64, rc), (140, 64, rc), (148, 34, 10), (147, 0, T + 20.2), (fx1 + 8, 0, T + 20.2)], rc)
-    pos += _pipe([(fx0 - 6, 0, T + 20.2), (79, 10, 30), (82, 26, 28), (sx + 20, 33, zs + 2.5),
-                  (sx + 13, 33, zs + 0.8)], rc)
-    add("B+ power cable and fuse link (red)", pos, C_RED, "rubber", 16, "context", (0, 0, 0))
+                 (-110, 64, rc), (140, 64, rc), (152, 54, rc + 2), (154, fy + 4, zf + 0.8), (t1 + 16, fy, zf + 0.8)], rc)
+    add("B+ power cable to the fuse holder (red)", pos, C_RED, "rubber", 16, "context", (0, 0, 0))
     shr = [_pipe([(sx, -54, zs + 0.8), (sx, -49.5, zs + 0.8)], rc + 0.5),
            _pipe([(N + 16, ys[0], zp + 0.8), (N + 21, ys[0], zp + 0.8)], rc + 0.5)]
     add("Heat-shrink boots, B-", _union(shr), C_BLACK, "rubber", 16, "context", (0, 0, 0))
     shr = [_pipe([(N + 16, ys[3], zp + 0.8), (N + 21, ys[3], zp + 0.8)], rc + 0.5),
-           _pipe([(fx1 + 5, 0, T + 20.2), (fx1 + 10, 0, T + 20.2)], rc + 0.5)]
+           _pipe([(t1 + 14, fy, zf + 0.8), (t1 + 19, fy, zf + 0.8)], rc + 0.5)]
     add("Heat-shrink boots, B+", _union(shr), C_RED, "rubber", 16, "context", (0, 0, 0))
 
     # CAN and UART cable to the host, leaving over the back of the mat

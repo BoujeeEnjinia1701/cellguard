@@ -22,7 +22,8 @@ FET_VDS = 100.0                                  # MOSFET rating, V
 
 I_CONT, I_PEAK, T_PEAK = 40.0, 80.0, 10.0        # A, A, s (R5)
 T_AMB = 40.0                                     # degC (R5)
-RDS25 = 2.5e-3                                   # ohm per FET at 25 degC, maximum (BOM line 4)
+RDS25 = 1.5e-3                                   # ohm per FET at 25 degC, 1.5 mOhm class (BOM line 4, CGD-DEC-001 2026-10-02)
+RDS25_OLD = 2.5e-3                               # ohm, the 2.5 mOhm parts specified before 2026-10-02
 RDS_TC = 0.0067                                  # per K; about 1.5 x at 100 degC
 N_PAR = 4                                        # FETs in parallel per direction
 SHARE = 1.10                                     # hottest FET carries 10 % more than its share
@@ -64,6 +65,8 @@ CC_OFF_CAL = 1e-6                                # V, offset after calibration (
 GAIN_CAL = 0.005                                 # 0.5 % residual gain error after calibration
 SOC_ANCHOR, SOC_CAP = 2.0, 2.0                   # points: anchor detection, capacity estimate
 CYCLES_7D = 3.5                                  # equivalent full cycles in 7 days of partial cycling
+DAYS_PROMPT = 5.0                                # days without a full charge before the firmware prompts for one (R8, CGD-DEC-001)
+CYCLES_PER_DAY = CYCLES_7D / 7                   # same partial-cycling rate as the 7-day case
 
 # ---------------------------------------------------------------- helpers
 rows = []
@@ -144,7 +147,7 @@ out("Power path efficiency, 16S at 40 A", 100 * (1 - p_total / (S_MAX * LFP_NOM 
 out("Plate area, both faces", area_plate, "m2", "{:.4f}")
 out("Plate temperature rise at 40 A", a["dt_plate"], "K", "{:.1f}")
 out("Hottest FET loss at 40 A", a["p_each"], "W", "{:.3f}")
-out("Saving with 1.5 mOhm MOSFETs at 40 A", a["p_fet"] * (1 - 1.5e-3 / RDS25), "W", "{:.2f}")
+out("Extra loss with the former 2.5 mOhm MOSFETs at 40 A", a["p_fet"] * (RDS25_OLD / RDS25 - 1), "W", "{:.2f}")
 out("FET junction at 40 A, 40 degC, top-cooled TOLT", a["tj"], "degC", "{:.1f}")
 out("FET junction at 40 A, 40 degC, TOLL through the mold", b["tj"], "degC", "{:.1f}")
 m_plate_al = PARAMS["plate_l"] * PARAMS["plate_w"] * PARAMS["plate_t"] * 1e-9 * AL_RHO
@@ -234,6 +237,15 @@ for cap in (20, 100, 280):
     gain = GAIN_CAL * CYCLES_7D * 100
     out(f"SoC error after 7 days, {cap} Ah, calibrated offset", soc_full + gain + drift_typ, "points", "{:.1f}")
     out(f"SoC error after 7 days, {cap} Ah, uncalibrated offset", soc_full + gain + drift_wc, "points", "{:.1f}")
+h_p = DAYS_PROMPT * 24
+for cap in (20, 100, 280):
+    gain = GAIN_CAL * CYCLES_PER_DAY * DAYS_PROMPT * 100
+    out(f"SoC error after {DAYS_PROMPT:.0f} days (full-charge prompt), {cap} Ah, calibrated offset",
+        soc_full + gain + off_cal * h_p / cap * 100, "points", "{:.1f}")
+    out(f"SoC error after {DAYS_PROMPT:.0f} days (full-charge prompt), {cap} Ah, uncalibrated offset",
+        soc_full + gain + off_uncal * h_p / cap * 100, "points", "{:.1f}")
+out(f"Offset allowed for 10 points on 20 Ah over {DAYS_PROMPT:.0f} days",
+    (10 - soc_full - GAIN_CAL * CYCLES_PER_DAY * DAYS_PROMPT * 100) / 100 * 20 / h_p * 1e3, "mA", "{:.1f}")
 out("Offset allowed for 10 points on 20 Ah", (10 - soc_full - GAIN_CAL * CYCLES_7D * 100) / 100 * 20 / 168 * 1e3,
     "mA", "{:.1f}")
 
@@ -295,7 +307,8 @@ mass = {"1 Base plate": vol[1] * dens[1],
         "11 Temperature sensors (assumed)": 10.0, "12 CAN and UART connector": vol[12] * dens[12],
         "13 Cover": vol[13] * dens[13], "3, 5, 6, 14, 15 Other components (assumed)": 15.0,
         "17 Gap pad, spacers, pillars, screws and nuts": m_fix,
-        "18 Fuse link, copper bar": vol[18] * dens[18]}
+        "18 Fuse link, copper bar": vol[18] * dens[18],
+        "15, 19 Status light and light pipe": cv["led"] * 2.0 + vol[19] * 1.20}
 for k, v in mass.items():
     out(f"Mass: {k}", v, "g", "{:.0f}")
 m_tot = sum(mass.values())
@@ -315,6 +328,7 @@ out("BOM total without the secondary protector", tot - sec, "USD")
 BUDGET = 140.0                                   # budget_usd in project.yaml (CGD-DDR-002; was 120)
 out("Share of budget_usd 140", 100 * tot / BUDGET, "%", "{:.1f}")
 out("Margin against budget_usd 140", BUDGET - tot, "USD")
+out("Over the value-engineering target of 140", tot - BUDGET, "USD")
 out("Against former budget of 120 (before CGD-DDR-002)", 100 * (tot / 120 - 1), "% over", "{:.1f}")
 
 with open(ROOT / "docs/04-calcs/results.csv", "w", newline="") as f:

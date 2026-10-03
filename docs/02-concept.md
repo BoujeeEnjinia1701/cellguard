@@ -3,7 +3,7 @@ doc_id: CGD-PRC-001
 title: CellGuard design precis
 project: CellGuard
 doc_type: Design precis
-version: "0.7"
+version: "0.8"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -37,13 +37,17 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: "Responses to R6, R8 and R14, cover, status light, state-of-charge check and first test partner as decided on 2026-10-02 (CGD-DEC-001)"
+- version: "0.8"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: "Key numbers from CGD-CAL-001 v0.6 (1.5 mOhm-class switches, five-day state-of-charge error); status light and light pipe in the components table; cost USD 159.15 against the USD 140 value-engineering target"
 ---
 
 # CellGuard design precis
 
 ## Summary
 
-CellGuard is one open battery management board for LFP packs of 4 to 16 cells in series. A single cell-monitor and protection chip measures every cell, trips the pack's MOSFET switches on its own when a limit is crossed, and balances the cells; a small microcontroller adds the state-of-charge estimate, a state-of-health log and an open CAN and UART interface. An independent secondary protector blows a self-control protector (SCP) fuse if the main protection fails. Everything sits on an aluminium base plate that spreads heat and also carries the pack fuse, so the whole protection path is one part that other lab projects can bolt on. The TRL 3 calculations (CGD-CAL-001) show 10 of 16 requirements met on paper. Three are not met: board loss 4.4 W against 4 W (R6), state of charge on small packs (R8) and mass 0.66 kg against 0.6 kg (R14). The parts cost of $138 meets the $140 budget that Amish set on 2026-09-25 (R16, CGD-DDR-002).
+CellGuard is one open battery management board for LFP packs of 4 to 16 cells in series. A single cell-monitor and protection chip measures every cell, trips the pack's MOSFET switches on its own when a limit is crossed, and balances the cells; a small microcontroller adds the state-of-charge estimate, a state-of-health log and an open CAN and UART interface. An independent secondary protector blows a self-control protector (SCP) fuse if the main protection fails. Everything sits on an aluminium base plate that spreads heat and also carries the pack fuse, so the whole protection path is one part that other lab projects can bolt on. The TRL 3 calculations (CGD-CAL-001 v0.6) show 12 of 16 requirements met on paper after the responses Amish decided on 2026-10-02: board loss 3.5 W against 4 W with 1.5 mΩ-class switches (R6), state of charge within 10 points between full charges prompted about every five days (R8, with calibration) and mass 0.66 kg against the relaxed 0.7 kg (R14). R2, R4 and R7 are at risk. Value-engineering target: USD 140. Estimated cost of the constructable design: USD 159.15 (USD 19.15 over the target), mainly the dearer switches (R16).
 
 ![CellGuard on a 4S LFP pack](../media/hero.png)
 
@@ -70,7 +74,7 @@ Table 1. Main components. Numbers match the exploded view (Figure 3) and `bom/bo
 | 1 | Base plate and heat spreader | 6061 aluminium, 220 x 110 x 4 mm, flat, drilled and tapped; the board sits on six bought 3 mm spacers (CGD-DDR-003) | Takes MOSFET heat through a gap pad; carries the fuse |
 | 2 | Main PCB | 4-layer, 2 oz (70 µm) copper, 150 x 95 mm | Power copper on inner layers; clearances for 60 V |
 | 3 | Cell monitor and protection IC | TI [BQ76952](https://www.ti.com/product/BQ76952): 3 to 16 cells, ±15 mV total cell voltage error from −40 to 85 °C, integrated high-side N-channel MOSFET driver, coulomb counter, I²C | Decided by Amish, 2026-09-25 (CGD-DDR-001 item 1, CGD-DDR-002) |
-| 4 | Charge and discharge MOSFETs | 8 x 100 V N-channel, 2.5 mΩ or less, top-side cooled (TOLT) package (decided, CGD-DDR-002): 4 in parallel for charge, 4 for discharge, back to back | Mounted on the PCB underside, pressed onto the base plate through an insulating pad |
+| 4 | Charge and discharge MOSFETs | 8 x 100 V N-channel, 1.5 mΩ class (decided 2026-10-02, CGD-DEC-001), top-side cooled (TOLT) package (decided, CGD-DDR-002): 4 in parallel for charge, 4 for discharge, back to back | Mounted on the PCB underside, pressed onto the base plate through an insulating pad |
 | 5 | Current shunt | 0.25 mΩ metal element, 3 W, low side between B- and P- | 10 mV at 40 A |
 | 6 | Microcontroller and CAN transceiver | STM32G0B1 class with built-in CAN controller, plus a 3.3 V CAN transceiver | Runs state of charge, log and interface; not in the protection path. Decided by Amish, 2026-09-25 (item 2) |
 | 7 | Precharge | 100 Ω 10 W aluminium-housed resistor with a DPAK-class P-channel MOSFET, driven by the front end's precharge output | 1 s timeout in firmware; DPAK-class switch sized for a 34 W peak (decided, CGD-DDR-002) |
@@ -79,9 +83,10 @@ Table 1. Main components. Numbers match the exploded view (Figure 3) and `bom/bo
 | 10 | Balance connector and harness | 17-way connector, 16 sense leads plus B- reference, each lead fused or resistor-protected at the cell end | Unused inputs linked on the board for packs under 16S |
 | 11 | Temperature sensors | Three 10 kΩ NTC thermistors: two ring-lug probes on cells, one on the board by the MOSFETs | Charge locked out below 0 °C |
 | 12 | CAN and UART connector | Latching 6-way connector: CAN-H, CAN-L, UART TX and RX, enable, ground | Enable keeps the output off until the host is connected |
-| 13 | Cover | Flame-retardant polycarbonate (UL 94 V-0 grade), printed or cut and bent | Leaves the studs and fuse reachable |
+| 13 | Cover | Flame-retardant polycarbonate (UL 94 V-0 grade), printed, opaque (decided 2026-10-02) | Leaves the studs and fuse reachable; a light pipe (line 19) shows the status light |
 | 14 | Secondary protector and SCP fuse | TI [BQ77216](https://www.ti.com/product/BQ77216) class: 3 to 16 cells, overvoltage, undervoltage, open wire and temperature, separate COUT and DOUT outputs, about 1 µA; drives a self-control protector fuse in the B+ path | Decided by Amish, 2026-09-25 (item 3); SCP rating at 40 A and 60 V to be confirmed |
-| 15 | Supporting electronics | 60 V input buck regulator, 16 Mbit SPI flash, TVS diode across P+ and P-, balance resistors, passives | Not shown in the model |
+| 15 | Supporting electronics | 60 V input buck regulator, 16 Mbit SPI flash, TVS diode across P+ and P-, balance resistors, passives, and one three-colour status light (decided 2026-10-02) | Only the status light is shown in the model |
+| 19 | Light pipe | Round flanged light pipe, 3 mm, pressed into the cover top over the status light (decided 2026-10-02) | Lets the opaque cover show the status light |
 
 ![Exploded view](../media/exploded.png)
 
@@ -115,27 +120,27 @@ Table 2. Key numbers at TRL 3.
 
 | Quantity | Value | Requirement |
 | --- | --- | --- |
-| Board loss at 40 A (MOSFETs 2.38 W, shunt 0.40 W, copper 1.02 W, SCP fuse 0.64 W) | 4.44 W | R6, 4 W: **not met**; about 3.5 W with the 1.5 mΩ-class switches decided on 2026-10-02 |
+| Board loss at 40 A, 1.5 mΩ-class switches (MOSFETs 1.41 W, shunt 0.40 W, copper 1.02 W, SCP fuse 0.64 W) | 3.47 W | R6, 4 W: met (was 4.4 W with 2.5 mΩ parts) |
 | External fuse and links at 40 A | 1.60 W | |
-| Power path efficiency, 16S at 40 A | 99.70 % | |
-| Plate temperature rise at 40 A | 13.0 K | |
-| MOSFET junction at 40 A and 40 °C ambient | 54.0 °C (TOLT), 61.6 °C (TOLL) | R5, 110 °C: met |
-| MOSFET junction bound, 80 A for 10 s | 59.5 °C (TOLT), 99.1 °C (TOLL) | R5: met |
+| Power path efficiency, 16S at 40 A | 99.75 % | |
+| Plate temperature rise at 40 A | 10.4 K | |
+| MOSFET junction at 40 A and 40 °C ambient | 51.0 °C (TOLT), 55.4 °C (TOLL) | R5, 110 °C: met |
+| MOSFET junction bound, 80 A for 10 s | 54.4 °C (TOLT), 77.6 °C (TOLL) | R5: met |
 | Protection settings (decided, CGD-DDR-002) | SCD 400 A in 15 µs, OCD2 160 A in 20 ms, OCD1 96 A in 320 ms, OCC 48 A | R3: met on paper |
-| Prospective short-circuit current | 696 A (4S 20 Ah) to 4,746 A (16S 280 Ah) | Fuse breaking capacity 10 kA |
+| Prospective short-circuit current | 716 A (4S 20 Ah) to 4,976 A (16S 280 Ah) | Fuse breaking capacity 10 kA |
 | Balancing | 103 mA, 0.350 W per channel; 1 % on 100 Ah in 9.7 h, on 280 Ah in 27.2 h | R7: at risk (resistor hotspot 73.9 °C) |
-| State-of-charge error after 7 days without a full charge | 10.1 points (20 Ah), 7.4 points (100 Ah) | R8, 10 points: **not met** on 20 Ah over 7 days; R8 now applies between prompted full charges, about five days apart |
+| State-of-charge error after five days between prompted full charges | 8.7 points (20 Ah), 6.7 points (100 Ah), with a calibrated coulomb counter offset | R8, 10 points between prompted full charges: met with calibration (24.5 points on 20 Ah uncalibrated) |
 | Current error at 80 A after one-point calibration | 0.404 A | R9, 0.850 A: met |
 | Sleep and ship-mode current | 54.5 µA and 6.0 µA | R10: met |
 | CAN bus load, 250 kbit/s | 1.84 % | R11: met |
 | Log capacity | 65,536 records of 32 bytes | R12: met |
 | Precharge of 2 mF to 90 % | 0.46 s, 3.38 J, 34.1 W peak | R13: met |
 | Size and mass | 220 x 110 x 33 mm; 0.664 kg | R14, 0.7 kg (relaxed 2026-10-02): met |
-| Parts cost | $138.00 estimated (98.6 % of the $140 value-engineering target) | R16, $140 target: within the value-engineering target |
+| Parts cost | $159.15 estimated (113.7 % of the $140 value-engineering target) | R16: over the value-engineering target by $19.15 |
 
 ### State-of-charge method
 
-LFP's flat voltage curve means voltage alone cannot give state of charge in the middle of the range. The concept uses coulomb counting from the front end's integrated coulomb counter, anchored at two points where LFP voltage does change quickly: full (all cells above 3.45 V with charge current tapering below C/20) and near empty (lowest cell below 3.0 V at light load). Between two anchors the firmware learns the usable capacity, which also feeds the state-of-health log. After a rest of two hours or more at the ends of the range, the open-circuit voltage is used as a check. The first error budget is in CGD-CAL-001 section 6: the coulomb counter's offset sets the drift, so on a 20 Ah pack the offset must stay near 1 µV across the shunt (about 4 mA) to hold 10 points over 7 days.
+LFP's flat voltage curve means voltage alone cannot give state of charge in the middle of the range. The concept uses coulomb counting from the front end's integrated coulomb counter, anchored at two points where LFP voltage does change quickly: full (all cells above 3.45 V with charge current tapering below C/20) and near empty (lowest cell below 3.0 V at light load). Between two anchors the firmware learns the usable capacity, which also feeds the state-of-health log. After a rest of two hours or more at the ends of the range, the open-circuit voltage is used as a check. The first error budget is in CGD-CAL-001 section 6: the coulomb counter's offset sets the drift, so on a 20 Ah pack the offset must stay under about 1.5 µV across the shunt (about 6 mA) to hold 10 points over the five days after which the firmware prompts for a full charge (decided 2026-10-02).
 
 ## Safety
 
@@ -145,7 +150,7 @@ LFP's flat voltage curve means voltage alone cannot give state of charge in the 
 
 > **Safety:** First power-up and all threshold changes should be tested on a cell simulator or a bench supply with current limiting, not on a full pack. Charge test packs on a non-combustible surface, inside a fire-resistant enclosure where possible, never unattended, with a lithium-rated or Class D extinguisher and sand nearby.
 
-> **Safety:** The MOSFETs cannot always interrupt a hard short from a large pack; the fuse must be sized for the pack's prospective short-circuit current (about 4.7 kA for a 16S 280 Ah pack by CGD-CAL-001; specify a 10 kA breaking capacity) and rated for DC at 80 V or more. Set the short-circuit delay to its 15 µs minimum: at 60 µs the current in a large pack reaches about 2.5 kA before the MOSFETs open. A TVS diode across P+ and P- limits the voltage spike when the MOSFETs open under load.
+> **Safety:** The MOSFETs cannot always interrupt a hard short from a large pack; the fuse must be sized for the pack's prospective short-circuit current (about 5.0 kA for a 16S 280 Ah pack by CGD-CAL-001; specify a 10 kA breaking capacity) and rated for DC at 80 V or more. Set the short-circuit delay to its 15 µs minimum: at 60 µs the current in a large pack reaches about 2.5 kA before the MOSFETs open. A TVS diode across P+ and P- limits the voltage spike when the MOSFETs open under load.
 
 > **Safety:** The secondary protector blows the SCP fuse if a MOSFET shorts or the front end fails. Until an SCP fuse rated for 40 A at 60 V DC is confirmed (R4 at risk), use only chargers with a fixed, correct end-of-charge voltage for the pack. A blown SCP fuse means a fault: inspect the board before repairing it.
 
@@ -157,7 +162,7 @@ Maximum pack voltage stays below 60 V DC. CellGuard is a research, educational a
 
 - [x] Licensing of reused Apache-2.0 firmware: separate `firmware/third_party/` folder with original notices, listed in `LICENSE-SOFTWARE`. Decided by Amish, 2026-09-25: go with recommendation.
 - [x] Value-engineering target: `budget_usd` (a hypothetical control target, not a limit) raised from $120 to $140. Decided by Amish, 2026-09-25: go with recommendation.
-- [x] Responses to R6, R8 and R14: 1.5 mΩ-class switches in the TOLT package (about 3.5 W); a firmware prompt for a full charge when about five days pass without one, with R8 restated to apply between prompted full charges; R14 relaxed to 0.7 kg with the 4 mm plate kept. Decided by Amish, 2026-10-02 (CGD-DEC-001).
+- [x] Responses to R6, R8 and R14: 1.5 mΩ-class switches in the TOLT package (3.47 W, CGD-CAL-001 v0.6); a firmware prompt for a full charge when about five days pass without one, with R8 restated to apply between prompted full charges; R14 relaxed to 0.7 kg with the 4 mm plate kept. Decided by Amish, 2026-10-02 (CGD-DEC-001).
 - [ ] SwapCell project's agreement to the NMC profile and the message set profile: to be recorded in the SwapCell repo once the board envelope question is settled (SwapCell expects about 230 x 58 x 10 mm; CellGuard is 220 x 110 x 33 mm). Decided by Amish, 2026-10-02 (CGD-DEC-001).
 - [x] Cover: printed flame-retardant polycarbonate, not sheet aluminium; opaque for the prototype, with a light pipe over a three-colour status light. Decided by Amish, 2026-10-02 (CGD-DEC-001).
 - [x] State-of-charge check: cycle a 4S 20 Ah LFP pack through seven days of partial cycles with a bench supply and a low-cost DC electronic load, count charge with a calibrated reference shunt and meter, then discharge fully to measure the true state of charge. Decided by Amish, 2026-10-02 (CGD-DEC-001).

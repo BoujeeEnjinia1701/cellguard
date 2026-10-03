@@ -7,29 +7,29 @@ NMC maximum series count under 60 V,14,cells
 NMC 13S maximum (SwapCell),54.60,V
 PCB copper and stud joints at 20 degC,0.569,mOhm
 PCB copper and stud joints at 50 degC,0.635,mOhm
-"MOSFET loss at 40 A, 25 degC junction",2.00,W
-"MOSFET loss at 40 A, converged junction (TOLT)",2.39,W
+"MOSFET loss at 40 A, 25 degC junction",1.20,W
+"MOSFET loss at 40 A, converged junction (TOLT)",1.41,W
 Shunt loss at 40 A,0.40,W
 PCB copper and stud loss at 40 A,1.02,W
 SCP fuse loss at 40 A (assumed 0.40 mOhm),0.64,W
-Board loss at 40 A with SCP (R6),4.44,W
-Board loss at 40 A without SCP,3.80,W
-"Board loss at 40 A, 25 degC FETs, with SCP",4.06,W
+Board loss at 40 A with SCP (R6),3.47,W
+Board loss at 40 A without SCP,2.83,W
+"Board loss at 40 A, 25 degC FETs, with SCP",3.26,W
 "Fuse, holder and links loss at 40 A (external)",1.60,W
-Total power path loss at 40 A,6.04,W
-"Power path efficiency, 16S at 40 A",99.70,%
+Total power path loss at 40 A,5.07,W
+"Power path efficiency, 16S at 40 A",99.75,%
 "Plate area, both faces",0.0484,m2
-Plate temperature rise at 40 A,13.0,K
-Hottest FET loss at 40 A,0.361,W
-Saving with 1.5 mOhm MOSFETs at 40 A,0.96,W
-"FET junction at 40 A, 40 degC, top-cooled TOLT",54.0,degC
-"FET junction at 40 A, 40 degC, TOLL through the mold",61.6,degC
+Plate temperature rise at 40 A,10.4,K
+Hottest FET loss at 40 A,0.213,W
+Extra loss with the former 2.5 mOhm MOSFETs at 40 A,0.94,W
+"FET junction at 40 A, 40 degC, top-cooled TOLT",51.0,degC
+"FET junction at 40 A, 40 degC, TOLL through the mold",55.4,degC
 Plate heat capacity,234,J/K
 Plate time constant,10.1,min
-"Extra plate rise, 80 A for 10 s",0.88,K
-Hottest FET loss at 80 A,1.64,W
-"FET junction after 80 A for 10 s, TOLT (steady bound)",59.5,degC
-"FET junction after 80 A for 10 s, TOLL (steady bound)",99.1,degC
+"Extra plate rise, 80 A for 10 s",0.60,K
+Hottest FET loss at 80 A,0.97,W
+"FET junction after 80 A for 10 s, TOLT (steady bound)",54.4,degC
+"FET junction after 80 A for 10 s, TOLL (steady bound)",77.6,degC
 SCD threshold (100 mV),400,A
 SCD delay set (15 to 450 us available),15,us
 "OCD1 threshold (24 mV), 320 ms",96,A
@@ -37,32 +37,32 @@ SCD delay set (15 to 450 us available),15,us
 OCC threshold (12 mV),48,A
 Smallest SCD step (10 mV),40,A
 SCD trip complete (delay plus turn-off),25,us
-Board and fuse resistance in the short-circuit loop,3.47,mOhm
+Board and fuse resistance in the short-circuit loop,2.97,mOhm
 "Power cable resistance, 2 x 0.5 m of 10 mm2",1.72,mOhm
-"16S 20 Ah: current at FET turn-off, SCD delay 15 us",676,A
+"16S 20 Ah: current at FET turn-off, SCD delay 15 us",679,A
 "16S 20 Ah: inductive energy at turn-off, delay 15 us",0.23,J
-"16S 20 Ah: current per discharge MOSFET at turn-off, 15 us",169,A
-"16S 20 Ah: current at FET turn-off, SCD delay 60 us",868,A
+"16S 20 Ah: current per discharge MOSFET at turn-off, 15 us",170,A
+"16S 20 Ah: current at FET turn-off, SCD delay 60 us",875,A
 "16S 20 Ah: inductive energy at turn-off, delay 60 us",0.38,J
-16S 20 Ah: prospective short-circuit current,883,A
-"16S 280 Ah: current at FET turn-off, SCD delay 15 us",1122,A
-"16S 280 Ah: inductive energy at turn-off, delay 15 us",0.63,J
-"16S 280 Ah: current per discharge MOSFET at turn-off, 15 us",280,A
-"16S 280 Ah: current at FET turn-off, SCD delay 60 us",2516,A
-"16S 280 Ah: inductive energy at turn-off, delay 60 us",3.16,J
-16S 280 Ah: prospective short-circuit current,4746,A
-"4S 280 Ah: current at FET turn-off, SCD delay 15 us",295,A
+16S 20 Ah: prospective short-circuit current,891,A
+"16S 280 Ah: current at FET turn-off, SCD delay 15 us",1129,A
+"16S 280 Ah: inductive energy at turn-off, delay 15 us",0.64,J
+"16S 280 Ah: current per discharge MOSFET at turn-off, 15 us",282,A
+"16S 280 Ah: current at FET turn-off, SCD delay 60 us",2555,A
+"16S 280 Ah: inductive energy at turn-off, delay 60 us",3.26,J
+16S 280 Ah: prospective short-circuit current,4976,A
+"4S 280 Ah: current at FET turn-off, SCD delay 15 us",297,A
 "4S 280 Ah: inductive energy at turn-off, delay 15 us",0.04,J
 "4S 280 Ah: current per discharge MOSFET at turn-off, 15 us",74,A
-"4S 280 Ah: current at FET turn-off, SCD delay 60 us",718,A
-"4S 280 Ah: inductive energy at turn-off, delay 60 us",0.26,J
-4S 280 Ah: prospective short-circuit current,1943,A
-"4S 20 Ah: current at FET turn-off, SCD delay 15 us",257,A
+"4S 280 Ah: current at FET turn-off, SCD delay 60 us",730,A
+"4S 280 Ah: inductive energy at turn-off, delay 60 us",0.27,J
+4S 280 Ah: prospective short-circuit current,2102,A
+"4S 20 Ah: current at FET turn-off, SCD delay 15 us",258,A
 "4S 20 Ah: inductive energy at turn-off, delay 15 us",0.03,J
-"4S 20 Ah: current per discharge MOSFET at turn-off, 15 us",64,A
-"4S 20 Ah: current at FET turn-off, SCD delay 60 us",504,A
+"4S 20 Ah: current per discharge MOSFET at turn-off, 15 us",65,A
+"4S 20 Ah: current at FET turn-off, SCD delay 60 us",511,A
 "4S 20 Ah: inductive energy at turn-off, delay 60 us",0.13,J
-4S 20 Ah: prospective short-circuit current,696,A
+4S 20 Ah: prospective short-circuit current,716,A
 Balance current per cell,103,mA
 Balance power per channel,0.350,W
 "Balance power, 8 channels at once",2.80,W
@@ -87,6 +87,13 @@ SoC error after a full charge (anchor + capacity + 1 cycle gain),5.0,points
 "SoC error after 7 days, 100 Ah, uncalibrated offset",11.9,points
 "SoC error after 7 days, 280 Ah, calibrated offset",7.0,points
 "SoC error after 7 days, 280 Ah, uncalibrated offset",8.6,points
+"SoC error after 5 days (full-charge prompt), 20 Ah, calibrated offset",8.7,points
+"SoC error after 5 days (full-charge prompt), 20 Ah, uncalibrated offset",24.5,points
+"SoC error after 5 days (full-charge prompt), 100 Ah, calibrated offset",6.7,points
+"SoC error after 5 days (full-charge prompt), 100 Ah, uncalibrated offset",9.9,points
+"SoC error after 5 days (full-charge prompt), 280 Ah, calibrated offset",6.4,points
+"SoC error after 5 days (full-charge prompt), 280 Ah, uncalibrated offset",7.6,points
+Offset allowed for 10 points on 20 Ah over 5 days,6.2,mA
 Offset allowed for 10 points on 20 Ah,3.9,mA
 "Sleep: Front end SLEEP, DSG on (TI typical)",41.0,uA
 Sleep: 3.3 V rail loads through the buck,1.5,uA
@@ -124,11 +131,13 @@ Mass: 13 Cover,57,g
 "Mass: 3, 5, 6, 14, 15 Other components (assumed)",15,g
 "Mass: 17 Gap pad, spacers, pillars, screws and nuts",25,g
 "Mass: 18 Fuse link, copper bar",12,g
+"Mass: 15, 19 Status light and light pipe",0,g
 Mass total without power cables,0.664,kg
 Mass total with a 3 mm plate,0.599,kg
-BOM lines,18,
-BOM total,138.00,USD
-BOM total without the secondary protector,128.00,USD
-Share of budget_usd 140,98.6,%
-Margin against budget_usd 140,2.00,USD
-Against former budget of 120 (before CGD-DDR-002),15.0,% over
+BOM lines,19,
+BOM total,159.15,USD
+BOM total without the secondary protector,149.15,USD
+Share of budget_usd 140,113.7,%
+Margin against budget_usd 140,-19.15,USD
+Over the value-engineering target of 140,19.15,USD
+Against former budget of 120 (before CGD-DDR-002),32.6,% over

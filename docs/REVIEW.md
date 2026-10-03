@@ -272,10 +272,6 @@ All open items are in the register CGD-DEC-001: accept CGD-DDR-003 (recommended)
 - The copper link and stud shoulders are live at pack potential outside the cover; the link is sleeved and the plan requires boots on the studs before anything is connected.
 - Unchanged: up to about 4.7 kA prospective short circuit; 15 µs short-circuit delay; protector fuse rating unconfirmed (R4 at risk).
 
-### Stale media (made on Amish's Mac, not regenerated here)
-
-`media/render-hero.png`, `media/render-exploded.png` and `media/render-detail.png` (referenced by the README, not in this copy), `media/card.png` and `media/social-preview.png` show the concept plate, fuse position and cover fixings. They need regenerating from `cad/src/product_model.py`, which should also adopt the fuse position, copper link and pillar cover fixing.
-
 ### Recommended next step
 
 Amish to review CGD-DDR-003 and the register. TRL 4 (board layout, bench build on a cell simulator, first checks) remains on hold by his instruction.
@@ -320,3 +316,91 @@ Amish, 2026-10-02: "i approve your recommendations for all 555 open decisions." 
 - Option (b) for R6 does not compare like with like: it reduces the counted board loss by redefining the boundary, not by reducing heat.
 - The value-engineering margin is $2, and the protector fuse price is still unconfirmed (DDR-003 A2); fitting 1.5 milliohm switches (item 4) will likely put the board over the $140 target.
 - The register listed 'decision 4 is (a)' under 'To confirm' item 8 for a clear sheet, but the clear cover is decision 3, not 4. Corrected in CGD-DEC-001 v0.3.
+
+## 2026-10-02: Approved follow-ups carried out
+
+Amish, 2026-10-02, approved carrying out every follow-up action from the open-decision sign-off ("APPROVED CHANGES, COMPLETE THESE") and preparing the render scenes. TRL stays 3.
+
+### Follow-ups
+
+| # | Follow-up | Done | What changed |
+| --- | --- | --- | --- |
+| 1 | Decision 3: light pipe over the status light in the cover; "opaque" in BOM line 13 | Done | `cad/src/model.py`: 3 mm flanged light pipe pressed into a 3.2 mm hole in the cover top, its foot 0.5 mm above the status light; new BOM line 19 ($0.80). CGD-DWG-104 Rev P2 (hole position and fitting note); new joint picture `docs/05-build-plan/joint-07.png`; overview and steps 1 and 9 show it. BOM line 13 now "Flame-retardant cover (opaque)" |
+| 2 | Decision 4: BOM line 4 as 1.5 mΩ-class TOLT switches, repriced | Done | Line 4 respecified (1.6 mΩ or less maximum, Infineon IPTC015N10NM5 class) and repriced from $2.50 to $5.00 each, basis in the line's notes |
+| 3 | Decision 4: re-run the sizing for the 1.5 mΩ-class switches; R6 status | Done | `docs/04-calcs/sizing.py` re-run; board loss 3.47 W at 40 A. **R6 changes from not met to met on paper** |
+| 4 | Decision 5: state-of-charge error over about five days between prompted full charges; R8 status | Done | 8.7 points on 20 Ah with a calibrated coulomb counter offset (24.5 uncalibrated), 6.7 on 100 Ah. **R8 changes from not met to met on paper with calibration**. The calibrated offset is TI's typical figure; the firmware prompt itself is TRL 4 work |
+| 5 | Decision 7: 4S 20 Ah partial-cycling check in the TRL 4 test plan | Not done | TRL 4 is not open, and a test plan is TRL 4 work under the TRL 3 cap. The check is recorded in the register (CGD-DEC-001) and cited in CGD-CAL-001 v0.6 section 6 for when TRL 4 opens |
+| 6 | Decision 8: approach a small off-grid solar installer as the first candidate test partner | Not done | An outreach action for Amish, not a design change; recorded in CGD-PRB-001 and the register. Nothing further to change in this repo |
+| 7 | Decision 9: three-colour status light in BOM line 15 and on the board in the model | Done | Line 15 adds a PLCC-4 RGB LED with three resistors ($16.00 to $16.35); `model.py` places it 30 mm toward the signal end of the board centre and 20 mm to the B+ side. CGD-DWG-103 Rev P2 notes its position |
+| 8 | Decision 10: product renders with the pack beside the board | Scenes ready | `cad/src/product_model.py` keeps the pack beside the board; render scenes exported (below). Photoreal rendering is on Amish's Mac |
+| 9 | Decision 11: product renders with the four cover pillars and the cables of CGD-DDR-003 | Scenes ready | `product_model.py` now takes the pillars, spacers, nuts, cover, fuse holder position, copper link and status light from `model.py`; the B+ cable goes to the fuse holder's outer terminal and the copper link to the B+ stud |
+| 10 | Decision 12: SwapCell agreement once the board envelope question is settled | Not done | The envelope question is not settled; the SwapCell part is listed under cross-repo actions |
+
+### Model and checks
+
+- `python cad/src/model.py --check`: 55 of 55 checks pass (was 46). New checks: status light soldered to the board, light pipe flange on the cover, light pipe foot 0.5 mm clear of the status light, light pipe and status light clear of the controller and pillars, light pipe on the status light axis, light pipe inside the envelope, light pipe assembly direction.
+- STEP and STL regenerated (`cad/step/`, `cad/stl/`); envelope still 220 x 110 x 33 mm; no clashes.
+
+### Requirement status changes (CGD-CAL-001 v0.6, CGD-REQ-001 v0.8)
+
+- R6: not met to **met on paper** (3.47 W against 4 W; was 4.44 W).
+- R8: not met to **met on paper with calibration** (8.7 points on 20 Ah over five days against ±10).
+- R16: within the target to **over the value-engineering target by $19.15**. Value-engineering target: USD 140.00. Estimated cost of the constructable design: USD 159.15 (USD 19.15 over the target). `budget_usd` unchanged.
+- R5 stays met with more margin: junction 51.0 °C (TOLT) at 40 A, 77.6 °C bound (TOLL) at 80 A for 10 s.
+- R14 stays met on paper: 0.664 kg against 0.7 kg (status light and light pipe weigh under 1 g).
+- Now 12 of 16 met on paper; R2, R4 and R7 at risk; R16 over the target.
+- Side effect to note: the lower-resistance switches raise the prospective short-circuit current slightly, to about 5.0 kA on a 16S 280 Ah pack (was 4.7 kA), still inside the fuse's 10 kA breaking capacity. Safety notes updated.
+
+### Documents changed and new versions
+
+- `docs/04-calcs/sizing.py` and `results.csv`; `docs/04-calcs/01-sizing.md` CGD-CAL-001 v0.6
+- `docs/03-requirements.md` CGD-REQ-001 v0.8
+- `docs/02-concept.md` CGD-PRC-001 v0.8
+- `docs/01-problem.md` CGD-PRB-001 v0.8 (cost constraint)
+- `docs/05-build-plan.md` CGD-BLD-001 v0.3 (status light, opaque cover with light pipe, new Figure 14, wiring now Figure 15)
+- `docs/06-design-decisions.md` CGD-DEC-001 v0.4 (value engineering restated; To confirm items 1, 5 and new item 9)
+- `bom/bom.csv` (lines 1, 4, 13, 15 and new line 19) and `bom/bom-notes.md`; `README.md`
+- `cad/src/model.py`, `cad/src/sheets.py`, `cad/src/concept_media.py`, `cad/src/build_plan_media.py`, `cad/src/product_model.py`
+- BOM line 1 specification corrected from "with 4 PCB standoffs" to the flat plate of CGD-DDR-003 (it had been left behind on 2026-09-30).
+
+### Pictures regenerated (each looked at)
+
+- `cad/drawings/CGD-DWG-001` Rev P3 (isometric view moved down to clear the longer revision table), CGD-DWG-103 Rev P2, CGD-DWG-104 Rev P2.
+- `docs/05-build-plan/overview.png`, `joint-07.png` (new), `step-01.png` to `step-10.png` (step 1 lists the status light; step 9 says the light pipe goes in first).
+- `media/hero.png`, `concept-blueprint.png`, `.pdf` and `.svg`, `exploded.png` (callouts 15 and 19 added), `cutaway.png`, `flow.png` (MOSFET loss 1.4 W), `model.glb`, `viewer.html`.
+- `python3 .kit/drawing.py --check-text cad/drawings/*.svg media/concept-blueprint.svg`: no hits.
+
+### Render scenes (appearance model)
+
+- `cad/src/product_model.py` brought in line with the constructable design: opaque cover on four pillars with four screws, light pipe with a lit green tip, one three-colour status light, flat plate with the four M4 mounting holes, six spacers, two corner nuts, fuse holder in line with the B+ stud, copper fuse link with sleeve, B+ cable to the holder's outer terminal. 67 parts, all valid. `RENDER_VIEWS` unchanged in name: hero, exploded, detail (notes updated).
+- Exported with `python3 .kit/export_views.py /home/claude/renders/cellguard`: `cellguard__hero`, `cellguard__exploded` and `cellguard__detail` (.npz and .json each) and `cellguard__jobs.json`.
+- Not rendered here: `media/render-*.png`, `media/card.png` and `media/social-preview.png` are made next on Amish's Mac.
+
+### Appearance deviations (Proposed, awaiting Amish)
+
+1. The light pipe tip is drawn lit green and the status light housing white; the model has no colour. Recommendation: accept as appearance only.
+2. The copper link is shown with a red heat-shrink sleeve over its middle, as the build plan specifies. Recommendation: accept.
+3. Name plate, warning label and the board's illustrative parts (balance resistors, capacitors, silkscreen) are kept from the 2026-09-26 appearance model. Recommendation: accept as appearance only.
+
+### Cross-repo actions
+
+- SwapCell: record the agreement to CellGuard's NMC profile and the v0.3 CAN message set once the board envelope question is settled. SwapCell expects a board about 230 x 58 mm, 10 mm or less thick, at $120; CellGuard is 220 x 110 x 33 mm and now estimated at $159.15. Not edited.
+
+### Safety concerns
+
+- Prospective short-circuit current up to about 5.0 kA (16S 280 Ah) with the lower-resistance switches; the 10 kA fuse and the 15 µs short-circuit delay still cover it.
+- The light pipe is an insulator, so the hole it fills adds no exposed conductor and no path to live parts.
+
+### Recommended next step
+
+Render the product views on Amish's Mac from the exported scenes, then `python .kit/cards.py .`. Confirm the switch price at quantity and the SCP fuse (register, To confirm items 1 and 5). TRL 4 remains on hold.
+
+## Session 2026-10-02: Photoreal renders redone on the constructable design
+
+Amish, 2026-10-02: "Photoreal renders are out of date in most repos ... COMPLETE THESE". Rendered with Blender Cycles on Amish's Mac (batch F1) from the scenes exported from `cad/src/product_model.py`, captioned with `.kit/photo_caption.py`; `media/card.png` and `media/social-preview.png` regenerated with `.kit/cards.py`. Each raw render was looked at once. No commit or push; `trl` unchanged.
+
+- Views: `media/render-hero.png`, `media/render-exploded.png`, `media/render-detail.png`.
+- Re-renders: none. The detail note now says "the cable slot in the cover at left" instead of "plugs at left", because the plugs sit behind the cover in that view (`RENDER_VIEWS` in `cad/src/product_model.py` updated to match).
+- Appearance deviations already logged (session "Approved follow-ups carried out", Proposed, awaiting Amish): light pipe drawn lit green with a white status light housing; red heat-shrink sleeve on the copper link; name plate, warning label and illustrative board parts. Unchanged.
+- `python3 .kit/image_qc.py`: 5 images, 0 problems. `python3 .kit/render.py --check`: no FAIL, no storefront warning.
+- The "Stale media" note of the 2026-09-30 session is removed; this work resolves it.
